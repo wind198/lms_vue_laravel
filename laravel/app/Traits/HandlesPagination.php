@@ -4,18 +4,15 @@ namespace App\Traits;
 
 use App;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Log;
 
 trait HandlesPagination
 {
     /**
-     * Paginate and order a query.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  array  $requestParams
-     * @param  array  $defaultOrder
-     * @return \Illuminate\Pagination\LengthAwarePaginator
+     * @return  array{output: array, pagination: LengthAwarePaginator}
      */
+
     public function paginateQuery(Builder $query, array $requestParams, array $defaultOrder = ['created_at' => 'desc'])
     {
         // Extract pagination parameters
@@ -35,6 +32,16 @@ trait HandlesPagination
         }
 
         // Paginate the results
-        return $query->paginate($perPage, ['*'], 'page', $page);
+        $pagination = $query->paginate($perPage, ['*'], 'page', $page);
+        $output = [
+            'data' => $pagination->items(),
+            'params' => [
+
+                'from' => $pagination->firstItem(),
+                'to' => $pagination->lastItem(),
+                'total' => $pagination->total()
+            ]
+        ];
+        return ['output' => $output, 'pagination' => $pagination];
     }
 }

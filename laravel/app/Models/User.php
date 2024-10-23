@@ -7,13 +7,14 @@ use App\Constants\AppConstants;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
 
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable,HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -60,15 +61,15 @@ class User extends Authenticatable
     public function getRules()
     {
         return [
-            'first_name' => ['required', 'string', 'max:' . AppConstants::$MAX_FIRST_NAME_LENGTH],
-            'last_name' => ['required', 'string', 'max:' . AppConstants::$MAX_FIRST_NAME_LENGTH],
-            'email' => ['required', 'string', 'email', 'max:' . AppConstants::$MAX_EMAIL_LENGTH, 'unique:users'],
-            'phone' => ['nullable', 'string', 'max:' . AppConstants::$MAX_PHONE_LENGTH],
-            'address' => ['nullable', 'string', 'max:' . AppConstants::$MAX_ADDRESS_LENGTH],
+            'first_name' => ['required', 'string', 'max:' . AppConstants::MAX_FIRST_NAME_LENGTH],
+            'last_name' => ['required', 'string', 'max:' . AppConstants::MAX_FIRST_NAME_LENGTH],
+            'email' => ['required', 'string', 'email', 'max:' . AppConstants::MAX_EMAIL_LENGTH, 'unique:users'],
+            'phone' => ['nullable', 'string', 'max:' . AppConstants::MAX_PHONE_LENGTH],
+            'address' => ['nullable', 'string', 'max:' . AppConstants::MAX_ADDRESS_LENGTH],
             'education_background' => [
                 'required',
                 'string',
-                'in:' . implode(',', AppConstants::$EDUCATION_BACKGROUNDS)
+                'in:' . implode(',', AppConstants::EDUCATION_BACKGROUNDS)
             ],
             'generation_id' => [
                 'nullable', // Make this field optional if needed
@@ -77,7 +78,7 @@ class User extends Authenticatable
             'gender' => [
                 'required',
                 'string',
-                'in:' . implode(',', AppConstants::$GENDERS)
+                'in:' . implode(',', AppConstants::GENDERS)
             ],
             'dob' => [
                 'nullable',

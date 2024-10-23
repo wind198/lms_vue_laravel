@@ -30,7 +30,7 @@ class UpdateStudentRequest extends FormRequest
         $student = $this->route('student');
 
         $rules['email'] =
-            ['required', 'string', 'email', 'max:' . AppConstants::$MAX_EMAIL_LENGTH, Rule::unique('users')->ignore($student->id),];
+            ['required', 'string', 'email', 'max:' . AppConstants::MAX_EMAIL_LENGTH, Rule::unique('users')->ignore($student->id),];
 
         // Make each field optional by modifying the rules
         return ValidationHelpers::makeRulesOptional($rules);

@@ -14,15 +14,17 @@ return new class extends Migration {
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('first_name', AppConstants::MAX_FIRST_NAME_LENGTH);
+            $table->string('last_name', AppConstants::MAX_FIRST_NAME_LENGTH);
+            $table->string('full_name', AppConstants::MAX_FIRST_NAME_LENGTH * 2);
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('user_type', [AppConstants::$STUDENT_ROLE, AppConstants::$TEACHER_ROLE, AppConstants::$ROOT_ADMIN_ROLE]);
-            $table->string('phone', AppConstants::$MAX_PHONE_LENGTH)->nullable();
-            $table->string('address', AppConstants::$MAX_ADDRESS_LENGTH)->nullable();
-            $table->enum('education_background', AppConstants::$EDUCATION_BACKGROUNDS);
-            $table->enum('gender', AppConstants::$GENDERS);
+            $table->enum('user_type', [AppConstants::STUDENT_ROLE, AppConstants::TEACHER_ROLE, AppConstants::ROOT_ADMIN_ROLE]);
+            $table->string('phone', AppConstants::MAX_PHONE_LENGTH)->nullable();
+            $table->string('address', AppConstants::MAX_ADDRESS_LENGTH)->nullable();
+            $table->enum('education_background', AppConstants::EDUCATION_BACKGROUNDS);
+            $table->enum('gender', AppConstants::GENDERS);
             $table->date('dob')->nullable();
             $table->rememberToken();
             $table->timestamps();
