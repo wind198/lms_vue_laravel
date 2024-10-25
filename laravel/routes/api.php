@@ -5,7 +5,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
-    [],
+    [
+        // 'sanctum'
+    ],
     function () {
         Route::middleware([])->controller(StudentsController::class)->group(function () {
             Route::get('/students', 'index')->name(StudentsController::INDEX_ROUTE);
