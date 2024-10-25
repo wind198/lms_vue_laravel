@@ -8,13 +8,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Str;
 
 class User extends Authenticatable
 {
 
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable,HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -58,11 +59,12 @@ class User extends Authenticatable
         ];
     }
 
-    public function getRules()
+    public static function getRules()
     {
         return [
             'first_name' => ['required', 'string', 'max:' . AppConstants::MAX_FIRST_NAME_LENGTH],
             'last_name' => ['required', 'string', 'max:' . AppConstants::MAX_FIRST_NAME_LENGTH],
+            'full_name' => ['required', 'string', 'max:' . AppConstants::MAX_FIRST_NAME_LENGTH * 2],
             'email' => ['required', 'string', 'email', 'max:' . AppConstants::MAX_EMAIL_LENGTH, 'unique:users'],
             'phone' => ['nullable', 'string', 'max:' . AppConstants::MAX_PHONE_LENGTH],
             'address' => ['nullable', 'string', 'max:' . AppConstants::MAX_ADDRESS_LENGTH],
@@ -85,6 +87,11 @@ class User extends Authenticatable
                 'date',
             ]
         ];
+    }
+
+    public static function generateRandomPassword($length = 8)
+    {
+        return Str::random($length);
     }
 
 }

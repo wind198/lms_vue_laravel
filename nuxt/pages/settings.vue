@@ -1,7 +1,5 @@
 <script setup lang="ts">
 definePageMeta({ layout: "home" });
 </script>
-<template>
-  <h1>home</h1>
-</template>
+<template><NuxtPage></NuxtPage></template>
 <style scoped></style>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Constants\AppConstants;
+use App\Http\Requests\CreateStudentRequest;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateManyStudentsRequest;
 use App\Http\Requests\UpdateStudentRequest;
@@ -56,7 +57,7 @@ class StudentsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function create(StoreStudentRequest $request)
+    public function create(CreateStudentRequest $request)
     {
 
         $validated = $request->validated();
@@ -112,19 +113,18 @@ class StudentsController extends Controller
         $validated = $request->validated();
 
         if (!is_array($ids)) {
-            response()->json(['message' => trans('validation.array', ['attribute' => 'ids'])], 400);
+            return response()->json(['message' => trans('validation.array', ['attribute' => 'ids'])], 400);
         }
         // Ensure we have an array of student IDs and update data
         if (empty($ids)) {
-            response()->json(['message' => trans('validation.empty', ['attribute' => 'ids'])], 400);
+            return response()->json(['message' => trans('validation.empty', ['attribute' => 'ids'])], 400);
         }
 
-        // Perform a batch update using the student IDs and provided update data
-        $updatedCount = User::whereIn('id', $ids)
-            ->where('user_type', AppConstants::STUDENT_ROLE) // Ensure only student records are updated
-            ->update($validated);
+        User::whereIn('id', $ids)
+            ->where('user_type', AppConstants::STUDENT_ROLE)->update($validated);
 
-        return $updatedCount;
+
+        return $ids;
     }
     /**
      * Remove the specified resource from storage.
@@ -132,7 +132,7 @@ class StudentsController extends Controller
     public function delete(User $user)
     {
         $user->delete();
-        return true;
+        return $user;
     }
 
     /**
@@ -144,11 +144,11 @@ class StudentsController extends Controller
         $ids = $request->input('ids', []);
 
         if (!is_array($ids)) {
-            response()->json(['message' => trans('validation.array', ['attribute' => 'ids'])], 400);
+            return response()->json(['message' => trans('validation.array', ['attribute' => 'ids'])], 400);
 
         }
         if (empty($ids)) {
-            response()->json(['message' => trans('validation.empty', ['attribute' => 'ids'])], 400);
+            return response()->json(['message' => trans('validation.empty', ['attribute' => 'ids'])], 400);
         }
         // Perform the deletion of the students
         $deleted = User::whereIn('id', $ids)

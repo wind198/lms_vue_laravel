@@ -1,9 +1,13 @@
+import type { NuxtConfig } from "nuxt/schema";
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
-export default defineNuxtConfig({
+const nuxtConfig: NuxtConfig = {
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
   runtimeConfig: {
-    public: { BASE_URL: "/api" }, // Your API base prefix
+    public: {
+      apiUrl: "",
+    },
   },
   modules: ["vuetify-nuxt-module", "@nuxtjs/i18n"],
   i18n: {
@@ -25,4 +29,6 @@ export default defineNuxtConfig({
       },
     },
   },
-});
+};
+
+export default defineNuxtConfig(nuxtConfig);
