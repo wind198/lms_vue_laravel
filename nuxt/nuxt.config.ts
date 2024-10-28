@@ -20,10 +20,7 @@ const nuxtConfig: NuxtConfig = {
         themes: {
           light: {
             dark: false,
-            colors: {
-              primary: "#8BC34A",
-              secondary: "#FFEB3B",
-            },
+            colors: {},
           },
         },
       },

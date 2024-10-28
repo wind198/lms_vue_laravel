@@ -13,7 +13,6 @@ export type IUser = {
   education_background: "high_school" | "bachelor" | "master" | "phd"; // Example values for education_background
   gender: "male" | "female" | "other"; // Example values for gender
   dob?: Date | null; // Nullable date
-  remember_token?: string | null;
   created_at: Date;
   updated_at: Date;
 };
