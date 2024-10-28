@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Entities;
 
+use App\Http\Controllers\Controller;
 use App\Constants\AppConstants;
 use App\Http\Requests\CreateStudentRequest;
 use App\Http\Requests\StoreStudentRequest;
