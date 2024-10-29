@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useForm } from "vee-validate";
 import type { LayoutKey } from "../../.nuxt/types/layouts.js";
 import { useAuth } from "../../composables/useAuth.js";
 
@@ -19,6 +20,16 @@ const subtitleMsg = t("messages.info.pleaseLogin");
 const { isAuthenticated, login } = useAuth();
 
 const formData = reactive<IFormData>({ email: "", password: "" });
+
+const { handleSubmit, handleReset } = useForm<IFormData>({
+  initialValues: {
+    email: "",
+    password: "",
+  },
+  validationSchema: {
+    email(v: string) {},
+  },
+});
 
 const showingPasswd = ref(false);
 
