@@ -64,14 +64,13 @@ class User extends Authenticatable
         return [
             'first_name' => ['required', 'string', 'max:' . AppConstants::MAX_FIRST_NAME_LENGTH],
             'last_name' => ['required', 'string', 'max:' . AppConstants::MAX_FIRST_NAME_LENGTH],
-            'full_name' => ['required', 'string', 'max:' . AppConstants::MAX_FIRST_NAME_LENGTH * 2],
             'email' => ['required', 'string', 'email', 'max:' . AppConstants::MAX_EMAIL_LENGTH, 'unique:users'],
             'phone' => ['nullable', 'string', 'max:' . AppConstants::MAX_PHONE_LENGTH],
             'address' => ['nullable', 'string', 'max:' . AppConstants::MAX_ADDRESS_LENGTH],
             'education_background' => [
                 'required',
                 'string',
-                'in:' . implode(',', AppConstants::EDUCATION_BACKGROUNDS)
+                'in:' . implode(',', AppConstants::EDUCATION_BACKGROUNDS_LIST)
             ],
             'generation_id' => [
                 'nullable', // Make this field optional if needed
@@ -92,6 +91,28 @@ class User extends Authenticatable
     public static function generateRandomPassword($length = 8)
     {
         return Str::random($length);
+    }
+
+
+    public static function augmentCreateUserPayload(array $payload, string $user_type): array
+    {
+        // Check if the user type is valid
+        if (!in_array($user_type, AppConstants::EDUCATION_BACKGROUNDS_LIST)) {
+            throw new \InvalidArgumentException("Invalid user type: {$user_type}");
+        }
+
+        // Build the new payload without modifying the input
+        $augmentedPayload = [
+            'first_name' => $payload['first_name'] ?? null,
+            'last_name' => $payload['last_name'] ?? null,
+            'full_name' => "{$payload['first_name']} {$payload['last_name']}",
+            'email' => $payload['email'] ?? null,
+            'password' => User::generateRandomPassword(),
+            'user_type' => $user_type,
+            // Add any additional fields if needed
+        ];
+
+        return $augmentedPayload;
     }
 
 }

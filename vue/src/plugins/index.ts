@@ -12,7 +12,8 @@ import router from '../router'
 // Types
 import type { App } from 'vue'
 import i18n from '../lang/i18n'
+import { VueQueryPlugin } from '@tanstack/vue-query'
 
 export function registerPlugins(app: App) {
-  app.use(vuetify).use(router).use(pinia).use(i18n)
+  app.use(vuetify).use(router).use(pinia).use(i18n).use(VueQueryPlugin)
 }

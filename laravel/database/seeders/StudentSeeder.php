@@ -14,7 +14,7 @@ class StudentSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->count(500)->create([
+        User::factory()->count(50)->create([
             'user_type' => AppConstants::STUDENT_ROLE,
             'education_background' => AppConstants::HIGH_SCHOOL,
         ]);

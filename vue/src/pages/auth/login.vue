@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { useField, useForm } from 'vee-validate'
 import { object, string } from 'yup'
-import type { LayoutKey } from '../../../.nuxt/types/layouts.js'
 import { useMutation } from '@tanstack/vue-query'
-import useHttpClient from '../../../composables/useHttpClient.js'
-import { IUser } from '../../../types/entities/user.entity.js'
+import useHttpClient from '../../composables/useHttpClient.js'
+import { IUser } from '../../types/entities/user.entity.js'
 import { useI18n } from 'vue-i18n'
-import { useAppStore } from '../../../stores/app.js'
-import authStore from '../../../stores/auth.js'
+import authStore from '../../stores/auth.js'
 
 type IFormData = {
   email: string
@@ -28,8 +26,8 @@ const validationSchema = object({
 
 const { handleSubmit, handleReset } = useForm<IFormData>({
   initialValues: {
-    email: '',
-    password: '',
+    email: 'tuanbk1908@gmail.com',
+    password: 'abc123',
   },
   validationSchema,
 })
@@ -51,26 +49,32 @@ const { $post } = useHttpClient()
 
 const { login } = authStore()
 
-const { status, mutateAsync } = useMutation({
+const { status, mutateAsync: sendLoginRequest } = useMutation({
   mutationFn: async (payload: any) => {
     const { data } = await $post<IFormData, { user: IUser; token: string }>(
       'login',
       payload
     )
-
     login(data)
   },
 })
 
 const onSubmit = () => {
-  handleSubmit(async (data) => {
-    try {
-      await sendLoginRequest()
-    } catch (error) {
-      console.error(error)
-      handleReset()
+  handleSubmit(
+    async (data) => {
+      console.log(data)
+
+      try {
+        await sendLoginRequest(data)
+      } catch (error) {
+        console.error(error)
+        handleReset()
+      }
+    },
+    (ctx) => {
+      console.error(ctx.errors)
     }
-  })
+  )()
 }
 </script>
 <template>
@@ -89,21 +93,21 @@ const onSubmit = () => {
 
         <v-text-field
           v-model="password"
-          :type="showingPasswd ? 'text' : 'password'"
-          label="Password"
           :error="!!passwordErrors.length"
           :error-messages="passwordErrorMessages"
+          label="Password"
           prepend-inner-icon="mdi-lock"
+          :type="showingPasswd ? 'text' : 'password'"
         />
       </v-card-text>
       <v-card-actions>
         <v-btn
           block
           color="primary"
-          type="submit"
-          variant="flat"
           :elevation="0"
           :loading="status === 'pending'"
+          type="submit"
+          variant="flat"
           >{{ t('actions.login') }}</v-btn
         >
       </v-card-actions>
@@ -117,5 +121,5 @@ const onSubmit = () => {
 </style>
 <route lang="yaml">
 meta:
-  layout: home
+  layout: login
 </route>

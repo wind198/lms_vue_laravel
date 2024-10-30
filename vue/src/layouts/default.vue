@@ -1,27 +1,28 @@
 <script setup lang="ts">
-  import type { IToastOptions } from '../composables/useToast.js'
+import { useToast, type IToastOptions } from '../composables/useToast.js'
 
-  const { toasts } = useToast()
+const { toasts } = useToast()
 
-  const getDefaultTitle = (type: IToastOptions['type']) => {
-    switch (type) {
-      case 'error':
-        return 'Error'
-      case 'warning':
-        return 'warning'
-      case 'success':
-        return 'success'
-      default:
-        return 'info'
-    }
+const getDefaultTitle = (type: IToastOptions['type']) => {
+  switch (type) {
+    case 'error':
+      return 'Error'
+    case 'warning':
+      return 'warning'
+    case 'success':
+      return 'success'
+    default:
+      return 'info'
   }
+}
 </script>
 <template>
   <div class="nuxt-app">
-    <slot />
+    <router-view />
     <div class="toast-list d-flex flex-column">
       <v-alert
         v-for="to in toasts"
+        :key="to.id"
         class="mb-2"
         :text="to.message"
         :title="to.title || getDefaultTitle(to.type)"

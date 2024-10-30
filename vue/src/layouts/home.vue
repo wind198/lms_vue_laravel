@@ -95,7 +95,7 @@ const studyLinks = {
       class="d-flex align-center justify-center"
       style="min-height: 300px"
     >
-      <slot> Main Content </slot>
+      <router-view />
     </v-main>
   </v-layout>
 </template>

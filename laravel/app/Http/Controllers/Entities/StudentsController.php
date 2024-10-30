@@ -63,11 +63,10 @@ class StudentsController extends Controller
 
         $validated = $request->validated();
 
-        $validated['user_type'] = AppConstants::STUDENT_ROLE;
-        $validated['password'] = User::generateRandomPassword(); // generate randow password
+        $payload = User::augmentCreateUserPayload($validated, AppConstants::STUDENT_ROLE);
 
         $builder = User::query();
-        $student = $builder->create($validated);
+        $student = $builder->create($payload);
 
         $student->sendEmailVerificationNotification();
 

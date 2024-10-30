@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->enum('user_type', [AppConstants::STUDENT_ROLE, AppConstants::TEACHER_ROLE, AppConstants::ROOT_ADMIN_ROLE]);
             $table->string('phone', AppConstants::MAX_PHONE_LENGTH)->nullable();
             $table->string('address', AppConstants::MAX_ADDRESS_LENGTH)->nullable();
-            $table->enum('education_background', AppConstants::EDUCATION_BACKGROUNDS);
+            $table->enum('education_background', AppConstants::EDUCATION_BACKGROUNDS_LIST);
             $table->enum('gender', AppConstants::GENDERS);
             $table->date('dob')->nullable();
             $table->rememberToken();

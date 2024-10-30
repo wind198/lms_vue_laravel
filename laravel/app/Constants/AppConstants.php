@@ -10,11 +10,11 @@ class AppConstants
     public const GRADUATED = 'GRADUATED';
     public const MASTER = 'MASTER';
     public const PHD = 'PHD';
-    public const EDUCATION_BACKGROUNDS = [
-        self::HIGH_SCHOOL, 
-        self::UNIVERSITY_STUDENT, 
-        self::GRADUATED, 
-        self::MASTER, 
+    public const EDUCATION_BACKGROUNDS_LIST = [
+        self::HIGH_SCHOOL,
+        self::UNIVERSITY_STUDENT,
+        self::GRADUATED,
+        self::MASTER,
         self::PHD
     ];
 
