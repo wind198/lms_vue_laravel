@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useToast, type IToastOptions } from '../composables/useToast.js'
+import { IToastOptions, useToastStore } from '../stores/toast.js'
 
-const { toasts } = useToast()
+const { toasts } = useToastStore()
 
 const getDefaultTitle = (type: IToastOptions['type']) => {
   switch (type) {
@@ -17,7 +17,7 @@ const getDefaultTitle = (type: IToastOptions['type']) => {
 }
 </script>
 <template>
-  <div class="nuxt-app">
+  <app-wrapper>
     <router-view />
     <div class="toast-list d-flex flex-column">
       <v-alert
@@ -29,7 +29,7 @@ const getDefaultTitle = (type: IToastOptions['type']) => {
         :type="to.type"
       />
     </div>
-  </div>
+  </app-wrapper>
 </template>
 <style scoped>
 .toast-list {

@@ -13,7 +13,14 @@ import router from '../router'
 import type { App } from 'vue'
 import i18n from '../lang/i18n'
 import { VueQueryPlugin } from '@tanstack/vue-query'
+import { DataLoaderPlugin } from 'unplugin-vue-router/data-loaders'
 
 export function registerPlugins(app: App) {
-  app.use(vuetify).use(router).use(pinia).use(i18n).use(VueQueryPlugin)
+  app
+    .use(vuetify)
+    .use(pinia)
+    .use(i18n)
+    .use(VueQueryPlugin)
+    .use(DataLoaderPlugin, { router })
+    .use(router)
 }

@@ -1,11 +1,15 @@
 import { NavigationGuardWithThis } from 'vue-router'
-import authStore from '../../stores/auth'
+import useAuthStore from '../../stores/auth'
+import useApiHttpClient from '../../composables/useHttpClient'
+import { apiPrefix } from '../../utils/helpers'
 
-export const authNavigationGuard: NavigationGuardWithThis<undefined> = (
+export const authNavigationGuard: NavigationGuardWithThis<undefined> = async (
   to,
   from
 ) => {
-  const { isAuthenticated, logout } = authStore()
+  const { isAuthenticated, logout, user, login } = useAuthStore()
+
+  const { $get } = useApiHttpClient()
 
   if (from.path === '/auth/login/' && isAuthenticated) {
     logout()
@@ -16,11 +20,16 @@ export const authNavigationGuard: NavigationGuardWithThis<undefined> = (
     return true
   }
   if (!isAuthenticated) {
-    return {
-      path: '/auth/login',
-      state: {
-        from: from.fullPath,
-      },
+    if (!user) {
+      return {
+        path: '/auth/login',
+        state: {
+          from: from.fullPath,
+        },
+      }
+    } else {
+      const { data } = await $get(apiPrefix('user'))
+      login({ user: data })
     }
   }
 }

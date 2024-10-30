@@ -1,11 +1,13 @@
 <script setup lang="ts"></script>
 <template>
-  <div class="public-layout h-screen w-100 d-flex">
-    <div class="left-side flex-fill bg-surface w-50" />
-    <div class="right-side flex-fill d-flex flex-column justify-center w-50">
-      <router-view />
+  <app-wrapper>
+    <div class="public-layout h-screen w-100 d-flex">
+      <div class="left-side flex-fill bg-surface w-50" />
+      <div class="right-side flex-fill d-flex flex-column justify-center w-50">
+        <router-view />
+      </div>
     </div>
-  </div>
+  </app-wrapper>
 </template>
 <style scoped>
 .right-side {

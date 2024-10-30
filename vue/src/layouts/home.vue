@@ -57,47 +57,52 @@ const studyLinks = {
 }
 </script>
 <template>
-  <v-layout class="rounded rounded-md h-screen">
-    <v-navigation-drawer class="app-left-navigation-drawer" :width="255">
-      <div
-        class="logo-container w-100 bg-primary d-flex justify-center align-center"
-      >
-        <span class="logo text-white">Logo</span>
-      </div>
-      <v-list v-model:opened="open">
-        <template v-for="(i, index) in [settingLinks, studyLinks]" :key="index">
-          <v-list-group :value="i.value">
-            <template #activator="{ props }">
+  <app-wrapper>
+    <v-layout class="rounded rounded-md h-screen">
+      <v-navigation-drawer class="app-left-navigation-drawer" :width="255">
+        <div
+          class="logo-container w-100 bg-primary d-flex justify-center align-center"
+        >
+          <span class="logo text-white">Logo</span>
+        </div>
+        <v-list v-model:opened="open">
+          <template
+            v-for="(i, index) in [settingLinks, studyLinks]"
+            :key="index"
+          >
+            <v-list-group :value="i.value">
+              <template #activator="{ props }">
+                <v-list-item
+                  v-bind="props"
+                  :prepend-icon="i.icon"
+                  :title="i.text"
+                />
+              </template>
               <v-list-item
-                v-bind="props"
-                :prepend-icon="i.icon"
-                :title="i.text"
-              />
-            </template>
-            <v-list-item
-              v-for="l in i.links"
-              :key="l.value"
-              :prepend-icon="l.icon"
-              :title="l.text"
-              :to="l.to"
-          /></v-list-group>
-        </template>
-      </v-list>
-    </v-navigation-drawer>
+                v-for="l in i.links"
+                :key="l.value"
+                :prepend-icon="l.icon"
+                :title="l.text"
+                :to="l.to"
+            /></v-list-group>
+          </template>
+        </v-list>
+      </v-navigation-drawer>
 
-    <v-app-bar
-      class="appbar"
-      :elevation="1"
-      title="Learning management system"
-    />
+      <v-app-bar
+        class="appbar"
+        :elevation="1"
+        title="Learning management system"
+      />
 
-    <v-main
-      class="d-flex align-center justify-center"
-      style="min-height: 300px"
-    >
-      <router-view />
-    </v-main>
-  </v-layout>
+      <v-main
+        class="d-flex align-center justify-center"
+        style="min-height: 300px"
+      >
+        <router-view />
+      </v-main>
+    </v-layout>
+  </app-wrapper>
 </template>
 <style scoped>
 .logo-container {

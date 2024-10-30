@@ -2,10 +2,11 @@
 import { useField, useForm } from 'vee-validate'
 import { object, string } from 'yup'
 import { useMutation } from '@tanstack/vue-query'
-import useHttpClient from '../../composables/useHttpClient.js'
+import useApiHttpClient from '../../composables/useHttpClient.js'
 import { IUser } from '../../types/entities/user.entity.js'
 import { useI18n } from 'vue-i18n'
-import authStore from '../../stores/auth.js'
+import useAuthStore from '../../stores/auth.js'
+import { apiPrefix, extractXsrfToken } from '../../utils/helpers.js'
 
 type IFormData = {
   email: string
@@ -13,6 +14,8 @@ type IFormData = {
 }
 
 const { t } = useI18n()
+
+const router = useRouter()
 
 const welcomeMsg = t('messages.info.welcome')
 const subtitleMsg = t('messages.info.pleaseLogin')
@@ -45,25 +48,24 @@ const {
 
 const showingPasswd = ref(false)
 
-const { $post } = useHttpClient()
+const { $post, $get } = useApiHttpClient()
 
-const { login } = authStore()
+const { login } = useAuthStore()
 
 const { status, mutateAsync: sendLoginRequest } = useMutation({
   mutationFn: async (payload: any) => {
-    const { data } = await $post<IFormData, { user: IUser; token: string }>(
-      'login',
-      payload
-    )
-    login(data)
+    await $get('/sanctum/csrf-cookie')
+    await $post('/login', payload).then(async () => {
+      const { data } = await $get(apiPrefix('user'))
+      login({ user: data })
+      router.push('/settings/students')
+    })
   },
 })
 
 const onSubmit = () => {
   handleSubmit(
     async (data) => {
-      console.log(data)
-
       try {
         await sendLoginRequest(data)
       } catch (error) {

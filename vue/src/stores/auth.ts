@@ -4,41 +4,38 @@ import { TOKEN_KEY, USER_KEY } from '../utils/constants'
 
 type IAuthStore = {
   user: IUser | null
-  token: string | null
+  isAuthenticated: boolean
 }
 
-const authStore = defineStore('auth', {
+const useAuthStore = defineStore('auth', {
   state(): IAuthStore {
-    const token = localStorage.getItem(TOKEN_KEY) || null
     const user = localStorage.getItem(USER_KEY) || null
     try {
       const userObject = user ? JSON.parse(user) : null
       return {
-        token,
         user: userObject,
+        isAuthenticated: false,
       }
     } catch (error) {
       console.error(error)
-      return { token, user: null }
+      return { user: null, isAuthenticated: false }
     }
   },
   actions: {
-    login(payload: { user: IUser; token: string }) {
+    login(payload: { user: IUser }) {
       this.user = payload.user
-      this.token = payload.token
+      localStorage.setItem(USER_KEY, JSON.stringify(payload.user))
+      this.isAuthenticated = true
     },
     logout() {
       this.user = null
-      this.token = null
-      localStorage.removeItem(TOKEN_KEY)
       localStorage.removeItem(USER_KEY)
+      this.isAuthenticated = false
     },
-  },
-  getters: {
-    isAuthenticated(s) {
-      return !!s.token
+    setAuthenticate(v: boolean) {
+      this.isAuthenticated = v
     },
   },
 })
 
-export default authStore
+export default useAuthStore

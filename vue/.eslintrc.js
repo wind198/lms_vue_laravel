@@ -20,6 +20,8 @@ module.exports = {
     'vue/valid-template-root': 'warn',
     indent: 'off',
     'vue/html-indent': 'off',
+    camelcase: 'off',
+    'vue/attributes-order': 'off',
     'arrow-parens': 'warn',
   },
 }

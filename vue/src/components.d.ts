@@ -7,7 +7,10 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AppWrapper: typeof import('./components/AppWrapper.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ServerTablePagination: typeof import('./components/ServerTablePagination.vue')['default']
+    TableSkeleton: typeof import('./components/TableSkeleton.vue')['default']
   }
 }
