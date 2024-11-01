@@ -7,22 +7,36 @@ import {
   PAGINATION_SEARCH_PARAMS,
 } from '../utils/constants'
 import { merge } from 'lodash-es'
+import { parse } from 'qs'
 
 export const DefaultSearchParams = {
   page: DEFAULT_PAGE,
   per_page: DEFAULT_PER_PAGE,
   order: DEFAULT_ORDER,
   order_by: DEFAULT_ORDER_BY,
-  filter: {},
+  filter: {} as Record<string, any>,
+  augmented: true,
 }
 export type ISearchParamKey = keyof typeof DefaultSearchParams
 
 export type ISearchParams = typeof DefaultSearchParams
 
+export const SearchParamKeyList = Object.keys(DefaultSearchParams)
+
 const useQueryParamsStore = defineStore('query', {
   state(): { searchParams: ISearchParams } {
+    let searchStr = window.location.search
+    if (!searchStr) {
+      return {
+        searchParams: DefaultSearchParams,
+      }
+    }
+
+    searchStr = searchStr.replace(/^\?/, '')
+    const searchParams = parse(searchStr)
+    console.log({ searchParams })
     return {
-      searchParams: DefaultSearchParams,
+      searchParams: merge(DefaultSearchParams, searchParams as any),
     }
   },
   actions: {

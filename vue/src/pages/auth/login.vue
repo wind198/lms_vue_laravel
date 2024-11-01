@@ -6,11 +6,11 @@ import useApiHttpClient from '../../composables/useHttpClient.js'
 import { IUser } from '../../types/entities/user.entity.js'
 import { useI18n } from 'vue-i18n'
 import useAuthStore from '../../stores/auth.js'
-import { apiPrefix, extractXsrfToken } from '../../utils/helpers.js'
+import { apiPrefix } from '../../utils/helpers.js'
 
 definePage({
   meta: {
-    layout: 'home',
+    layout: 'login',
     label: 'actions.login',
   },
 })

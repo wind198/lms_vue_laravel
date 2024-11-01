@@ -18,9 +18,9 @@ import { DataLoaderPlugin } from 'unplugin-vue-router/data-loaders'
 export function registerPlugins(app: App) {
   app
     .use(vuetify)
-    .use(pinia)
     .use(i18n)
     .use(VueQueryPlugin)
     .use(DataLoaderPlugin, { router })
     .use(router)
+    .use(pinia)
 }

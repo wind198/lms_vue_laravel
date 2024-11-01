@@ -1,5 +1,6 @@
 import { AxiosHeaders } from 'axios'
 import { IOrder } from '../types/common.type'
+import dayjs, { ConfigType } from 'dayjs'
 
 /**
  * HELPERS
@@ -18,3 +19,7 @@ export const apiPrefix = (i: string) => {
 }
 
 export const reserveOrder = (i: IOrder) => (i === 'asc' ? 'desc' : 'asc')
+
+export const joinStr = (...i: string[]) => i.join(' ')
+
+export const getAge = (i: ConfigType) => dayjs().diff(i, 'year')

@@ -2,6 +2,8 @@ import { Ref } from 'vue'
 import { IOrder } from '../types/common.type'
 import { DEFAULT_ORDER, DEFAULT_ORDER_BY } from '../utils/constants'
 import useQueryParamsStore from '../stores/query'
+import useUpdateSearchParamsAndNavigate from './useUpdateSearchParamsAndNavigate'
+import { merge } from 'lodash-es'
 
 // type IProps<T> = {
 //     data: T[];
@@ -10,57 +12,32 @@ import useQueryParamsStore from '../stores/query'
 // };
 
 export default function useServerTable<T>() {
-  const { searchParams, updateSearchParams } = useQueryParamsStore()
+  const { $push } = useUpdateSearchParamsAndNavigate()
 
-  const router = useRouter()
+  const { searchParams } = useQueryParamsStore()
 
-  const { path } = useRoute()
-
-  const handleChangeOrder = (key?: string, newOrder?: IOrder) => {
-    key = key || DEFAULT_ORDER_BY
-    newOrder = newOrder || DEFAULT_ORDER
-    updateSearchParams({ order: key, order_by: newOrder })
-    router.push(path)
+  const handleChangeOrder = (key?: string, $newOrder?: IOrder) => {
+    const newOrderBy = key || DEFAULT_ORDER_BY
+    const newOrder: IOrder = $newOrder || DEFAULT_ORDER
+    $push({
+      order: newOrder,
+      order_by: newOrderBy,
+    })
   }
 
   const handleChangePage = (v: number) => {
-    updateSearchParams({ page: v })
-    router.push(path)
+    $push({ page: v })
   }
   const handleChangePerPage = (v: number) => {
-    const urlParams = new URLSearchParams(window.location.search)
-    if (v === DefaultTablePerPage) {
-      urlParams.delete('per_page')
-    } else {
-      urlParams.set('per_page', v.toString())
-    }
-
-    const data = Object.fromEntries(urlParams.entries())
-
-    router.get(window.location.pathname, data, { preserveState: true })
+    $push({ per_page: v })
   }
 
   const handleChangeFilter = (newFilters: Record<string, any>) => {
-    const urlParams = new URLSearchParams(window.location.search)
+    const currentFilter = searchParams.filter ?? {}
 
-    let paramsObject = Object.fromEntries(urlParams.entries())
+    const newFilter = merge(currentFilter, newFilters)
 
-    paramsObject = removeValueFromObject(paramsObject, (_, k) =>
-      k.startsWith('filter')
-    )
-
-    const data = {
-      ...paramsObject,
-      filters: newFilters,
-    }
-
-    let newUrl = window.location.pathname
-
-    const queryStr = stringify(data)
-
-    newUrl += `?${queryStr}`
-
-    router.visit(newUrl, { preserveState: true })
+    $push({ filter: newFilter })
   }
 
   return {

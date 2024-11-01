@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { VPagination, VSelect } from 'vuetify/components'
-import { DEFAULT_PER_PAGE_ITEMS } from '../utils/constants.js'
+import { DEFAULT_PER_PAGE_ITEMS } from '../../utils/constants.js'
 
 type IProps = {
   perPage: number

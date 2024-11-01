@@ -8,7 +8,7 @@ definePage({
 })
 </script>
 <template>
-  <div class="setting-page py-3 px-2">
+  <div class="setting-page py-3 pl-2 pr-4">
     <AppBreadcrumbs />
 
     <RouterView />

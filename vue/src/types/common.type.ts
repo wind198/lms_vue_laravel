@@ -8,3 +8,4 @@ export type IPaginatedData<T> = {
     total: number
   }
 }
+export type IHasSize = { size: 'small' | 'medium' | 'large' }

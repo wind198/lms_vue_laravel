@@ -9,8 +9,12 @@ export const vi = {
     cancel: 'Hủy',
     login: 'Đăng nhập',
     logout: 'Đăng xuất',
+    close: 'Đóng',
+    copy: 'Copy',
   },
   nouns: {
+    male: 'Nam',
+    female: 'Nữ',
     email: 'Địa chỉ email',
     password: 'Mật khẩu',
     dob: 'Ngày sinh',
@@ -48,6 +52,10 @@ export const vi = {
   },
   messages: {
     info: {
+      copied: 'Lưu thành công',
+      info: 'Thông tin',
+      warning: 'Chú ý',
+      error: 'Lỗi',
       welcome: 'Chào mừng đến với Hệ thống Quản lý Học tập',
       savedSuccessfully: 'Các thay đổi của bạn đã được lưu thành công.',
       deletedSuccessfully: 'Xóa thành công.',
@@ -81,5 +89,6 @@ export const vi = {
     appName: 'Hệ thống Quản lý Học tập',
     appNameShort: 'LMS',
     footerText: '© 2024 LMS. Bản quyền thuộc về LMS.',
+    smtOfsmo: '{smt} của {smo}',
   },
 } as ITranslation

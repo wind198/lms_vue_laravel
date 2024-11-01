@@ -57,7 +57,7 @@ const studyLinks = {
 }
 </script>
 <template>
-  <div class="home-layout">
+  <app-wrapper class="home-layout">
     <v-layout class="rounded rounded-md h-screen">
       <v-navigation-drawer class="app-left-navigation-drawer" :width="255">
         <div
@@ -95,7 +95,7 @@ const studyLinks = {
         <router-view />
       </v-main>
     </v-layout>
-  </div>
+  </app-wrapper>
 </template>
 <style scoped>
 .logo-container {

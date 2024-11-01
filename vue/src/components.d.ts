@@ -9,9 +9,15 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppBreadcrumbs: typeof import('./components/AppBreadcrumbs.vue')['default']
     AppWrapper: typeof import('./components/AppWrapper.vue')['default']
+    BaseStack: typeof import('./components/common/BaseStack.vue')['default']
+    DateFilter: typeof import('./components/common/DateFilter.vue')['default']
+    GenderField: typeof import('./components/common/GenderField.vue')['default']
+    LongTextDialog: typeof import('./components/LongTextDialog.vue')['default']
+    LongTextWithElipsis: typeof import('./components/common/LongTextWithElipsis.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    ServerTablePagination: typeof import('./components/ServerTablePagination.vue')['default']
-    TableSkeleton: typeof import('./components/TableSkeleton.vue')['default']
+    SearchBox: typeof import('./components/common/SearchBox.vue')['default']
+    ServerTablePagination: typeof import('./components/common/ServerTablePagination.vue')['default']
+    TableSkeleton: typeof import('./components/common/TableSkeleton.vue')['default']
   }
 }
