@@ -1,5 +1,5 @@
-import type { IUser } from "./user.entity";
+import type { IUser } from './user.entity'
 
-export type IStudent = Omit<IUser, "user_type"> & {
-  user_type: "student";
-};
+export type IStudent = Omit<IUser, 'user_type'> & {
+  user_type: 'student'
+}

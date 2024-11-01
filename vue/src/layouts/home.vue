@@ -57,7 +57,7 @@ const studyLinks = {
 }
 </script>
 <template>
-  <app-wrapper>
+  <div class="home-layout">
     <v-layout class="rounded rounded-md h-screen">
       <v-navigation-drawer class="app-left-navigation-drawer" :width="255">
         <div
@@ -89,20 +89,13 @@ const studyLinks = {
         </v-list>
       </v-navigation-drawer>
 
-      <v-app-bar
-        class="appbar"
-        :elevation="1"
-        title="Learning management system"
-      />
+      <v-app-bar class="appbar" :elevation="1" :title="t('others.appName')" />
 
-      <v-main
-        class="d-flex align-center justify-center"
-        style="min-height: 300px"
-      >
+      <v-main style="min-height: 300px">
         <router-view />
       </v-main>
     </v-layout>
-  </app-wrapper>
+  </div>
 </template>
 <style scoped>
 .logo-container {

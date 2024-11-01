@@ -7,13 +7,15 @@ type IProps = {
   perPage: number
   page: number
   totalItems: number
-  length: number
 }
 
 const emit = defineEmits(['updatePerPage', 'updatePage'])
 
 const props = defineProps<IProps>()
 
+const totalPages = computed(() =>
+  Math.max(1, Math.ceil(props.totalItems / props.perPage))
+)
 const paginationText = computed(() => {
   const startItemIndex = (props.page - 1) * props.perPage + 1
   const totalItems = props.totalItems
@@ -23,7 +25,8 @@ const paginationText = computed(() => {
 </script>
 <template>
   <div class="server-table-pagination d-flex justify-end align-center">
-    <span class="mb-0 text-body-2 align-self-center mr-4">{{ paginationText }}
+    <span class="mb-0 text-body-2 align-self-center mr-4"
+      >{{ paginationText }}
     </span>
     <VSelect
       :model-value="props.perPage"
@@ -34,7 +37,7 @@ const paginationText = computed(() => {
     />
     <VPagination
       :model-value="props.page"
-      :length="props.length"
+      :length="totalPages"
       :total-visible="5"
       @update:model-value="emit('updatePage', $event)"
     />

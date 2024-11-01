@@ -17,7 +17,7 @@ const getDefaultTitle = (type: IToastOptions['type']) => {
 }
 </script>
 <template>
-  <app-wrapper>
+  <div class="default-layout">
     <router-view />
     <div class="toast-list d-flex flex-column">
       <v-alert
@@ -29,7 +29,7 @@ const getDefaultTitle = (type: IToastOptions['type']) => {
         :type="to.type"
       />
     </div>
-  </app-wrapper>
+  </div>
 </template>
 <style scoped>
 .toast-list {

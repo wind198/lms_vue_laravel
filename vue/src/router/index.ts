@@ -11,9 +11,11 @@ import { routes } from 'vue-router/auto-routes'
 import { authNavigationGuard } from './guards/auth'
 import { buildQueryMiddleware } from './middlewares/build-query'
 
+const augmentedRoutes = setupLayouts(routes)
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: setupLayouts(routes),
+  routes: augmentedRoutes,
 })
 
 router.beforeEach(authNavigationGuard)

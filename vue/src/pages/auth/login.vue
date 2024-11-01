@@ -8,6 +8,13 @@ import { useI18n } from 'vue-i18n'
 import useAuthStore from '../../stores/auth.js'
 import { apiPrefix, extractXsrfToken } from '../../utils/helpers.js'
 
+definePage({
+  meta: {
+    layout: 'home',
+    label: 'actions.login',
+  },
+})
+
 type IFormData = {
   email: string
   password: string
@@ -121,7 +128,3 @@ const onSubmit = () => {
   max-width: 800px;
 }
 </style>
-<route lang="yaml">
-meta:
-  layout: login
-</route>

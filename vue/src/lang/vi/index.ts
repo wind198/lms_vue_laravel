@@ -19,6 +19,7 @@ export const vi = {
     firstName: 'Tên',
     lastName: 'Họ',
     fullName: 'Họ và tên',
+    age: 'Tuổi',
     course: 'Khóa học',
     lesson: 'Bài học',
     username: 'Tên người dùng',
@@ -41,6 +42,9 @@ export const vi = {
     teacher: 'Giáo viên',
     management: 'Quản lý',
     study: 'Học tập',
+    home: 'Trang chủ',
+    createdAt: 'Ngày tạo',
+    actions: 'Hành động',
   },
   messages: {
     info: {
