@@ -22,6 +22,22 @@ const paginationText = computed(() => {
   const endItemIndex = Math.min(totalItems, props.page * props.perPage)
   return `${startItemIndex} to ${endItemIndex} of ${totalItems}`
 })
+
+const pagination = useTemplateRef('pagination')
+
+// onMounted(() => {
+//   const nav = pagination.value?.$el
+//   if (!nav) {
+//     return
+//   }
+//   const activeBtn = (nav as HTMLElement).querySelectorAll('.v-pagination__item > button')[
+//     props.page - 1
+//   ] as HTMLButtonElement
+//   if (!activeBtn) {
+//     return
+//   }
+//   activeBtn?.click()
+// })
 </script>
 <template>
   <div class="server-table-pagination d-flex justify-end align-center">
@@ -29,14 +45,15 @@ const paginationText = computed(() => {
       >{{ paginationText }}
     </span>
     <VSelect
-      :model-value="props.perPage"
+      :model-value="perPage"
       class="flex-grow-0 item-per-page-select"
       :items="DEFAULT_PER_PAGE_ITEMS"
       label="Per page"
       @update:model-value="emit('updatePerPage', $event)"
     />
     <VPagination
-      :model-value="props.page"
+      ref="pagination"
+      :model-value="page"
       :length="totalPages"
       :total-visible="5"
       @update:model-value="emit('updatePage', $event)"

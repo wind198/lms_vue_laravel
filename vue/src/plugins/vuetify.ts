@@ -1,3 +1,5 @@
+import DayJsAdapter from '@date-io/dayjs'
+
 /**
  * plugins/vuetify.ts
  *
@@ -15,5 +17,8 @@ import { createVuetify } from 'vuetify'
 export default createVuetify({
   theme: {
     defaultTheme: 'light',
+  },
+  date: {
+    adapter: DayJsAdapter,
   },
 })

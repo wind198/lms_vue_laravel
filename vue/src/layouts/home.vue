@@ -58,7 +58,7 @@ const studyLinks = {
 </script>
 <template>
   <app-wrapper class="home-layout">
-    <v-layout class="rounded rounded-md h-screen">
+    <v-layout class="rounded rounded-md h-screen" style="overflow-y: auto">
       <v-navigation-drawer class="app-left-navigation-drawer" :width="255">
         <div
           class="logo-container w-100 bg-primary d-flex justify-center align-center"

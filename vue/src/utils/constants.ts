@@ -20,3 +20,7 @@ export const PAGINATION_SEARCH_PARAMS = [
   'order',
   'filter',
 ] as ISearchParamKey[]
+
+export const GENDER_LIST = ['FEMALE', 'MALE'] as const
+
+export type IGender = (typeof GENDER_LIST)[number]

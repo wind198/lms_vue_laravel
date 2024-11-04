@@ -1,24 +1,36 @@
 <script setup lang="ts">
-import { ConfigType } from 'dayjs'
+import useFilterFeatures from '@/composables/useFilterFeatures.js'
+import dayjs, { ConfigType } from 'dayjs'
 import useFormatDateTime from '../../composables/useFormatDateTime.js'
-import { IHasSize } from '../../types/common.type.js'
+import { IFilter, IHasSize } from '../../types/common.type.js'
 
 const props = defineProps<
-  {
-    value: ConfigType
-    label: string
-    filterKey: string
+  IFilter<ConfigType> & {
     showTime?: boolean
   } & Partial<IHasSize>
 >()
 
 const { formatDateCommon, formatDateTimeCommon } = useFormatDateTime()
 
+const { onChangeValue, currentSearchParamValue } = useFilterFeatures({
+  defaultValue: props.defaultValue,
+  filterKey: props.filterKey,
+})
+
+const modelValue = computed(() => {
+  return currentSearchParamValue.value
+    ? dayjs(currentSearchParamValue.value)
+    : null
+})
+
 const displayText = computed(() => {
-  if (props.showTime) {
-    return formatDateTimeCommon(props.value)
+  if (!currentSearchParamValue.value) {
+    return ''
   }
-  return formatDateCommon(props.value)
+  if (props.showTime) {
+    return formatDateTimeCommon(currentSearchParamValue.value)
+  }
+  return formatDateCommon(currentSearchParamValue.value)
 })
 
 const width = computed(() => {
@@ -31,10 +43,29 @@ const width = computed(() => {
       return 240
   }
 })
+
+const handleUpdateModelValue = (v: any) => {
+  if (!v) {
+    onChangeValue(null)
+    return
+  }
+  onChangeValue(dayjs(v).toISOString())
+}
+
+const onClickClearFilter = () => {
+  onChangeValue(null)
+}
+
+defineExpose({
+  filterKey: props.filterKey,
+  label: props.label,
+  alwaysOn: !!props.alwaysOn,
+  defaultValue: !!props.defaultValue,
+})
 </script>
 
 <template>
-  <div class="text-center">
+  <div class="date-filter">
     <v-menu>
       <template #activator="{ props }">
         <v-text-field
@@ -43,9 +74,16 @@ const width = computed(() => {
           :style="{ flexGrow: 0, width: width + 'px' }"
           v-bind="props"
           hide-details="auto"
+          clearable
+          @click:clear="onClickClearFilter"
         />
       </template>
-      Hello
+      <v-date-picker
+        hide-header
+        elevation="8"
+        :model-value="modelValue"
+        @update:model-value="handleUpdateModelValue"
+      />
     </v-menu>
   </div>
 </template>

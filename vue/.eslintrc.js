@@ -22,6 +22,7 @@ module.exports = {
     'vue/html-indent': 'off',
     camelcase: 'off',
     'vue/attributes-order': 'off',
+    'space-before-function-paren': 'off',
     'arrow-parens': 'warn',
   },
 }

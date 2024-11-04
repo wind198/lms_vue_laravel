@@ -7,9 +7,9 @@ import {
   DEFAULT_ORDER_BY,
   DEFAULT_PAGE,
   DEFAULT_PER_PAGE,
+  GENDER_LIST,
   PAGINATION_SEARCH_PARAMS,
 } from '../../utils/constants.js'
-import useUpdateSearchParamsAndNavigate from '@/composables/useUpdateSearchParamsAndNavigate.js'
 import useServerTableEventHandler from '@/composables/useServerTableEventHandler.js'
 import useServerTablePaginationParams from '@/composables/useServerTablePaginationParams.js'
 import { useI18n } from 'vue-i18n'
@@ -26,18 +26,19 @@ definePage({
 
 const { t } = useI18n()
 
-const { searchParams } = storeToRefs(useQueryParamsStore())
+const { filterParams } = storeToRefs(useQueryParamsStore())
 
 const { handleUpdateSort, handleUpdatePage, handleUpdatePerPage } =
   useServerTableEventHandler()
 
 const { order, order_by, page, per_page } = useServerTablePaginationParams()
 
-const { data, isLoading, isFetching } = useStudents({
+const { data, isLoading } = useStudents({
   order,
   order_by,
   page,
   per_page,
+  filter: filterParams,
 })
 
 const studentList = computed(() => data.value?.data ?? [])
@@ -62,21 +63,23 @@ const { formatDateCommon } = useFormatDateTime()
   <div class="data-list">
     <TableSkeleton v-if="isLoading" />
     <template v-else>
-      <div class="w-full align-baseline d-flex flex-wrap ga-3">
-        <v-spacer />
-        <DateFilter
-          :value="searchParams.filter.created_at?.gte"
-          :label="t('others.createdAfter')"
-          filter-key="created_at.gte"
-        />
-        <SearchBox :value="searchParams.filter.q" />
-      </div>
+      <FilterToolbar>
+        <template #inner-append="{ setRef, visibilityMap }">
+          <GenderFilter
+            :ref="setRef"
+            filter-key="gender"
+            default-value="FEMALE"
+            v-show="visibilityMap.gender"
+          />
+        </template>
+        <!-- <template v-slot:inner-append="{ setRef, visibilityMap }"/> -->
+      </FilterToolbar>
       <VDataTable
         :headers="headers"
         :items="studentList"
-        :sort-by="[{ key: searchParams.order_by, order: searchParams.order }]"
+        :sort-by="[{ key: order_by, order: order }]"
         :hide-default-footer="true"
-        :items-per-page="searchParams.per_page"
+        :items-per-page="per_page"
         @update:sort-by="handleUpdateSort"
       >
         <template #item.created_at="{ value }">

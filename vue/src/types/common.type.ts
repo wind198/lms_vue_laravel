@@ -9,3 +9,18 @@ export type IPaginatedData<T> = {
   }
 }
 export type IHasSize = { size: 'small' | 'medium' | 'large' }
+
+export type IFilter<T> = {
+  filterKey: string
+  defaultValue?: T
+  alwaysOn?: boolean
+  label?: string
+}
+
+export type IQueryListParams = {
+  page: number
+  per_page: number
+  order: IOrder
+  order_by: string
+  filter: string
+}

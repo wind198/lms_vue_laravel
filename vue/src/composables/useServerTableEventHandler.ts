@@ -1,34 +1,37 @@
 import useQueryParamsStore, { DefaultSearchParams } from '../stores/query'
-import { IOrder } from '../types/common.type'
-import { reserveOrder } from '../utils/helpers'
-import useUpdateSearchParamsAndNavigate from './useUpdateSearchParamsAndNavigate'
 
 export default function useServerTableEventHandler() {
-  const { searchParams } = useQueryParamsStore()
+  const { setAugmented, updatePaginationParams } = useQueryParamsStore()
 
-  const { $push } = useUpdateSearchParamsAndNavigate()
+  const router = useRouter()
 
   const handleUpdateSort = (v: any) => {
+    setAugmented(false)
     if (!v.length) {
-      $push({
+      updatePaginationParams({
         order: DefaultSearchParams.order,
         order_by: DefaultSearchParams.order_by,
       })
-      return
-    }
-    const { key: orderBy, order } = v[0]
+    } else {
+      const { key: orderBy, order } = v[0]
 
-    $push({
-      order,
-      order_by: orderBy,
-    })
+      updatePaginationParams({
+        order,
+        order_by: orderBy,
+      })
+    }
+    router.push({ force: true })
   }
 
   const handleUpdatePage = (v: number) => {
-    $push({ page: v })
+    setAugmented(false)
+    updatePaginationParams({ page: v })
+    router.push({ force: true })
   }
   const handleUpdatePerPage = (v: number) => {
-    $push({ per_page: v })
+    setAugmented(false)
+    updatePaginationParams({ per_page: v })
+    router.push({ force: true })
   }
 
   return { handleUpdateSort, handleUpdatePage, handleUpdatePerPage }

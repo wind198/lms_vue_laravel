@@ -1,14 +1,16 @@
+import { ref, reactive, computed } from 'vue'
 import { defineStore } from 'pinia'
 import {
   DEFAULT_ORDER,
   DEFAULT_ORDER_BY,
   DEFAULT_PAGE,
   DEFAULT_PER_PAGE,
-  PAGINATION_SEARCH_PARAMS,
 } from '../utils/constants'
-import { merge } from 'lodash-es'
+import { cloneDeep, isEmpty, merge, pick } from 'lodash-es'
 import { parse } from 'qs'
+import { removeNullFields } from '../utils/helpers'
 
+// Define default search parameters
 export const DefaultSearchParams = {
   page: DEFAULT_PAGE,
   per_page: DEFAULT_PER_PAGE,
@@ -17,33 +19,107 @@ export const DefaultSearchParams = {
   filter: {} as Record<string, any>,
   augmented: true,
 }
-export type ISearchParamKey = keyof typeof DefaultSearchParams
 
+export type ISearchParamKey = keyof typeof DefaultSearchParams
 export type ISearchParams = typeof DefaultSearchParams
 
 export const SearchParamKeyList = Object.keys(DefaultSearchParams)
 
-const useQueryParamsStore = defineStore('query', {
-  state(): { searchParams: ISearchParams } {
-    let searchStr = window.location.search
-    if (!searchStr) {
-      return {
-        searchParams: DefaultSearchParams,
+export const PaginationParamKeyList = [
+  'page',
+  'per_page',
+  'order',
+  'order_by',
+] as ISearchParamKey[]
+
+export type IPaginationSearchParamKey = (typeof PaginationParamKeyList)[number]
+
+// Define the store with Composition API
+export const useQueryParamsStore = defineStore('query', () => {
+  // Initialize state based on URL or default values
+  const searchStr = window.location.search
+    .replace(/^\?/, '')
+    .split('&')
+    .map(decodeURI)
+    .join('&')
+
+  const initialParams = searchStr
+    ? parse(decodeURIComponent(searchStr))
+    : DefaultSearchParams
+
+  const formatedInitialParams = {} as Partial<ISearchParams>
+
+  for (const k in initialParams) {
+    const v = initialParams[k]
+    if (['page', 'per_page'].includes(k)) {
+      formatedInitialParams[k] = typeof v === 'number' ? v : parseInt(v)
+    }
+  }
+
+  const searchParams = reactive<ISearchParams>(
+    merge(cloneDeep(DefaultSearchParams), formatedInitialParams)
+  )
+
+  // Actions
+  function updatePaginationParams(
+    v: Partial<Pick<ISearchParams, IPaginationSearchParamKey>>
+  ) {
+    for (const key in pick(v, PaginationParamKeyList)) {
+      const element = v[key]
+      if (['string', 'boolean', 'number'].includes(typeof element))
+        searchParams[key] = element
+    }
+  }
+
+  function updateFilterParams(p: Record<string, any>) {
+    let newFilter = cloneDeep(searchParams.filter)
+    newFilter = removeNullFields(merge(newFilter, p))
+
+    searchParams.filter = newFilter
+  }
+
+  function updateSearchParams(p: Partial<ISearchParams>) {
+    for (const key in p) {
+      const element = p[key]
+
+      if (key === 'filter' && !isEmpty(element)) {
+        searchParams.filter = removeNullFields(
+          merge(searchParams.filter, element)
+        )
+      } else if (
+        key !== 'filter' &&
+        ['string', 'number', 'boolean'].includes(element)
+      ) {
+        searchParams[key] = element
       }
     }
+  }
 
-    searchStr = searchStr.replace(/^\?/, '')
-    const searchParams = parse(searchStr)
-    console.log({ searchParams })
-    return {
-      searchParams: merge(DefaultSearchParams, searchParams as any),
-    }
-  },
-  actions: {
-    updateSearchParams(v: Partial<ISearchParams>) {
-      this.searchParams = merge(this.searchParams, v)
-    },
-  },
+  function setAugmented(p: boolean) {
+    searchParams.augmented = p
+  }
+
+  const filterParams = computed(() => searchParams.filter)
+
+  const page = computed(() => searchParams.page)
+  const per_page = computed(() => searchParams.per_page)
+  const order = computed(() => searchParams.order)
+  const order_by = computed(() => searchParams.order_by)
+  const augmented = computed(() => searchParams.augmented)
+
+  return {
+    searchParams,
+    filterParams,
+    updatePaginationParams,
+    updateFilterParams,
+    updateSearchParams,
+    setAugmented,
+    page,
+    per_page,
+    order,
+    order_by,
+    augmented,
+  }
 })
 
 export default useQueryParamsStore

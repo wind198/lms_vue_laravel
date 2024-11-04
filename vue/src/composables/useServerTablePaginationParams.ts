@@ -1,26 +1,13 @@
 import { storeToRefs } from 'pinia'
 import useQueryParamsStore from '../stores/query'
-import { IOrder } from '../types/common.type'
-import {
-  DEFAULT_ORDER,
-  DEFAULT_ORDER_BY,
-  DEFAULT_PAGE,
-  DEFAULT_PER_PAGE,
-} from '../utils/constants'
 
 export default function useServerTablePaginationParams() {
-  const { searchParams } = storeToRefs(useQueryParamsStore())
+  const { page, per_page, order, order_by } = storeToRefs(useQueryParamsStore())
 
-  const page = computed(() => searchParams.value.page || DEFAULT_PAGE)
-  const per_page = computed(
-    () => searchParams.value.per_page || DEFAULT_PER_PAGE
-  )
-  const order = computed<IOrder>(
-    () => searchParams.value.order || DEFAULT_ORDER
-  )
-  const order_by = computed(
-    () => searchParams.value.order_by || DEFAULT_ORDER_BY
-  )
-
-  return { page, per_page, order, order_by }
+  return {
+    page,
+    per_page,
+    order,
+    order_by,
+  }
 }

@@ -13,6 +13,7 @@ export const vi = {
     copy: 'Copy',
   },
   nouns: {
+    filter: 'Bộ lọc',
     male: 'Nam',
     female: 'Nữ',
     email: 'Địa chỉ email',
@@ -90,5 +91,8 @@ export const vi = {
     appNameShort: 'LMS',
     footerText: '© 2024 LMS. Bản quyền thuộc về LMS.',
     smtOfsmo: '{smt} của {smo}',
+    createdAfter: 'Tạo sau',
+    createdBefore: 'Tạo trước',
+
   },
 } as ITranslation

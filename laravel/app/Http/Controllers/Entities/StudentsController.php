@@ -27,33 +27,44 @@ class StudentsController extends Controller
      */
     public function index(Request $request)
     {
-        $filters = $request->input('filters', []); // Filters array
+        $filter = $request->input('filter', []); // Filters array
 
         $query = User::where('user_type', 'student');
 
-        if (!empty($filters['q'])) {
-            $q = $filters['q'];
-            $query->where(function ($query) use ($q) {
-                $query->where('email', 'like', "%{$q}%")
-                    ->orWhere('first_name', 'like', "%{$q}%")
-                    ->orWhere('last_name', 'like', "%{$q}%")
-                    ->orWhere('phone', 'like', "%{$q}%");
+        // Text search filter
+        if (!empty($filter['q'])) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('email', 'like', "%{$filter['q']}%")
+                    ->orWhere('first_name', 'like', "%{$filter['q']}%")
+                    ->orWhere('last_name', 'like', "%{$filter['q']}%")
+                    ->orWhere('phone', 'like', "%{$filter['q']}%");
             });
         }
 
-        if (!empty($filters['created_at']['gte'])) {
-            $query->where('created_at', '>=', $filters['created_at']['gte']);
+        // Date range filters
+        $dateFilters = ['created_at', 'dob'];
+        foreach ($dateFilters as $field) {
+            if (!empty($filter[$field]['gte'])) {
+                $query->where($field, '>=', $filter[$field]['gte']);
+            }
+            if (!empty($filter[$field]['lte'])) {
+                $query->where($field, '<=', $filter[$field]['lte']);
+            }
         }
 
-        if (!empty($filters['created_at']['lte'])) {
-            $query->where('created_at', '<=', $filters['created_at']['lte']);
+        // Direct filters
+        $directFilters = ['gender', 'education_background', 'user_type'];
+        foreach ($directFilters as $field) {
+            if (!empty($filter[$field])) {
+                $query->where($field, $filter[$field]);
+            }
         }
 
         $res = $this->paginateQuery($query, $request->all(), ['created_at' => 'desc']);
 
-
         return $res['output'];
     }
+
 
     /**
      * Store a newly created resource in storage.

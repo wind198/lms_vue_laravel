@@ -2,6 +2,7 @@
 import { storeToRefs } from 'pinia'
 import { IToastOptions, useToastStore } from '../stores/toast.js'
 import { useI18n } from 'vue-i18n'
+import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
 
 const { toasts } = storeToRefs(useToastStore())
 
@@ -33,6 +34,7 @@ const getDefaultTitle = (type: IToastOptions['type']) => {
       />
     </div>
     <long-text-dialog />
+    <VueQueryDevtools/>
   </div>
 </template>
 <style scoped>

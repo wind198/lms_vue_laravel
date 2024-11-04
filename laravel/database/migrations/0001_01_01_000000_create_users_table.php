@@ -14,18 +14,18 @@ return new class extends Migration {
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name', AppConstants::MAX_FIRST_NAME_LENGTH);
+            $table->string('first_name', AppConstants::MAX_FIRST_NAME_LENGTH)->index();
             $table->string('last_name', AppConstants::MAX_FIRST_NAME_LENGTH);
-            $table->string('full_name', AppConstants::MAX_FIRST_NAME_LENGTH * 2);
+            $table->string('full_name', AppConstants::MAX_FIRST_NAME_LENGTH * 2)->index();
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('email_verified_at')->nullable()->index();
             $table->string('password');
-            $table->enum('user_type', [AppConstants::STUDENT_ROLE, AppConstants::TEACHER_ROLE, AppConstants::ROOT_ADMIN_ROLE]);
+            $table->enum('user_type', [AppConstants::STUDENT_ROLE, AppConstants::TEACHER_ROLE, AppConstants::ROOT_ADMIN_ROLE])->index();
             $table->string('phone', AppConstants::MAX_PHONE_LENGTH)->nullable();
             $table->string('address', AppConstants::MAX_ADDRESS_LENGTH)->nullable();
-            $table->enum('education_background', AppConstants::EDUCATION_BACKGROUNDS_LIST);
-            $table->enum('gender', AppConstants::GENDERS);
-            $table->date('dob')->nullable();
+            $table->enum('education_background', AppConstants::EDUCATION_BACKGROUNDS_LIST)->index();
+            $table->enum('gender', AppConstants::GENDERS)->index();
+            $table->date('dob')->nullable()->index();
             $table->rememberToken();
             $table->timestamps();
         });

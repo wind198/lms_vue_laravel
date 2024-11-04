@@ -8,8 +8,10 @@
     "lint": "eslint . --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@date-io/dayjs": "^3.0.0",
     "@mdi/font": "7.4.47",
     "@tanstack/vue-query": "^5.59.16",
+    "@tanstack/vue-query-devtools": "^5.59.17",
     "@types/lodash-es": "^4.17.12",
     "@types/qs": "^6.9.16",
     "axios": "^1.7.7",
