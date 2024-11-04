@@ -23,6 +23,7 @@ declare module 'vue-router/auto-routes' {
     '/settings': RouteRecordInfo<'/settings', '/settings', Record<never, never>, Record<never, never>>,
     '/settings/generations': RouteRecordInfo<'/settings/generations', '/settings/generations', Record<never, never>, Record<never, never>>,
     '/settings/students': RouteRecordInfo<'/settings/students', '/settings/students', Record<never, never>, Record<never, never>>,
+    '/settings/students.create': RouteRecordInfo<'/settings/students.create', '/settings/students/create', Record<never, never>, Record<never, never>>,
     '/settings/teachers': RouteRecordInfo<'/settings/teachers', '/settings/teachers', Record<never, never>, Record<never, never>>,
   }
 }

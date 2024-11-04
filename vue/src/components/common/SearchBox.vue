@@ -14,10 +14,14 @@ const width = computed(() => {
       return 240
   }
 })
+
+const isVisible = toRef(props.isVisible)
+
 const { onChangeValue, currentSearchParamValue } = useFilterFeatures({
   defaultValue: props.defaultValue,
   filterKey: props.filterKey,
   debounceTime: 400,
+  isVisible,
 })
 // define expose not work in composable, otherwise it should have been defined in useFilterFeatures
 defineExpose({

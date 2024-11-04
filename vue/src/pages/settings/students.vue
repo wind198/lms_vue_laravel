@@ -21,6 +21,7 @@ definePage({
   meta: {
     label: 'nouns.student',
     searchParams: PAGINATION_SEARCH_PARAMS,
+    title: ['nouns.list', { entity: 'nouns.student' }],
   },
 })
 
@@ -58,69 +59,112 @@ const headers = ref([
 ])
 
 const { formatDateCommon } = useFormatDateTime()
+
+const selectedUsers = ref([])
+
+const selectedUsersText = computed(() =>
+  t('messages.info.selected', {
+    count: selectedUsers.value.length,
+    entity: t('nouns.' + 'student'),
+  })
+)
 </script>
 <template>
-  <div class="data-list">
-    <TableSkeleton v-if="isLoading" />
-    <template v-else>
-      <FilterToolbar>
-        <template #inner-append="{ setRef, visibilityMap }">
-          <GenderFilter
-            :ref="setRef"
-            filter-key="gender"
-            default-value="FEMALE"
-            v-show="visibilityMap.gender"
-          />
-        </template>
-        <!-- <template v-slot:inner-append="{ setRef, visibilityMap }"/> -->
-      </FilterToolbar>
-      <VDataTable
-        :headers="headers"
-        :items="studentList"
-        :sort-by="[{ key: order_by, order: order }]"
-        :hide-default-footer="true"
-        :items-per-page="per_page"
-        @update:sort-by="handleUpdateSort"
-      >
-        <template #item.created_at="{ value }">
-          {{ formatDateCommon(value) }}
-        </template>
-        <template #item.dob="{ value }">
-          {{ getAge(value) }}
-        </template>
-        <template #item.gender="{ value }">
-          {{ t('nouns.' + value.toLowerCase()) }}
-        </template>
-        <template #item.email="{ value }">
-          <a :href="`mailto:${value}`">
-            {{ value }}
-          </a>
-        </template>
-        <template #item.phone="{ value }">
-          <a :href="`tel:${value}`">
-            {{ value }}
-          </a>
-        </template>
-        <template #item.address="{ value, item }">
-          <LongTextWithElipsis
-            :text="value"
-            :title="
-              t('others.smtOfsmo', {
-                smt: t('nouns.address'),
-                smo: joinStr(t('nouns.student').toLowerCase(), item.full_name),
-              })
-            "
-          />
-        </template>
-      </VDataTable>
-    </template>
-    <ServerTablePagination
-      @update-page="handleUpdatePage"
-      @update-per-page="handleUpdatePerPage"
-      :page="page"
-      :per-page="per_page"
-      :total-items="paginationParams?.total ?? 0"
-    />
+  <div class="student-list-page">
+    <AppBreadcrumbs />
+    <div class="data-list px-3">
+      <TableSkeleton v-if="isLoading" />
+      <template v-else>
+        <VToolbar class="d-flex align-center bg-transparent">
+          <p class="pl-1 text-subtitle-2">
+            <span v-if="!selectedUsers.length">
+              {{ t('nouns.total') }}: {{ paginationParams?.total }}
+            </span>
+            <span v-else>
+              {{ t('nouns.total') }}: {{ paginationParams?.total }} /
+              {{ selectedUsersText }}
+              <v-btn
+                icon
+                density="compact"
+                variant="flat"
+                size="small"
+                @click="selectedUsers = []"
+              >
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </span>
+          </p>
+          <v-spacer />
+          <FilterToolbar v-if="!selectedUsers.length">
+            <template #inner-append="{ setRef, visibilityMap }">
+              <GenderFilter
+                :ref="setRef"
+                :label="t('nouns.gender')"
+                filter-key="gender"
+                default-value="FEMALE"
+                :is-visible="!!visibilityMap.gender"
+              />
+            </template>
+            <!-- <template v-slot:inner-append="{ setRef, visibilityMap }"/> -->
+          </FilterToolbar>
+          <BulkActionToolbar v-else />
+          <v-btn color="primary" variant="flat" to="/settings/students/create">
+            {{ t('actions.create') }}
+          </v-btn>
+        </VToolbar>
+        <VDataTable
+          v-model="selectedUsers"
+          show-select
+          :headers="headers"
+          :items="studentList"
+          :sort-by="[{ key: order_by, order: order }]"
+          :hide-default-footer="true"
+          :items-per-page="per_page"
+          @update:sort-by="handleUpdateSort"
+        >
+          <template #item.created_at="{ value }">
+            {{ formatDateCommon(value) }}
+          </template>
+          <template #item.dob="{ value }">
+            {{ getAge(value) }}
+          </template>
+          <template #item.gender="{ value }">
+            {{ t('nouns.' + value.toLowerCase()) }}
+          </template>
+          <template #item.email="{ value }">
+            <a :href="`mailto:${value}`">
+              {{ value }}
+            </a>
+          </template>
+          <template #item.phone="{ value }">
+            <a :href="`tel:${value}`">
+              {{ value }}
+            </a>
+          </template>
+          <template #item.address="{ value, item }">
+            <LongTextWithElipsis
+              :text="value"
+              :title="
+                t('others.smtOfsmo', {
+                  smt: t('nouns.address'),
+                  smo: joinStr(
+                    t('nouns.student').toLowerCase(),
+                    item.full_name
+                  ),
+                })
+              "
+            />
+          </template>
+        </VDataTable>
+      </template>
+      <ServerTablePagination
+        @update-page="handleUpdatePage"
+        @update-per-page="handleUpdatePerPage"
+        :page="page"
+        :per-page="per_page"
+        :total-items="paginationParams?.total ?? 0"
+      />
+    </div>
   </div>
 </template>
 <style scoped></style>

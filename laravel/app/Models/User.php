@@ -102,15 +102,12 @@ class User extends Authenticatable
         }
 
         // Build the new payload without modifying the input
-        $augmentedPayload = [
-            'first_name' => $payload['first_name'] ?? null,
-            'last_name' => $payload['last_name'] ?? null,
+        $augmentedPayload = array_merge([
             'full_name' => "{$payload['first_name']} {$payload['last_name']}",
-            'email' => $payload['email'] ?? null,
             'password' => User::generateRandomPassword(),
             'user_type' => $user_type,
             // Add any additional fields if needed
-        ];
+        ], $payload);
 
         return $augmentedPayload;
     }

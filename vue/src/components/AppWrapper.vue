@@ -3,12 +3,13 @@ import { storeToRefs } from 'pinia'
 import { IToastOptions, useToastStore } from '../stores/toast.js'
 import { useI18n } from 'vue-i18n'
 import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
+import useQueryParamsStore from '../stores/query.js'
 
 const { toasts } = storeToRefs(useToastStore())
 
 const { t } = useI18n()
 
-const getDefaultTitle = (type: IToastOptions['type']) => {
+const getDefaultToastAlertTitle = (type: IToastOptions['type']) => {
   switch (type) {
     case 'error':
     case 'warning':
@@ -18,6 +19,17 @@ const getDefaultTitle = (type: IToastOptions['type']) => {
       return undefined
   }
 }
+
+const { mapQueryStringToStore } = useQueryParamsStore()
+
+const onPopCallback = () => {
+  mapQueryStringToStore(window.location.search)
+}
+
+onMounted(() => {
+  mapQueryStringToStore(window.location.search)
+  window.onpopstate = onPopCallback
+})
 </script>
 <template>
   <div class="app-wrapper">
@@ -28,13 +40,13 @@ const getDefaultTitle = (type: IToastOptions['type']) => {
         :key="to.id"
         class="mb-2"
         :text="to.message"
-        :title="to.title || getDefaultTitle(to.type)"
+        :title="to.title || getDefaultToastAlertTitle(to.type)"
         :type="to.type"
         variant="flat"
       />
     </div>
     <long-text-dialog />
-    <VueQueryDevtools/>
+    <VueQueryDevtools />
   </div>
 </template>
 <style scoped>

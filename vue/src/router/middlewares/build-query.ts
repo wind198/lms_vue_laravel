@@ -2,7 +2,7 @@ import { isEmpty, merge, omit } from 'lodash-es'
 import { parse, stringify } from 'qs'
 import { NavigationGuardWithThis, RouteLocationRaw } from 'vue-router'
 import useQueryParamsStore, {
-  DefaultSearchParams,
+  getDefaultSearchParams,
   ISearchParamKey,
   ISearchParams,
 } from '../../stores/query'
@@ -18,6 +18,8 @@ export const buildQueryMiddleware: NavigationGuardWithThis<undefined> = async (
   const { path, hash, fullPath } = to
 
   const queryStore = useQueryParamsStore()
+
+  const defaultSearchParams = getDefaultSearchParams()
 
   if (queryStore.augmented) {
     return
@@ -42,7 +44,7 @@ export const buildQueryMiddleware: NavigationGuardWithThis<undefined> = async (
 
   if (from.path !== to.path) {
     objectToUpdateSearchParams = merge(
-      DefaultSearchParams,
+      getDefaultSearchParams(),
       objectToUpdateSearchParams
     )
   }
@@ -70,7 +72,7 @@ export const buildQueryMiddleware: NavigationGuardWithThis<undefined> = async (
     ) {
       continue
     }
-    if (element === DefaultSearchParams[key]) {
+    if (element === defaultSearchParams[key]) {
       continue
     }
     // @ts-expect-error
@@ -95,6 +97,5 @@ export const buildQueryMiddleware: NavigationGuardWithThis<undefined> = async (
     query: parseQueryStringToLocationQuery(queryStr),
     path,
     hash,
-    replace: true,
   } as RouteLocationRaw
 }

@@ -75,13 +75,13 @@ const toggleFilter = (keyStr: string) => {
 
     <slot>
       <!-- Table search field -->
-      <SearchBox always-on filter-key="q" :ref="setRef" />
+      <SearchBox is-visible always-on filter-key="q" :ref="setRef" />
       <!-- Date selector for "created_at.gte" -->
       <DateFilter
         :ref="setRef"
         class="created-after-filter"
         :label="t('others.createdAfter')"
-        v-show="visibilityMap['created_at.gte']"
+        :is-visible="visibilityMap['created_at.gte']"
         filter-key="created_at.gte"
       />
       <!-- Date selector for "created_at.lte" -->
@@ -89,7 +89,7 @@ const toggleFilter = (keyStr: string) => {
         :ref="setRef"
         class="created-before-filter"
         :label="t('others.createdBefore')"
-        v-show="visibilityMap['created_at.lte']"
+        :is-visible="visibilityMap['created_at.lte']"
         filter-key="created_at.lte"
       />
     </slot>

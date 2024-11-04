@@ -10,6 +10,7 @@ import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
 import { authNavigationGuard } from './guards/auth'
 import { buildQueryMiddleware } from './middlewares/build-query'
+import { DynamicTitleMiddleware } from './middlewares/dynamic-title'
 
 const augmentedRoutes = setupLayouts(routes)
 
@@ -19,6 +20,7 @@ const router = createRouter({
 })
 
 router.beforeEach(authNavigationGuard)
+router.beforeEach(DynamicTitleMiddleware)
 router.beforeEach(buildQueryMiddleware)
 // Workaround for https://github.com/vitejs/vite/issues/11804
 router.onError((err, to) => {

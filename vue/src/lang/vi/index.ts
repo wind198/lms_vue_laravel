@@ -2,18 +2,21 @@ import { ITranslation } from '../i18n'
 
 export const vi = {
   actions: {
-    create: 'Tạo',
+    create: 'Tạo {entity}',
     update: 'Cập nhật',
     delete: 'Xóa',
     save: 'Lưu',
     cancel: 'Hủy',
     login: 'Đăng nhập',
     logout: 'Đăng xuất',
+    reset: 'Hủy bỏ',
     close: 'Đóng',
     copy: 'Copy',
   },
   nouns: {
+    total: 'Tổng số',
     filter: 'Bộ lọc',
+    list: 'Danh sách {entity}',
     male: 'Nam',
     female: 'Nữ',
     email: 'Địa chỉ email',
@@ -62,6 +65,7 @@ export const vi = {
       deletedSuccessfully: 'Xóa thành công.',
       actionCompleted: 'Hành động đã được hoàn tất thành công.',
       pleaseLogin: 'Vui lòng đăng nhập để tiếp tục.',
+      selected: 'đã chọn {count}',
     },
     error: {},
     validations: {
@@ -70,6 +74,7 @@ export const vi = {
       maxLength: 'Trường này không được vượt quá {max} ký tự.',
       required: 'Trường này là bắt buộc.',
       invalidEmail: 'Vui lòng nhập một địa chỉ email hợp lệ.',
+      invalid: 'Vui lòng nhập giá trị hợp lệ.',
       numeric: 'Trường này chỉ chấp nhận số.',
       match: 'Trường này phải trùng khớp với {field}.',
       between: 'Trường này phải nằm trong khoảng từ {min} đến {max}.',
@@ -93,6 +98,5 @@ export const vi = {
     smtOfsmo: '{smt} của {smo}',
     createdAfter: 'Tạo sau',
     createdBefore: 'Tạo trước',
-
   },
 } as ITranslation

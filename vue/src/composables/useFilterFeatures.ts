@@ -7,10 +7,11 @@ type IOptions<T> = {
   defaultValue?: T
   filterKey: string
   debounceTime?: number
+  isVisible: Ref<boolean>
 }
 
 export default function useFilterFeatures<T>(options: IOptions<T>) {
-  const { filterKey, defaultValue, debounceTime } = options
+  const { filterKey, defaultValue, debounceTime, isVisible } = options
 
   const filterPaths = computed(() => filterKey.split('.'))
 
@@ -36,15 +37,20 @@ export default function useFilterFeatures<T>(options: IOptions<T>) {
     ? debounce(_onChangeValue, debounceTime)
     : _onChangeValue
 
-  onMounted(() => {
-    if (defaultValue === undefined) {
-      return
-    }
-    if (defaultValue === currentSearchParamValue.value) {
-      return
-    }
-    onChangeValue(defaultValue)
-  })
+  watch(
+    isVisible,
+    (v) => {
+      if (!v) {
+        onChangeValue(null)
+        return
+      }
+      if (defaultValue === undefined) {
+        return
+      }
+      onChangeValue(defaultValue)
+    },
+    { immediate: true }
+  )
 
   return { onChangeValue, currentSearchParamValue }
 }

@@ -11,19 +11,19 @@ import { parse } from 'qs'
 import { removeNullFields } from '../utils/helpers'
 
 // Define default search parameters
-export const DefaultSearchParams = {
+export const getDefaultSearchParams = () => ({
   page: DEFAULT_PAGE,
   per_page: DEFAULT_PER_PAGE,
   order: DEFAULT_ORDER,
   order_by: DEFAULT_ORDER_BY,
   filter: {} as Record<string, any>,
   augmented: true,
-}
+})
 
-export type ISearchParamKey = keyof typeof DefaultSearchParams
-export type ISearchParams = typeof DefaultSearchParams
+export type ISearchParams = ReturnType<typeof getDefaultSearchParams>
+export type ISearchParamKey = keyof ISearchParams
 
-export const SearchParamKeyList = Object.keys(DefaultSearchParams)
+export const SearchParamKeyList = Object.keys(getDefaultSearchParams())
 
 export const PaginationParamKeyList = [
   'page',
@@ -37,28 +37,12 @@ export type IPaginationSearchParamKey = (typeof PaginationParamKeyList)[number]
 // Define the store with Composition API
 export const useQueryParamsStore = defineStore('query', () => {
   // Initialize state based on URL or default values
-  const searchStr = window.location.search
-    .replace(/^\?/, '')
-    .split('&')
-    .map(decodeURI)
-    .join('&')
 
-  const initialParams = searchStr
-    ? parse(decodeURIComponent(searchStr))
-    : DefaultSearchParams
+  const searchParams = reactive<ISearchParams>(getDefaultSearchParams())
 
-  const formatedInitialParams = {} as Partial<ISearchParams>
-
-  for (const k in initialParams) {
-    const v = initialParams[k]
-    if (['page', 'per_page'].includes(k)) {
-      formatedInitialParams[k] = typeof v === 'number' ? v : parseInt(v)
-    }
-  }
-
-  const searchParams = reactive<ISearchParams>(
-    merge(cloneDeep(DefaultSearchParams), formatedInitialParams)
-  )
+  onMounted(() => {
+    mapQueryStringToStore(window.location.search)
+  })
 
   // Actions
   function updatePaginationParams(
@@ -69,6 +53,37 @@ export const useQueryParamsStore = defineStore('query', () => {
       if (['string', 'boolean', 'number'].includes(typeof element))
         searchParams[key] = element
     }
+  }
+
+  function mapQueryStringToStore(queryString: string) {
+    const searchStr = queryString
+      .replace(/^\?/, '')
+      .split('&')
+      .map(decodeURI)
+      .join('&')
+
+    const initialParams = searchStr ? parse(decodeURIComponent(searchStr)) : {}
+
+    const formatedInitialParams = {} as Partial<ISearchParams>
+
+    for (const k in initialParams) {
+      const v = initialParams[k]
+      if (['page', 'per_page'].includes(k)) {
+        formatedInitialParams[k] = typeof v === 'number' ? v : parseInt(v)
+      } else if ('filter' === k) {
+        const formatedValue = cloneDeep(v)
+        // Add necessary format for filter fields
+        formatedInitialParams.filter = formatedValue
+      } else {
+        formatedInitialParams[k] = v
+      }
+    }
+
+    const paramsToUpdateStore = merge(
+      getDefaultSearchParams(),
+      formatedInitialParams
+    )
+    updateSearchParams(paramsToUpdateStore)
   }
 
   function updateFilterParams(p: Record<string, any>) {
@@ -88,7 +103,7 @@ export const useQueryParamsStore = defineStore('query', () => {
         )
       } else if (
         key !== 'filter' &&
-        ['string', 'number', 'boolean'].includes(element)
+        ['string', 'number', 'boolean'].includes(typeof element)
       ) {
         searchParams[key] = element
       }
@@ -119,6 +134,7 @@ export const useQueryParamsStore = defineStore('query', () => {
     order,
     order_by,
     augmented,
+    mapQueryStringToStore,
   }
 })
 

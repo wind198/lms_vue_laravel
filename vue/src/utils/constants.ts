@@ -22,5 +22,13 @@ export const PAGINATION_SEARCH_PARAMS = [
 ] as ISearchParamKey[]
 
 export const GENDER_LIST = ['FEMALE', 'MALE'] as const
+export const EDUCATION_BACKGROUND_LIST = [
+  'HIGH_SCHOOL',
+  'UNIVERSITY_STUDENT',
+  'GRADUATED',
+  'MASTER',
+  'PHD',
+] as const
 
 export type IGender = (typeof GENDER_LIST)[number]
+export type IEducationBackground = (typeof EDUCATION_BACKGROUND_LIST)[number]

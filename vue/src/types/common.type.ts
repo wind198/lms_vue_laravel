@@ -15,6 +15,7 @@ export type IFilter<T> = {
   defaultValue?: T
   alwaysOn?: boolean
   label?: string
+  isVisible: boolean
 }
 
 export type IQueryListParams = {

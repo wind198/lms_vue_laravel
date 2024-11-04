@@ -12,6 +12,7 @@ definePage({
   meta: {
     layout: 'login',
     label: 'actions.login',
+    title: 'actions.login',
   },
 })
 

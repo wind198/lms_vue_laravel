@@ -10,11 +10,14 @@ const props = defineProps<
   } & Partial<IHasSize>
 >()
 
+const isVisible = computed(() => props.isVisible)
+
 const { formatDateCommon, formatDateTimeCommon } = useFormatDateTime()
 
 const { onChangeValue, currentSearchParamValue } = useFilterFeatures({
   defaultValue: props.defaultValue,
   filterKey: props.filterKey,
+  isVisible,
 })
 
 const modelValue = computed(() => {
@@ -65,7 +68,7 @@ defineExpose({
 </script>
 
 <template>
-  <div class="date-filter">
+  <div class="date-filter" v-if="isVisible">
     <v-menu>
       <template #activator="{ props }">
         <v-text-field

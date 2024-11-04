@@ -12,6 +12,8 @@ const props = defineProps<
   } & Partial<IHasSize>
 >()
 
+const isVisible = computed(() => props.isVisible)
+
 const items = GENDER_LIST.map((i) => ({
   title: t('nouns.' + i.toLowerCase()),
   value: i,
@@ -20,16 +22,17 @@ const items = GENDER_LIST.map((i) => ({
 const { onChangeValue, currentSearchParamValue } = useFilterFeatures({
   defaultValue: props.defaultValue,
   filterKey: props.filterKey,
+  isVisible,
 })
 
 const width = computed(() => {
   switch (props.size) {
     case 'small':
-      return 100
+      return 140
     case 'large':
-      return 200
+      return 320
     default:
-      return 120
+      return 200
   }
 })
 
@@ -42,6 +45,8 @@ defineExpose({
 </script>
 <template>
   <VSelect
+    :label="label"
+    v-if="isVisible"
     clearable
     hide-details="auto"
     :model-value="currentSearchParamValue"
