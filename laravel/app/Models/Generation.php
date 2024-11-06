@@ -45,4 +45,9 @@ class Generation extends Model
 
         return array_merge($defaultRules, $overrides);
     }
+
+    public function students()
+    {
+        return $this->hasMany(User::class, 'generation_id');
+    }
 }

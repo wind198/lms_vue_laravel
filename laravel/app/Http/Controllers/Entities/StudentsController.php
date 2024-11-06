@@ -78,35 +78,21 @@ class StudentsController extends Controller
         $validated = $request->validated();
         $payload = User::augmentCreateUserPayload($validated, AppConstants::STUDENT_ROLE);
 
-        DB::beginTransaction();
-        try {
-            $builder = User::query();
+        $builder = User::query();
 
-            // Find the generation and associate it with the user
-            $matchGeneration = Generation::findOrFail($validated['generation_id']);
-            $student = $builder->create($payload);
-            $student->generation()->associate($matchGeneration);
+        // Find the generation and associate it with the user
+        $matchGeneration = Generation::findOrFail($validated['generation_id']);
+        $student = $builder->create($payload);
+        $student->generation()->associate($matchGeneration);
 
-            $student->save();  // Ensure the association is persisted
+        $student->save();  // Ensure the association is persisted
 
-            // Send email verification notification
-            $student->sendEmailVerificationNotification();
+        // Send email verification notification
+        $student->sendEmailVerificationNotification();
 
-            DB::commit();
 
-            return $student;
-        } catch (\Exception $e) {
-            DB::rollBack();
+        return $student;
 
-            // Log the exception for troubleshooting
-            Log::error('Failed to create student: ' . $e->getMessage(), [
-                'exception' => $e,
-                'payload' => $payload,
-            ]);
-
-            // Return a JSON response with an error message
-            return response(trans('message.error.generic'), 500);
-        }
     }
 
 
@@ -141,27 +127,47 @@ class StudentsController extends Controller
     /**
      * Update the multiple record at once.
      */
+
     public function updateMany(UpdateManyUsersRequest $request)
     {
-        // Retrieve the array of student IDs from the request
+        // Retrieve the array of student IDs and validate the data
         $ids = $request->input('ids', []);
-        // Validate the request data
         $validated = $request->validated();
 
-        if (!is_array($ids)) {
-            return response()->json(['message' => trans('validation.array', ['attribute' => 'ids'])], 400);
-        }
-        // Ensure we have an array of student IDs and update data
-        if (empty($ids)) {
-            return response()->json(['message' => trans('validation.empty', ['attribute' => 'ids'])], 400);
+        if (!is_array($ids) || empty($ids)) {
+            return response()->json(['message' => trans('validation.invalid', ['attribute' => 'ids'])], 400);
         }
 
-        User::whereIn('id', $ids)
-            ->where('user_type', AppConstants::STUDENT_ROLE)->update($validated);
+        // Start a transaction for atomic updates
+        DB::beginTransaction();
 
+        try {
+            // Bulk update fields that don’t require relationship handling
+            User::whereIn('id', $ids)
+                ->where('user_type', AppConstants::STUDENT_ROLE)
+                ->update(collect($validated)->except('generation_id')->toArray());
 
-        return $ids;
+            // Handle generation association in a separate batch if 'generation_id' is provided
+            if (isset($validated['generation_id'])) {
+                $matchGeneration = Generation::findOrFail($validated['generation_id']);
+
+                // Associate the generation in bulk for relevant users
+                User::whereIn('id', $ids)
+                    ->where('user_type', AppConstants::STUDENT_ROLE)
+                    ->update(['generation_id' => $matchGeneration->id]);
+            }
+
+            // Commit the transaction
+            DB::commit();
+
+            return response()->json(['updated_ids' => $ids, 'message' => 'Users updated successfully.']);
+        } catch (\Exception $e) {
+            // Rollback in case of error
+            DB::rollBack();
+            return response()->json(['error' => 'Failed to update users', 'details' => $e->getMessage()], 500);
+        }
     }
+
     /**
      * Remove the specified resource from storage.
      */

@@ -1,6 +1,6 @@
 import { useI18n } from 'vue-i18n'
 import { IUser, IUserCoreField } from '../types/entities/user.entity'
-import { date, object, string } from 'yup'
+import { date, number, object, string } from 'yup'
 import {
   EDUCATION_BACKGROUND_LIST,
   GENDER_LIST,
@@ -29,6 +29,7 @@ export default function useUserInputs(initialValues?: IUserCoreField) {
     gender: stringRequiredSchema.oneOf(GENDER_LIST),
     education_background: stringRequiredSchema.oneOf(EDUCATION_BACKGROUND_LIST),
     dob: date().required(t('messages.validations.required')),
+    generation_id: number(),
   })
 
   // Form and fields
@@ -46,6 +47,7 @@ export default function useUserInputs(initialValues?: IUserCoreField) {
     'education_background'
   )
   const dobField = useField<Dayjs>('dob')
+  const generationField = useField<number>('generation_id')
 
   return {
     handleSubmit,
@@ -58,5 +60,6 @@ export default function useUserInputs(initialValues?: IUserCoreField) {
     genderField,
     educationBackgroundField,
     dobField,
+    generationField,
   }
 }

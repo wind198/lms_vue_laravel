@@ -14,6 +14,7 @@ import {
 import dayjs from 'dayjs'
 import useQueryParamsStore from '@/stores/query.js'
 import { useQueryClient } from '@tanstack/vue-query'
+import useGenerations from '@/composables/useGenerations.js'
 
 const props = defineProps<{
   userType: IUserType
@@ -53,6 +54,7 @@ const {
   handleSubmit,
   lastNameField,
   phoneField,
+  generationField,
 } = useUserInputs(initialValues)
 
 const { show } = useToastStore()
@@ -100,6 +102,15 @@ const educationBackgroundItemList = EDUCATION_BACKGROUND_LIST.map((i) => ({
   title: t('nouns.' + i.toLowerCase()),
   value: i,
 }))
+
+const { data: generationData, isLoading: isLoadingGenerations } =
+  useGenerations()
+const generationItems = computed(() => {
+  return generationData.value?.data.map((g) => ({
+    title: g.title,
+    value: g.id,
+  }))
+})
 </script>
 
 <template>
@@ -129,6 +140,12 @@ const educationBackgroundItemList = EDUCATION_BACKGROUND_LIST.map((i) => ({
         v-model="genderField.value.value"
         :error-messages="genderField.errorMessage.value"
         :items="genderItemList"
+      />
+      <VSelect
+        v-if="userType === 'student'"
+        :items="generationItems"
+        v-model="generationField.value.value"
+        :error-messages="generationField.errorMessage.value"
       />
       <v-text-field
         :label="t('nouns.phone')"

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Entities\GenerationsController;
 use App\Http\Controllers\Entities\StudentsController;
 use App\Http\Controllers\Entities\TeachersController;
 use Illuminate\Http\Request;
@@ -27,6 +28,14 @@ Route::group(
             Route::delete('/teachers/{user}', 'delete')->name(TeachersController::DELETE_ROUTE);
             Route::patch('/teachers/update-many', 'updateMany')->name(TeachersController::UPDATE_MANY_ROUTE);
             Route::patch('/teachers/{user}', 'update')->name(TeachersController::UPDATE_ROUTE);
+        });
+        Route::controller(GenerationsController::class)->group(function () {
+            Route::get('/generations', 'index')->name(GenerationsController::INDEX_ROUTE);
+            Route::get('/generations/{user}', 'show')->name(GenerationsController::SHOW_ROUTE);
+            Route::post('/generations', 'create')->name(GenerationsController::CREATE_ROUTE);
+            Route::delete('/generations/delete-many', 'deleteMany')->name(GenerationsController::DELETE_MANY_ROUTE);
+            Route::delete('/generations/{user}', 'delete')->name(GenerationsController::DELETE_ROUTE);
+            Route::patch('/generations/{user}', 'update')->name(GenerationsController::UPDATE_ROUTE);
         });
         Route::get('/user', function (Request $request) {
             return $request->user();

@@ -23,8 +23,19 @@ export type IQueryListParams = {
   per_page: number
   order: IOrder
   order_by: string
-  filter: string
+  filter: Record<string, any>
 }
+
+type ToRefs<T> = {
+  [K in keyof T]: Ref<T[K]>
+}
+
+export type IQueryListParamsAsRefs = ToRefs<IQueryListParams>
 
 export type IHasId = { id: number }
 export type ITimeStamp = { created_at: number; updated_at: number }
+
+export type IHasDescriptiveFields = {
+  title: string
+  description?: string
+}

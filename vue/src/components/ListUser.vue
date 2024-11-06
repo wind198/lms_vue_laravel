@@ -17,6 +17,8 @@ import useFormatDateTime from '@/composables/useFormatDateTime'
 import { getAge, getDeleteApi, joinStr } from '@/utils/helpers'
 import { IUser, IUserType } from '@/types/entities/user.entity'
 import { useCommonStuffStore } from '@/stores/common'
+import useSelection from '@/composables/useSelection'
+import TableMetaToolbar from '@/components/TableMetaToolbar.vue'
 
 const props = defineProps<{ user_type: IUserType }>()
 
@@ -56,58 +58,22 @@ const headers = ref([
 
 const { formatDateCommon } = useFormatDateTime()
 
-const selectedUsers = ref<number[]>([])
-
-const selectedUsersText = computed(() =>
-  t('messages.info.selected', {
-    count: selectedUsers.value.length,
-    entity: t('nouns.' + 'student'),
-  })
-)
-
-const { openDeleteBulkDialog } = useCommonStuffStore()
-
-const resource = computed(() => props.user_type + 's')
-
-const onClickDeleteBulk = () => {
-  openDeleteBulkDialog({
-    deleteApi: getDeleteApi(resource.value),
-    title: joinStr(t('actions.delete'), t('nouns.' + props.user_type)),
-    text: t('messages.confirmation.delete', {
-      count: selectedUsers.value.length,
-      entity: t('nouns.' + props.user_type),
-    }),
-    ids: selectedUsers.value,
-    queryKey: [resource.value],
-  })
-}
+const { onClickDeleteBulk, selectedEntitesText, selectedEntities } =
+  useSelection({ entity: props.user_type })
 </script>
 <template>
   <div class="user-list px-3">
     <TableSkeleton v-if="isLoading" />
     <template v-else>
       <VToolbar class="d-flex align-center bg-transparent">
-        <p class="pl-1 text-subtitle-2">
-          <span v-if="!selectedUsers.length">
-            {{ t('nouns.total') }}: {{ paginationParams?.total }}
-          </span>
-          <span v-else>
-            {{ t('nouns.total') }}: {{ paginationParams?.total }} /
-            {{ selectedUsersText }}
-            <v-btn
-              icon
-              density="compact"
-              variant="flat"
-              size="small"
-              @click="selectedUsers = []"
-              class="remove-selection-btn"
-            >
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </span>
-        </p>
+        <TableMetaToolbar
+          :selected="selectedEntities.length"
+          :selected-text="selectedEntitesText"
+          :total="paginationParams?.total ?? 0"
+          @clear="selectedEntities = []"
+        />
         <v-spacer />
-        <FilterToolbar v-if="!selectedUsers.length">
+        <FilterToolbar v-if="!selectedEntities.length">
           <template #inner-append="{ setRef, visibilityMap }">
             <GenderFilter
               :ref="setRef"
@@ -125,7 +91,7 @@ const onClickDeleteBulk = () => {
         </v-btn>
       </VToolbar>
       <VDataTable
-        v-model="selectedUsers"
+        v-model="selectedEntities"
         show-select
         :headers="headers"
         :items="studentList"
