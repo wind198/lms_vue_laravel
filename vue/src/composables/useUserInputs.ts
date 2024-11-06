@@ -1,5 +1,5 @@
 import { useI18n } from 'vue-i18n'
-import { IUser } from '../types/entities/user.entity'
+import { IUser, IUserCoreField } from '../types/entities/user.entity'
 import { date, object, string } from 'yup'
 import {
   EDUCATION_BACKGROUND_LIST,
@@ -10,14 +10,11 @@ import {
 import { useField, useForm } from 'vee-validate'
 import { Dayjs } from 'dayjs'
 
-export type IUserForm = Omit<
-  IUser,
-  'id' | 'created_at' | 'updated_at' | 'user_type'
->
+export type IUserForm = IUserCoreField
 
 export type IUpdateUserForm = Partial<IUserForm>
 
-export default function useUserInputs() {
+export default function useUserInputs(initialValues?: IUserCoreField) {
   const { t } = useI18n()
   const stringRequiredSchema = string().required(
     t('messages.validations.required')
@@ -37,6 +34,7 @@ export default function useUserInputs() {
   // Form and fields
   const { handleSubmit, handleReset } = useForm<IUserForm>({
     validationSchema,
+    initialValues,
   })
   const emailField = useField<string>('email')
   const firstNameField = useField<string>('first_name')

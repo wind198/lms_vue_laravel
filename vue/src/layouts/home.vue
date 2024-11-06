@@ -25,7 +25,7 @@ const settingLinks = {
       to: '/settings/teachers',
       text: t('nouns.teacher'),
       value: 'teachers',
-      icon: 'mdi-teach', // Teacher icon
+      icon: 'mdi-human-male-board', // Teacher icon
     },
   ],
 }

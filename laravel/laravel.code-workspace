@@ -14,6 +14,7 @@
 		"i18n-ally.keystyle": "nested",
 		"prettier.jsxSingleQuote": true,
 		"prettier.singleQuote": true,
-		"html.completion.attributeDefaultValue": "singlequotes"
+		"html.completion.attributeDefaultValue": "singlequotes",
+		"javascript.preferences.importModuleSpecifier": "non-relative"
 	}
 }

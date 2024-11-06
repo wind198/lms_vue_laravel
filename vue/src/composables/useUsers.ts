@@ -17,8 +17,10 @@ import {
 import { parse } from 'qs'
 import { AxiosError } from 'axios'
 import dayjs from 'dayjs'
+import { IUser, IUserType } from '../types/entities/user.entity'
 
 type IOptions = {
+  user_type: IUserType
   page: Ref<number>
   per_page: Ref<number>
   order: Ref<IOrder>
@@ -26,8 +28,8 @@ type IOptions = {
   filter: Ref<Record<string, any>>
 }
 
-export default function useStudents(options: IOptions) {
-  const { order, order_by, page, per_page, filter } = options
+export default function useUsers(options: IOptions) {
+  const { order, order_by, page, per_page, filter, user_type } = options
 
   const { $get } = useApiHttpClient()
 
@@ -51,18 +53,28 @@ export default function useStudents(options: IOptions) {
         augmentedFilter[k] = v
       }
     }
-    const { data } = await $get<IPaginatedData<IStudent>>(
-      apiPrefix('students'),
-      {
-        params: {
-          order: order.value,
-          order_by: order_by.value,
-          page: page.value,
-          per_page: per_page.value,
-          filter: augmentedFilter,
-        },
-      }
-    )
+    let apiRoute
+    switch (user_type) {
+      case 'admin':
+        apiRoute = 'admins'
+        break
+
+      case 'teacher':
+        apiRoute = 'teachers'
+        break
+
+      default:
+        apiRoute = 'students'
+    }
+    const { data } = await $get<IPaginatedData<IStudent>>(apiPrefix(apiRoute), {
+      params: {
+        order: order.value,
+        order_by: order_by.value,
+        page: page.value,
+        per_page: per_page.value,
+        filter: augmentedFilter,
+      },
+    })
     return data
   }
 
@@ -72,7 +84,7 @@ export default function useStudents(options: IOptions) {
     IPaginatedData<IStudent>
   >({
     queryKey: [
-      'students',
+      user_type + 's',
       {
         filter,
         order,

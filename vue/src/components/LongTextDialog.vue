@@ -19,7 +19,7 @@ const addToClipboard = async () => {
   show({ message: t('messages.info.copied') })
 }
 </script>
-<template v-slot:default="{ isActive }">
+<template>
   <v-dialog max-width="500" :model-value="longTextDialog.isOpen">
     <v-card :title="longTextDialog.title ?? 'Long text'">
       <v-card-text>

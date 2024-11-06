@@ -87,3 +87,6 @@ export function removeNullFields(obj: any) {
 
   return obj
 }
+
+export const getDeleteApi = (resource: string) =>
+  apiPrefix(`/${resource}/delete-many`)

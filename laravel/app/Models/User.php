@@ -97,7 +97,7 @@ class User extends Authenticatable
     public static function augmentCreateUserPayload(array $payload, string $user_type): array
     {
         // Check if the user type is valid
-        if (!in_array($user_type, AppConstants::EDUCATION_BACKGROUNDS_LIST)) {
+        if (!in_array($user_type, AppConstants::USER_TYPES)) {
             throw new \InvalidArgumentException("Invalid user type: {$user_type}");
         }
 

@@ -6,7 +6,8 @@ import useApiHttpClient from '../../composables/useHttpClient.js'
 import { IUser } from '../../types/entities/user.entity.js'
 import { useI18n } from 'vue-i18n'
 import useAuthStore from '../../stores/auth.js'
-import { apiPrefix } from '../../utils/helpers.js'
+import { apiPrefix, extractQueryString } from '../../utils/helpers.js'
+import useQueryParamsStore from '@/stores/query.js'
 
 definePage({
   meta: {
@@ -24,6 +25,8 @@ type IFormData = {
 const { t } = useI18n()
 
 const router = useRouter()
+
+const { redirectedFrom } = useRoute()
 
 const welcomeMsg = t('messages.info.welcome')
 const subtitleMsg = t('messages.info.pleaseLogin')
@@ -66,7 +69,11 @@ const { status, mutateAsync: sendLoginRequest } = useMutation({
     await $post('/login', payload).then(async () => {
       const { data } = await $get(apiPrefix('user'))
       login({ user: data })
-      router.push('/settings/students')
+      if (redirectedFrom) {
+        router.push(redirectedFrom.fullPath)
+      } else {
+        router.push('/settings/students')
+      }
     })
   },
 })

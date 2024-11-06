@@ -9,16 +9,16 @@ const { toasts } = storeToRefs(useToastStore())
 
 const { t } = useI18n()
 
-const getDefaultToastAlertTitle = (type: IToastOptions['type']) => {
-  switch (type) {
-    case 'error':
-    case 'warning':
-    case 'success':
-      return t('messages.info.' + type)
-    default:
-      return undefined
-  }
-}
+// const getDefaultToastAlertTitle = (type: IToastOptions['type']) => {
+//   switch (type) {
+//     case 'error':
+//     case 'warning':
+//     case 'success':
+//       return t('messages.info.' + type)
+//     default:
+//       return undefined
+//   }
+// }
 
 const { mapQueryStringToStore } = useQueryParamsStore()
 
@@ -40,12 +40,13 @@ onMounted(() => {
         :key="to.id"
         class="mb-2"
         :text="to.message"
-        :title="to.title || getDefaultToastAlertTitle(to.type)"
+        :title="to.title"
         :type="to.type"
         variant="flat"
       />
     </div>
     <long-text-dialog />
+    <DeleteBulkDialog />
     <VueQueryDevtools />
   </div>
 </template>

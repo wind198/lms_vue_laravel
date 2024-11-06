@@ -25,3 +25,6 @@ export type IQueryListParams = {
   order_by: string
   filter: string
 }
+
+export type IHasId = { id: number }
+export type ITimeStamp = { created_at: number; updated_at: number }

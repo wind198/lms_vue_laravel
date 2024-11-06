@@ -5,17 +5,16 @@ namespace App\Http\Controllers\Entities;
 use App\Http\Controllers\Controller;
 use App\Constants\AppConstants;
 use App\Http\Requests\CreateUserRequest;
-use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateManyUsersRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use App\Traits\HandlesPagination;
 use Illuminate\Http\Request;
 
-class StudentsController extends Controller
+class TeachersController extends Controller
 {
     use HandlesPagination;
-    public const INDEX_ROUTE = 'students';
+    public const INDEX_ROUTE = 'teachers';
     public const SHOW_ROUTE = self::INDEX_ROUTE . '.show';
     public const CREATE_ROUTE = self::INDEX_ROUTE . '.create';
     public const UPDATE_ROUTE = self::INDEX_ROUTE . '.update';
@@ -29,7 +28,7 @@ class StudentsController extends Controller
     {
         $filter = $request->input('filter', []); // Filters array
 
-        $query = User::where('user_type', 'student');
+        $query = User::where('user_type', 'teacher');
 
         // Text search filter
         if (!empty($filter['q'])) {
@@ -74,14 +73,14 @@ class StudentsController extends Controller
 
         $validated = $request->validated();
 
-        $payload = User::augmentCreateUserPayload($validated, AppConstants::STUDENT_ROLE);
+        $payload = User::augmentCreateUserPayload($validated, AppConstants::TEACHER_ROLE);
 
         $builder = User::query();
-        $student = $builder->create($payload);
+        $teacher = $builder->create($payload);
 
-        $student->sendEmailVerificationNotification();
+        $teacher->sendEmailVerificationNotification();
 
-        return $student;
+        return $teacher;
 
     }
 
@@ -102,7 +101,7 @@ class StudentsController extends Controller
         // Validate the request data
         $validated = $request->validated();
 
-        // Update the student's details
+        // Update the teacher's details
         $user->update($validated);
 
 
@@ -118,7 +117,7 @@ class StudentsController extends Controller
      */
     public function updateMany(UpdateManyUsersRequest $request)
     {
-        // Retrieve the array of student IDs from the request
+        // Retrieve the array of teacher IDs from the request
         $ids = $request->input('ids', []);
         // Validate the request data
         $validated = $request->validated();
@@ -126,13 +125,13 @@ class StudentsController extends Controller
         if (!is_array($ids)) {
             return response()->json(['message' => trans('validation.array', ['attribute' => 'ids'])], 400);
         }
-        // Ensure we have an array of student IDs and update data
+        // Ensure we have an array of teacher IDs and update data
         if (empty($ids)) {
             return response()->json(['message' => trans('validation.empty', ['attribute' => 'ids'])], 400);
         }
 
         User::whereIn('id', $ids)
-            ->where('user_type', AppConstants::STUDENT_ROLE)->update($validated);
+            ->where('user_type', AppConstants::TEACHER_ROLE)->update($validated);
 
 
         return $ids;
@@ -151,7 +150,7 @@ class StudentsController extends Controller
      */
     public function deleteMany(Request $request)
     {
-        // Retrieve the array of student IDs from the request
+        // Retrieve the array of teacher IDs from the request
         $ids = $request->input('ids', []);
 
         if (!is_array($ids)) {
@@ -161,9 +160,9 @@ class StudentsController extends Controller
         if (empty($ids)) {
             return response()->json(['message' => trans('validation.empty', ['attribute' => 'ids'])], 400);
         }
-        // Perform the deletion of the students
+        // Perform the deletion of the teachers
         $deleted = User::whereIn('id', $ids)
-            ->where('user_type', AppConstants::STUDENT_ROLE) // Ensure only student records are deleted
+            ->where('user_type', AppConstants::TEACHER_ROLE) // Ensure only teacher records are deleted
             ->pluck('id'); // Retrieve IDs of the records to be deleted
 
         if ($deleted->isEmpty()) {

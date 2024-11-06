@@ -3,12 +3,13 @@
 namespace App\Http\Requests;
 
 use App\Constants\AppConstants;
+use App\Helpers\ValidationHelper;
 use App\Helpers\ValidationHelpers;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class CreateStudentRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +27,12 @@ class CreateStudentRequest extends FormRequest
     public function rules(): array
     {
         $rules = User::getRules();
+        $user = $this->route('user');
 
-        return $rules;
+        $rules['email'] =
+            ['required', 'string', 'email', 'max:' . AppConstants::MAX_EMAIL_LENGTH, Rule::unique('users')->ignore($user->id),];
+
+        // Make each field optional by modifying the rules
+        return ValidationHelpers::makeRulesOptional($rules);
     }
 }

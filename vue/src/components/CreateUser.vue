@@ -1,11 +1,19 @@
 <script setup lang="ts">
+import { faker } from '@faker-js/faker'
 import { useI18n } from 'vue-i18n'
 import useApiHttpClient from '../composables/useHttpClient.js'
 import useUserInputs from '../composables/useUserInputs.js'
 import { useToastStore } from '../stores/toast.js'
-import { IUserType } from '../types/entities/user.entity.js'
+import { IUserCoreField, IUserType } from '../types/entities/user.entity.js'
 import { apiPrefix } from '../utils/helpers.js'
-import { EDUCATION_BACKGROUND_LIST, GENDER_LIST } from '../utils/constants.js'
+import {
+  EDUCATION_BACKGROUND_LIST,
+  GENDER_LIST,
+  IS_DEV,
+} from '../utils/constants.js'
+import dayjs from 'dayjs'
+import useQueryParamsStore from '@/stores/query.js'
+import { useQueryClient } from '@tanstack/vue-query'
 
 const props = defineProps<{
   userType: IUserType
@@ -13,6 +21,26 @@ const props = defineProps<{
 
 const { t } = useI18n()
 const { $post } = useApiHttpClient()
+
+const getRandomUser = (): IUserCoreField => {
+  const firstName = faker.person.firstName()
+  const lastName = faker.person.lastName()
+  const fullName = `${firstName} ${lastName}`
+  return {
+    first_name: firstName,
+    last_name: lastName,
+    full_name: fullName,
+    education_background: 'HIGH_SCHOOL',
+    email: faker.internet.email(),
+    gender: 'FEMALE',
+    phone: faker.phone.number(),
+    address: faker.location.streetAddress(),
+    dob: faker.date.past(),
+    user_type: props.userType,
+  }
+}
+
+const initialValues = IS_DEV ? getRandomUser() : undefined
 
 const {
   addressField,
@@ -25,16 +53,53 @@ const {
   handleSubmit,
   lastNameField,
   phoneField,
-} = useUserInputs()
+} = useUserInputs(initialValues)
 
 const { show } = useToastStore()
+
+const router = useRouter()
+
+const { setAugmented } = useQueryParamsStore()
+
+const resource = computed(() => props.userType + 's')
+
+const queryClient = useQueryClient()
+
+const createUser = async (payload: IUserCoreField) => {
+  try {
+    const { dob, ...o } = payload
+
+    await $post(apiPrefix(resource.value), {
+      ...o,
+      dob: dayjs(dob).format('YYYY-MM-DD'),
+    })
+    show({
+      message: t('messages.info.createdSuccessfully'),
+      type: 'success',
+    })
+    router.push('/settings/' + resource.value)
+  } catch (error) {
+    console.error('Error creating user:', error)
+  } finally {
+    queryClient.invalidateQueries([resource.value] as any)
+  }
+}
 
 const onSubmit = handleSubmit(async (values) => {
   console.log('Form submitted with values:', values)
   // Handle form submission, e.g., API call
 
-  await $post(apiPrefix(props.userType), values)
+  await createUser(values)
 })
+
+const genderItemList = GENDER_LIST.map((i) => ({
+  title: t('nouns.' + i.toLowerCase()),
+  value: i,
+}))
+const educationBackgroundItemList = EDUCATION_BACKGROUND_LIST.map((i) => ({
+  title: t('nouns.' + i.toLowerCase()),
+  value: i,
+}))
 </script>
 
 <template>
@@ -63,7 +128,7 @@ const onSubmit = handleSubmit(async (values) => {
         :label="t('nouns.gender')"
         v-model="genderField.value.value"
         :error-messages="genderField.errorMessage.value"
-        :items="GENDER_LIST"
+        :items="genderItemList"
       />
       <v-text-field
         :label="t('nouns.phone')"
@@ -74,13 +139,14 @@ const onSubmit = handleSubmit(async (values) => {
       <v-text-field
         :label="t('nouns.address')"
         :error-messages="addressField.errorMessage.value"
-        :v-model="addressField.value.value"
+        v-model="addressField.value.value"
       />
+
       <v-select
         :label="t('nouns.educationLevel')"
         v-model="educationBackgroundField.value.value"
         :error-messages="educationBackgroundField.errorMessage.value"
-        :items="EDUCATION_BACKGROUND_LIST"
+        :items="educationBackgroundItemList"
       />
       <VDateInput
         :label="t('nouns.dob')"

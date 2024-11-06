@@ -32,3 +32,5 @@ export const EDUCATION_BACKGROUND_LIST = [
 
 export type IGender = (typeof GENDER_LIST)[number]
 export type IEducationBackground = (typeof EDUCATION_BACKGROUND_LIST)[number]
+
+export const IS_DEV = import.meta.env.DEV
