@@ -33,7 +33,8 @@ class User extends Authenticatable
         'address',
         'education_background',
         'dob',
-        'gender'
+        'gender',
+        'generation_id'
     ];
 
     /**
@@ -112,4 +113,11 @@ class User extends Authenticatable
         return $augmentedPayload;
     }
 
+    /**
+     * Get the generation that the user belongs to.
+     */
+    public function generation()
+    {
+        return $this->belongsTo(Generation::class);
+    }
 }

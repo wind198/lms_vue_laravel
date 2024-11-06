@@ -34,4 +34,6 @@ class AppConstants
     public const MAX_PHONE_LENGTH = 25;
     public const MAX_EMAIL_LENGTH = 50;
     public const MAX_ADDRESS_LENGTH = 200;
+    public const MAX_TITLE_LENGTH = 50;
+    public const MAX_DESCRIPTION_LENGTH = 200;
 }

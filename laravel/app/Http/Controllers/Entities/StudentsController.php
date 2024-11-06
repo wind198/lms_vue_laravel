@@ -8,9 +8,12 @@ use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateManyUsersRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Generation;
 use App\Models\User;
 use App\Traits\HandlesPagination;
+use DB;
 use Illuminate\Http\Request;
+use Log;
 
 class StudentsController extends Controller
 {
@@ -29,7 +32,11 @@ class StudentsController extends Controller
     {
         $filter = $request->input('filter', []); // Filters array
 
-        $query = User::where('user_type', 'student');
+        $query = User::where('user_type', 'student')->with([
+            'generation' => function ($query) {
+                $query->select('id', 'title');
+            }
+        ]);
 
         // Text search filter
         if (!empty($filter['q'])) {
@@ -66,24 +73,42 @@ class StudentsController extends Controller
     }
 
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function create(CreateUserRequest $request)
     {
-
         $validated = $request->validated();
-
         $payload = User::augmentCreateUserPayload($validated, AppConstants::STUDENT_ROLE);
 
-        $builder = User::query();
-        $student = $builder->create($payload);
+        DB::beginTransaction();
+        try {
+            $builder = User::query();
 
-        $student->sendEmailVerificationNotification();
+            // Find the generation and associate it with the user
+            $matchGeneration = Generation::findOrFail($validated['generation_id']);
+            $student = $builder->create($payload);
+            $student->generation()->associate($matchGeneration);
 
-        return $student;
+            $student->save();  // Ensure the association is persisted
 
+            // Send email verification notification
+            $student->sendEmailVerificationNotification();
+
+            DB::commit();
+
+            return $student;
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            // Log the exception for troubleshooting
+            Log::error('Failed to create student: ' . $e->getMessage(), [
+                'exception' => $e,
+                'payload' => $payload,
+            ]);
+
+            // Return a JSON response with an error message
+            return response(trans('message.error.generic'), 500);
+        }
     }
+
 
     /**
      * Display the specified resource.
