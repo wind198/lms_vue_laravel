@@ -42,15 +42,18 @@ export default function useGenerations(options?: IOptions) {
       }
     }
     const apiRoute = 'generations'
-    const { data } = await $get<IPaginatedData<IStudent>>(apiPrefix(apiRoute), {
-      params: {
-        order: order?.value ?? DEFAULT_ORDER,
-        order_by: order_by?.value ?? DEFAULT_ORDER_BY,
-        page: page?.value ?? DEFAULT_PAGE,
-        per_page: per_page?.value ?? DEFAULT_PER_PAGE,
-        filter: augmentedFilter ?? {},
-      },
-    })
+    const { data } = await $get<IPaginatedData<IGeneration>>(
+      apiPrefix(apiRoute),
+      {
+        params: {
+          order: order?.value ?? DEFAULT_ORDER,
+          order_by: order_by?.value ?? DEFAULT_ORDER_BY,
+          page: page?.value ?? DEFAULT_PAGE,
+          per_page: per_page?.value ?? DEFAULT_PER_PAGE,
+          filter: augmentedFilter ?? {},
+        },
+      }
+    )
     return data
   }
 

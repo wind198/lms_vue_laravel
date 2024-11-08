@@ -18,7 +18,7 @@ import { getAge, getDeleteApi, joinStr } from '@/utils/helpers'
 import { IUser, IUserType } from '@/types/entities/user.entity'
 import { useCommonStuffStore } from '@/stores/common'
 import useSelection from '@/composables/useSelection'
-import TableMetaToolbar from '@/components/TableMetaToolbar.vue'
+import TableMetaToolbar from '@/components/common/TableMetaToolbar.vue'
 import useGenerations from '@/composables/useGenerations'
 
 const { t } = useI18n()

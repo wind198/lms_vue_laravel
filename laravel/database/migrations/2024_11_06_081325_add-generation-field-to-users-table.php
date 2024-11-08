@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('generation_id')->nullable();
+            $table->unsignedBigInteger('generation_id')->nullable();
             $table->foreign('generation_id')->references('id')->on('generations')->onDelete('restrict');
         });
     }

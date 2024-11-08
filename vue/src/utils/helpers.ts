@@ -19,6 +19,19 @@ export const apiPrefix = (i: string) => {
   return ['api', input].join('/')
 }
 
+export const getOneUrl = (resourcePlural: string, id: number) => {
+  return [apiPrefix(resourcePlural).replace(/\/$/, ''), id].join('/')
+}
+export const getManyUrl = (resourcePlural: string) => {
+  return [apiPrefix(resourcePlural).replace(/\/$/, ''), 'get-many'].join('/')
+}
+export const updateManyUrl = (resourcePlural: string) => {
+  return [apiPrefix(resourcePlural).replace(/\/$/, ''), 'update-many'].join('/')
+}
+export const deleteManyUrl = (resourcePlural: string) => {
+  return [apiPrefix(resourcePlural).replace(/\/$/, ''), 'delete-many'].join('/')
+}
+
 export const reserveOrder = (i: IOrder) => (i === 'asc' ? 'desc' : 'asc')
 
 export const joinStr = (...i: string[]) => i.join(' ')

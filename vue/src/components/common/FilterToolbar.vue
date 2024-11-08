@@ -2,7 +2,7 @@
 import useQueryParamsStore from '@/stores/query'
 import { get } from 'lodash-es'
 import { storeToRefs } from 'pinia'
-import DateFilter from './common/DateFilter.vue'
+import DateFilter from '@/components/common/DateFilter.vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Generation extends Model
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<\Database\Factories\GenerationFactory> */
     use HasFactory;
 
     /**

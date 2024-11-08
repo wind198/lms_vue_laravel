@@ -19,6 +19,8 @@ import { IUser, IUserType } from '@/types/entities/user.entity'
 import { useCommonStuffStore } from '@/stores/common'
 import useSelection from '@/composables/useSelection'
 import TableMetaToolbar from '@/components/TableMetaToolbar.vue'
+import useGenerationInputs from '@/composables/useGenerationInputs.js'
+import useGenerations from '@/composables/useGenerations.js'
 
 const props = defineProps<{ user_type: IUserType }>()
 
@@ -49,6 +51,7 @@ const headers = ref([
   { sortable: true, title: t('nouns.fullName'), value: 'full_name' },
   { sortable: true, title: t('nouns.age'), value: 'dob' },
   { sortable: true, title: t('nouns.gender'), value: 'gender' },
+  { sortable: true, title: t('nouns.generation'), value: 'generation' },
   { sortable: true, title: t('nouns.email'), value: 'email' },
   { sortable: true, title: t('nouns.phone'), value: 'phone' },
   { sortable: true, title: t('nouns.address'), value: 'address' },
@@ -105,6 +108,11 @@ const { onClickDeleteBulk, selectedEntitesText, selectedEntities } =
         </template>
         <template #item.dob="{ value }">
           {{ getAge(value) }}
+        </template>
+        <template #item.generation="{ value }">
+          <RouterLink :to="`/settings/generations/${value.id}`">{{
+            value.title
+          }}</RouterLink>
         </template>
         <template #item.gender="{ value }">
           {{ t('nouns.' + value.toLowerCase()) }}

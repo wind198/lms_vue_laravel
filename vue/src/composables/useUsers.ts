@@ -66,7 +66,9 @@ export default function useUsers(options: IOptions) {
       default:
         apiRoute = 'students'
     }
-    const { data } = await $get<IPaginatedData<IStudent>>(apiPrefix(apiRoute), {
+    const { data } = await $get<
+      IPaginatedData<IStudent & { generation?: { id: number; title: string } }>
+    >(apiPrefix(apiRoute), {
       params: {
         order: order.value,
         order_by: order_by.value,

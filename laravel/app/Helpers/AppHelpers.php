@@ -11,6 +11,6 @@ class AppHelpers
     {
 
         $table->string('title', AppConstants::MAX_TITLE_LENGTH)->index();
-        $table->text('description')->index();
+        $table->text('description');
     }
 }

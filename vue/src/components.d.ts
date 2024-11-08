@@ -9,11 +9,12 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppBreadcrumbs: typeof import('./components/AppBreadcrumbs.vue')['default']
     AppWrapper: typeof import('./components/AppWrapper.vue')['default']
-    BulkActionToolbar: typeof import('./components/BulkActionToolbar.vue')['default']
+    BulkActionToolbar: typeof import('./components/common/BulkActionToolbar.vue')['default']
+    CreateGeneration: typeof import('./components/CreateGeneration.vue')['default']
     CreateUser: typeof import('./components/CreateUser.vue')['default']
     DateFilter: typeof import('./components/common/DateFilter.vue')['default']
     DeleteBulkDialog: typeof import('./components/DeleteBulkDialog.vue')['default']
-    FilterToolbar: typeof import('./components/FilterToolbar.vue')['default']
+    FilterToolbar: typeof import('./components/common/FilterToolbar.vue')['default']
     GenderFilter: typeof import('./components/common/GenderFilter.vue')['default']
     ListUser: typeof import('./components/ListUser.vue')['default']
     LongTextDialog: typeof import('./components/LongTextDialog.vue')['default']
@@ -22,6 +23,8 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SearchBox: typeof import('./components/common/SearchBox.vue')['default']
     ServerTablePagination: typeof import('./components/common/ServerTablePagination.vue')['default']
+    ShowUser: typeof import('./components/ShowUser.vue')['default']
+    TableMetaToolbar: typeof import('./components/common/TableMetaToolbar.vue')['default']
     TableSkeleton: typeof import('./components/common/TableSkeleton.vue')['default']
   }
 }
