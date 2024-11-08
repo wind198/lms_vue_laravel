@@ -14,7 +14,9 @@ export type IUserForm = IUserCoreField
 
 export type IUpdateUserForm = Partial<IUserForm>
 
-export default function useUserInputs(initialValues?: IUserCoreField) {
+export default function useUserInputs(
+  initialValues?: Ref<IUserCoreField | undefined>
+) {
   const { t } = useI18n()
   const stringRequiredSchema = string().required(
     t('messages.validations.required')
@@ -35,7 +37,7 @@ export default function useUserInputs(initialValues?: IUserCoreField) {
   // Form and fields
   const { handleSubmit, handleReset } = useForm<IUserForm>({
     validationSchema,
-    initialValues,
+    initialValues: initialValues?.value,
   })
   const emailField = useField<string>('email')
   const firstNameField = useField<string>('first_name')

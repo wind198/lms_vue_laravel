@@ -1,5 +1,5 @@
 import { debounce, get, set } from 'lodash-es'
-import useQueryParamsStore from '../stores/query'
+import useQueryParamsStore, { ISearchParams } from '../stores/query'
 import { storeToRefs } from 'pinia'
 import { defineExpose } from 'vue'
 
@@ -15,7 +15,7 @@ export default function useFilterFeatures<T>(options: IOptions<T>) {
 
   const filterPaths = computed(() => filterKey.split('.'))
 
-  const { updateFilterParams, setAugmented } = useQueryParamsStore()
+  const { updateFilterParams } = useQueryParamsStore()
 
   const { filterParams } = storeToRefs(useQueryParamsStore())
 
@@ -26,10 +26,9 @@ export default function useFilterFeatures<T>(options: IOptions<T>) {
   const router = useRouter()
 
   const _onChangeValue = (v: any) => {
-    const payload = {}
+    const payload = { augmented: false } as Partial<ISearchParams>
     set(payload, filterPaths.value, v)
     updateFilterParams(payload)
-    setAugmented(false)
     router.push({ force: true })
   }
 

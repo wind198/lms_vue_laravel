@@ -15,13 +15,17 @@ import dayjs from 'dayjs'
 import useQueryParamsStore from '@/stores/query.js'
 import { useQueryClient } from '@tanstack/vue-query'
 import useGenerations from '@/composables/useGenerations.js'
+import { IMethod } from '@/types/common.type.js'
 
 const props = defineProps<{
   userType: IUserType
+  method?: IMethod
 }>()
 
 const { t } = useI18n()
 const { $post } = useApiHttpClient()
+
+const isEdit = computed(() => props.method !== 'POST')
 
 const getRandomUser = (): IUserCoreField => {
   const firstName = faker.person.firstName()
@@ -41,7 +45,7 @@ const getRandomUser = (): IUserCoreField => {
   }
 }
 
-const initialValues = IS_DEV ? getRandomUser() : undefined
+const initialValues = computed(() => (IS_DEV ? getRandomUser() : undefined))
 
 const {
   addressField,
@@ -60,8 +64,6 @@ const {
 const { show } = useToastStore()
 
 const router = useRouter()
-
-const { setAugmented } = useQueryParamsStore()
 
 const resource = computed(() => props.userType + 's')
 
@@ -114,7 +116,7 @@ const generationItems = computed(() => {
 </script>
 
 <template>
-  <VForm @submit="onSubmit" @reset="handleReset">
+  <VForm @submit.prevent="onSubmit" @reset.prevent="handleReset">
     <VSheet class="pa-3">
       <v-text-field
         :label="t('nouns.email')"
@@ -172,7 +174,7 @@ const generationItems = computed(() => {
       />
       <div class="d-flex w-full">
         <v-spacer />
-        <v-btn type="button" variant="flat">
+        <v-btn variant="flat" type="reset">
           {{ t('actions.reset') }}
         </v-btn>
         <v-btn type="submit" color="primary" variant="flat">

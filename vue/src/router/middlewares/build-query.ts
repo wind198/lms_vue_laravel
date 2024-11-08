@@ -10,6 +10,7 @@ import {
   extractQueryString,
   parseQueryStringToLocationQuery,
 } from '../../utils/helpers'
+import { storeToRefs } from 'pinia'
 
 export const buildQueryMiddleware: NavigationGuardWithThis<undefined> = async (
   to,
@@ -17,31 +18,22 @@ export const buildQueryMiddleware: NavigationGuardWithThis<undefined> = async (
 ) => {
   const { path, hash, fullPath } = to
 
+  const { augmented } = storeToRefs(useQueryParamsStore())
   const queryStore = useQueryParamsStore()
 
   const defaultSearchParams = getDefaultSearchParams()
 
-  if (queryStore.augmented) {
+  // If the URL is already checked, then just proceed without doing anything
+  if (augmented.value) {
     return
   }
-
-  // let searchParamsForThisRoute: string[] = []
-  // matched.forEach((m) => {
-  //   if (m.meta.searchParams?.length) {
-  //     searchParamsForThisRoute.push(...(m.meta.searchParams as string[]))
-  //   }
-  // })
-
-  // searchParamsForThisRoute = uniq(searchParamsForThisRoute)
-  // if (!searchParamsForThisRoute?.length) {
-  //   updateSearchParams({ augmented: true })
-  //   return
-  // }
 
   let objectToUpdateSearchParams = parse(
     extractQueryString(fullPath)
   ) as Partial<ISearchParams>
+  objectToUpdateSearchParams.augmented = true
 
+  // If path has changed, then we need to reset the search params first, then apply the new one from the URL
   if (from.path !== to.path) {
     objectToUpdateSearchParams = merge(
       getDefaultSearchParams(),

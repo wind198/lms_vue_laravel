@@ -9,9 +9,9 @@ export default function useServerTableEventHandler() {
   const router = useRouter()
 
   const handleUpdateSort = (v: any) => {
-    setAugmented(false)
     if (!v.length) {
       updatePaginationParams({
+        augmented: false,
         order: DEFAULT_ORDER,
         order_by: DEFAULT_ORDER_BY,
       })
@@ -19,22 +19,22 @@ export default function useServerTableEventHandler() {
       const { key: orderBy, order } = v[0]
 
       updatePaginationParams({
+        augmented: false,
         order,
         order_by: orderBy,
       })
     }
-    router.push({ force: true, path })
+    router.push({ force: true })
   }
 
   const handleUpdatePage = (v: number) => {
-    setAugmented(false)
-    updatePaginationParams({ page: v })
-    router.push({ force: true, path })
+    updatePaginationParams({ page: v, augmented: false })
+    router.push({ force: true })
   }
   const handleUpdatePerPage = (v: number) => {
     setAugmented(false)
-    updatePaginationParams({ per_page: v })
-    router.push({ force: true, path })
+    updatePaginationParams({ per_page: v, augmented: false })
+    router.push({ force: true })
   }
 
   return { handleUpdateSort, handleUpdatePage, handleUpdatePerPage }

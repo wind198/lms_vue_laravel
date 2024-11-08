@@ -15,6 +15,8 @@
 		"prettier.jsxSingleQuote": true,
 		"prettier.singleQuote": true,
 		"html.completion.attributeDefaultValue": "singlequotes",
-		"javascript.preferences.importModuleSpecifier": "non-relative"
+		"javascript.preferences.importModuleSpecifier": "non-relative",
+		"javascript.suggest.includeCompletionsForImportStatements": false,
+		"typescript.preferences.importModuleSpecifier": "non-relative"
 	}
 }

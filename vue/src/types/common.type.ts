@@ -39,3 +39,5 @@ export type IHasDescriptiveFields = {
   title: string
   description?: string
 }
+
+export type IMethod = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE'

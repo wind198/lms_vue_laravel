@@ -123,7 +123,6 @@ export const useQueryParamsStore = defineStore('query', () => {
   const augmented = computed(() => searchParams.augmented)
 
   return {
-    searchParams,
     filterParams,
     updatePaginationParams,
     updateFilterParams,

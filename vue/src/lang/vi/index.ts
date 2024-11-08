@@ -16,6 +16,7 @@ export const vi = {
   },
   nouns: {
     high_school: 'Cấp 3',
+    startYear: 'Năm bắt đầu',
     title: 'Tiêu đề',
     description: 'Mô tả',
     master: 'Thạc sỹ',

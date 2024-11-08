@@ -34,3 +34,10 @@ export type IGender = (typeof GENDER_LIST)[number]
 export type IEducationBackground = (typeof EDUCATION_BACKGROUND_LIST)[number]
 
 export const IS_DEV = import.meta.env.DEV
+
+export const MAX_FIRST_NAME_LENGTH = 20
+export const MAX_PHONE_LENGTH = 25
+export const MAX_EMAIL_LENGTH = 50
+export const MAX_ADDRESS_LENGTH = 200
+export const MAX_TITLE_LENGTH = 50
+export const MAX_DESCRIPTION_LENGTH = 200
