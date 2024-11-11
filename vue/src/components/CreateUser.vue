@@ -16,16 +16,18 @@ import useQueryParamsStore from '@/stores/query.js'
 import { useQueryClient } from '@tanstack/vue-query'
 import useGenerations from '@/composables/useGenerations.js'
 import { IMethod } from '@/types/common.type.js'
+import { camelCase } from 'lodash-es'
 
 const props = defineProps<{
   userType: IUserType
-  method?: IMethod
 }>()
 
 const { t } = useI18n()
-const { $post } = useApiHttpClient()
+const { $post, $patch } = useApiHttpClient()
 
-const isEdit = computed(() => props.method !== 'POST')
+const { path } = useRoute()
+
+const isEdit = computed(() => path.endsWith('update'))
 
 const getRandomUser = (): IUserCoreField => {
   const firstName = faker.person.firstName()
@@ -69,18 +71,27 @@ const resource = computed(() => props.userType + 's')
 
 const queryClient = useQueryClient()
 
-const createUser = async (payload: IUserCoreField) => {
+const sendApiRequest = async (_payload: IUserCoreField) => {
+  const { dob, ...o } = _payload
+  const $payload = {
+    ...o,
+    dob: dayjs(dob).format('YYYY-MM-DD'),
+  }
   try {
-    const { dob, ...o } = payload
+    if (isEdit.value) {
+      await $post(apiPrefix(resource.value), $payload)
+      show({
+        message: t('messages.info.createdSuccessfully'),
+        type: 'success',
+      })
+    } else {
+      await $patch(apiPrefix(resource.value), $payload)
+      show({
+        message: t('messages.info.updatedSuccessfully'),
+        type: 'success',
+      })
+    }
 
-    await $post(apiPrefix(resource.value), {
-      ...o,
-      dob: dayjs(dob).format('YYYY-MM-DD'),
-    })
-    show({
-      message: t('messages.info.createdSuccessfully'),
-      type: 'success',
-    })
     router.push('/settings/' + resource.value)
   } catch (error) {
     console.error('Error creating user:', error)
@@ -91,9 +102,8 @@ const createUser = async (payload: IUserCoreField) => {
 
 const onSubmit = handleSubmit(async (values) => {
   console.log('Form submitted with values:', values)
-  // Handle form submission, e.g., API call
 
-  await createUser(values)
+  await sendApiRequest(values)
 })
 
 const genderItemList = GENDER_LIST.map((i) => ({
@@ -101,7 +111,7 @@ const genderItemList = GENDER_LIST.map((i) => ({
   value: i,
 }))
 const educationBackgroundItemList = EDUCATION_BACKGROUND_LIST.map((i) => ({
-  title: t('nouns.' + i.toLowerCase()),
+  title: t('nouns.' + camelCase(i.toLowerCase())),
   value: i,
 }))
 
@@ -113,10 +123,15 @@ const generationItems = computed(() => {
     value: g.id,
   }))
 })
+
+const onReset = () => {
+  handleReset()
+  router.back()
+}
 </script>
 
 <template>
-  <VForm @submit.prevent="onSubmit" @reset.prevent="handleReset">
+  <VForm @submit.prevent="onSubmit" @reset.prevent="onReset">
     <VSheet class="pa-3">
       <v-text-field
         :label="t('nouns.email')"
@@ -145,8 +160,10 @@ const generationItems = computed(() => {
       />
       <VSelect
         v-if="userType === 'student'"
+        :label="t('nouns.generation')"
         :items="generationItems"
         v-model="generationField.value.value"
+        :loading="isLoadingGenerations"
         :error-messages="generationField.errorMessage.value"
       />
       <v-text-field
@@ -178,7 +195,7 @@ const generationItems = computed(() => {
           {{ t('actions.reset') }}
         </v-btn>
         <v-btn type="submit" color="primary" variant="flat">
-          {{ t('actions.save') }}
+          {{ t('actions.' + (isEdit ? 'save' : 'create')) }}
         </v-btn>
       </div>
     </VSheet>

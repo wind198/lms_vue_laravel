@@ -45,9 +45,9 @@ const paginationParams = computed(() => data.value?.params)
 const headers = ref([
   { sortable: true, title: t('nouns.title'), value: 'title' },
   { sortable: true, title: t('nouns.description'), value: 'description' },
-  { sortable: true, title: t('nouns.year'), value: 'year' },
+  { sortable: true, title: t('nouns.startYear'), value: 'year' },
   { sortable: true, title: t('nouns.createdAt'), value: 'created_at' },
-  { sortable: true, title: t('nouns.actions'), value: 'actions' },
+  { sortable: true, title: t('nouns.actions'), value: 'actions', width: 80 },
 ])
 
 const { formatDateCommon } = useFormatDateTime()
@@ -83,6 +83,15 @@ const { onClickDeleteBulk, selectedEntitesText, selectedEntities } =
         :items-per-page="per_page"
         @update:sort-by="handleUpdateSort"
       >
+        <template #item.actions="{ item }">
+          <RowActionButtons
+            :edit-url="`/settings/generations/${item.id}/update`"
+            :representation="item.title"
+            resource="generations"
+            :id="item.id"
+          />
+        </template>
+
         <template #item.created_at="{ value }">
           {{ formatDateCommon(value) }}
         </template>

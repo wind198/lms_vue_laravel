@@ -3,8 +3,9 @@ import { ITranslation } from '../i18n'
 export const vi = {
   actions: {
     create: 'Tạo {entity}',
-    update: 'Cập nhật',
-    delete: 'Xóa',
+    update: 'Cập nhật {entity}',
+    delete: 'Xóa {entity}',
+    view: 'Xem {entity}',
     save: 'Lưu',
     cancel: 'Hủy',
     login: 'Đăng nhập',
@@ -15,13 +16,17 @@ export const vi = {
     confirm: 'Xác nhận',
   },
   nouns: {
-    high_school: 'Cấp 3',
+    year: 'Năm',
+    detail: 'Chi tiết',
+    basicInfo: 'Thông tin cơ bản',
+    userType: 'Loại tài khoản',
+    highSchool: 'Cấp 3',
     startYear: 'Năm bắt đầu',
     title: 'Tiêu đề',
     description: 'Mô tả',
     master: 'Thạc sỹ',
     phd: 'Tiến sỹ',
-    university_student: 'Sinh viên',
+    universityStudent: 'Sinh viên',
     graduated: 'Cử nhân',
     total: 'Tổng số',
     filter: 'Bộ lọc',
@@ -76,6 +81,7 @@ export const vi = {
       actionCompleted: 'Hành động đã được hoàn tất thành công.',
       pleaseLogin: 'Vui lòng đăng nhập để tiếp tục.',
       createdSuccessfully: 'Tạo thành công',
+      updatedSuccessfully: 'Updated thành công',
       selected: 'đã chọn {count}',
     },
     confirmation: {
@@ -106,6 +112,7 @@ export const vi = {
     },
   },
   others: {
+    startYear: 'Năm bắt đầu',
     appName: 'Hệ thống Quản lý Học tập',
     appNameShort: 'LMS',
     footerText: '© 2024 LMS. Bản quyền thuộc về LMS.',

@@ -1,5 +1,5 @@
 import { AxiosHeaders } from 'axios'
-import { IOrder } from '../types/common.type'
+import { IOrder, IStringOrNumber } from '../types/common.type'
 import dayjs, { ConfigType } from 'dayjs'
 import { LocationQuery } from 'vue-router'
 
@@ -19,8 +19,18 @@ export const apiPrefix = (i: string) => {
   return ['api', input].join('/')
 }
 
-export const getOneUrl = (resourcePlural: string, id: number) => {
+export const getOneUrl = (resourcePlural: string, id: IStringOrNumber) => {
   return [apiPrefix(resourcePlural).replace(/\/$/, ''), id].join('/')
+}
+export const getRepresentationUrl = (
+  resourcePlural: string,
+  id: IStringOrNumber
+) => {
+  return [
+    apiPrefix(resourcePlural).replace(/\/$/, ''),
+    id,
+    'representation',
+  ].join('/')
 }
 export const getManyUrl = (resourcePlural: string) => {
   return [apiPrefix(resourcePlural).replace(/\/$/, ''), 'get-many'].join('/')
@@ -103,3 +113,5 @@ export function removeNullFields(obj: any) {
 
 export const getDeleteApi = (resource: string) =>
   apiPrefix(`/${resource}/delete-many`)
+
+export const getPathSegments = (i: string) => i.split(/\/+/).filter(Boolean)

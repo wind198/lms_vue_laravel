@@ -21,9 +21,11 @@ declare module 'vue' {
     LongTextWithElipsis: typeof import('./components/common/LongTextWithElipsis.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    RowActionButtons: typeof import('./components/RowActionButtons.vue')['default']
     SearchBox: typeof import('./components/common/SearchBox.vue')['default']
     ServerTablePagination: typeof import('./components/common/ServerTablePagination.vue')['default']
     ShowUser: typeof import('./components/ShowUser.vue')['default']
+    ShowUserBasicInfo: typeof import('./components/ShowUserBasicInfo.vue')['default']
     TableMetaToolbar: typeof import('./components/common/TableMetaToolbar.vue')['default']
     TableSkeleton: typeof import('./components/common/TableSkeleton.vue')['default']
   }

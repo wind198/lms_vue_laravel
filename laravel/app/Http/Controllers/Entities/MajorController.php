@@ -1,20 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Entities;
+namespace App\Http\Controllers;
 
 use App\Contracts\HasRepresentationRoute;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\CreateGenerationRequest;
-use App\Http\Requests\UpdateGenerationRequest;
-use App\Models\Generation;
+use App\Models\Major;
 use App\Traits\HandlesFilter;
 use App\Traits\HandlesPagination;
 use Illuminate\Http\Request;
 
-class GenerationsController extends Controller implements HasRepresentationRoute
+class MajorController extends Controller implements HasRepresentationRoute
 {
     use HandlesPagination, HandlesFilter;
-    public const INDEX_ROUTE = 'generations';
+    public const INDEX_ROUTE = 'majors';
     public const REPRESENTATION_ROUTE = self::INDEX_ROUTE . '.representation';
 
     public const SHOW_ROUTE = self::INDEX_ROUTE . '.show';
@@ -30,7 +27,7 @@ class GenerationsController extends Controller implements HasRepresentationRoute
     {
         $filter = $request->input('filter', []); // Filters array
 
-        $query = Generation::query()->withCount('students');
+        $query = Major::query()->withCount('students');
 
         // Text search filter
         if (!empty($filter['q'])) {
@@ -55,51 +52,51 @@ class GenerationsController extends Controller implements HasRepresentationRoute
     }
 
 
-    public function create(CreateGenerationRequest $request)
+    public function create(CreateMajorRequest $request)
     {
         $validated = $request->validated();
 
-        $builder = Generation::query();
+        $builder = Major::query();
 
-        $generation = $builder->create($validated);
+        $major = $builder->create($validated);
 
-        return $generation;
+        return $major;
 
     }
 
 
-    public function representation(string $generation)
+    public function representation(string $major)
     {
-        return Generation::whereKey($generation)->firstOrFail()->getAttribute('title');
+        return Major::whereKey($major)->firstOrFail()->getAttribute('title');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Generation $generation)
+    public function show(Major $major)
     {
-        return $generation;
+        return $major;
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Generation $generation, UpdateGenerationRequest $request)
+    public function update(Major $major, UpdateMajorRequest $request)
     {
 
         // Validate the request data
         $validated = $request->validated();
 
-        // Update the generation's details
-        $generation->update($validated);
+        // Update the major's details
+        $major->update($validated);
 
-        return $generation;
+        return $major;
     }
 
-    public function delete(Generation $generation)
+    public function delete(Major $major)
     {
-        $generation->delete();
-        return $generation;
+        $major->delete();
+        return $major;
     }
 
     /**
@@ -107,7 +104,7 @@ class GenerationsController extends Controller implements HasRepresentationRoute
      */
     public function deleteMany(Request $request)
     {
-        // Retrieve the array of generation IDs from the request
+        // Retrieve the array of major IDs from the request
         $ids = $request->input('ids', []);
 
         if (!is_array($ids)) {
@@ -117,8 +114,8 @@ class GenerationsController extends Controller implements HasRepresentationRoute
         if (empty($ids)) {
             return response()->json(['message' => trans('validation.empty', ['attribute' => 'ids'])], 400);
         }
-        // Perform the deletion of the generations
-        $deleted = Generation::whereIn('id', $ids)
+        // Perform the deletion of the majors
+        $deleted = Major::whereIn('id', $ids)
             ->pluck('id'); // Retrieve IDs of the records to be deleted
 
         if ($deleted->isEmpty()) {
@@ -126,7 +123,7 @@ class GenerationsController extends Controller implements HasRepresentationRoute
         }
 
         // Actually delete the records
-        Generation::whereIn('id', $deleted)->delete();
+        Major::whereIn('id', $deleted)->delete();
 
         return $deleted;
     }

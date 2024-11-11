@@ -1,13 +1,14 @@
 <script setup lang="ts">
 definePage({
   meta: {
-    label: ['actions.create', { entity: 'nouns.student' }],
+    label: 'actions.update',
+    title: ['actions.update', { entity: 'nouns.student' }],
+    isBreadcrumb: true,
   },
 })
 </script>
 <template>
-  <div class="create-student-page">
-    <AppBreadcrumbs />
+  <div class="update-student-page">
     <CreateUser user-type="student" />
   </div>
 </template>

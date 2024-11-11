@@ -18,11 +18,13 @@ import { getAge, getDeleteApi, joinStr } from '@/utils/helpers'
 import { IUser, IUserType } from '@/types/entities/user.entity'
 import { useCommonStuffStore } from '@/stores/common'
 import useSelection from '@/composables/useSelection'
-import TableMetaToolbar from '@/components/TableMetaToolbar.vue'
+import TableMetaToolbar from '@/components/common/TableMetaToolbar.vue'
 import useGenerationInputs from '@/composables/useGenerationInputs.js'
 import useGenerations from '@/composables/useGenerations.js'
 
 const props = defineProps<{ user_type: IUserType }>()
+
+const resource = computed(() => props.user_type + 's')
 
 const { t } = useI18n()
 
@@ -56,13 +58,19 @@ const headers = ref([
   { sortable: true, title: t('nouns.phone'), value: 'phone' },
   { sortable: true, title: t('nouns.address'), value: 'address' },
   { sortable: true, title: t('nouns.createdAt'), value: 'created_at' },
-  { sortable: true, title: t('nouns.actions'), value: 'actions' },
+  { sortable: true, title: t('nouns.actions'), value: 'actions', width: 80 },
 ])
 
 const { formatDateCommon } = useFormatDateTime()
 
 const { onClickDeleteBulk, selectedEntitesText, selectedEntities } =
   useSelection({ entity: props.user_type })
+
+const router = useRouter()
+
+const onRowClick = (_: any, itemWrapper: any) => {
+  router.push('/settings/students/' + itemWrapper.item.id)
+}
 </script>
 <template>
   <div class="user-list px-3">
@@ -94,6 +102,7 @@ const { onClickDeleteBulk, selectedEntitesText, selectedEntities } =
         </v-btn>
       </VToolbar>
       <VDataTable
+        @click:row="onRowClick"
         v-model="selectedEntities"
         show-select
         :headers="headers"
@@ -103,6 +112,14 @@ const { onClickDeleteBulk, selectedEntitesText, selectedEntities } =
         :items-per-page="per_page"
         @update:sort-by="handleUpdateSort"
       >
+        <template #item.actions="{ item }">
+          <RowActionButtons
+            :edit-url="`/settings/${resource}/${item.id}/update`"
+            :representation="item.full_name"
+            :resource="resource"
+            :id="item.id"
+          />
+        </template>
         <template #item.created_at="{ value }">
           {{ formatDateCommon(value) }}
         </template>
@@ -110,7 +127,7 @@ const { onClickDeleteBulk, selectedEntitesText, selectedEntities } =
           {{ getAge(value) }}
         </template>
         <template #item.generation="{ value }">
-          <RouterLink :to="`/settings/generations/${value.id}`">{{
+          <RouterLink v-if="value" :to="`/settings/generations/${value.id}`">{{
             value.title
           }}</RouterLink>
         </template>

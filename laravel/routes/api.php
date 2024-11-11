@@ -13,6 +13,7 @@ Route::group(
     function () {
         Route::controller(StudentsController::class)->group(function () {
             Route::get('/students', 'index')->name(StudentsController::INDEX_ROUTE);
+            Route::get('/students/{user}/representation', 'representation')->name(StudentsController::REPRESENTATION_ROUTE);
             Route::get('/students/{user}', 'show')->name(StudentsController::SHOW_ROUTE);
             Route::post('/students', 'create')->name(StudentsController::CREATE_ROUTE);
             Route::delete('/students/delete-many', 'deleteMany')->name(StudentsController::DELETE_MANY_ROUTE);

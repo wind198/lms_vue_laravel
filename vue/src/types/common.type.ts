@@ -41,3 +41,9 @@ export type IHasDescriptiveFields = {
 }
 
 export type IMethod = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE'
+
+export type IStringOrNumber = string | number
+
+export type IHasRepresentation = {
+  representation: string
+}

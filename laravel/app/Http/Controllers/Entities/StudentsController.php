@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Entities;
 
+use App\Contracts\HasRepresentationRoute;
 use App\Http\Controllers\Controller;
 use App\Constants\AppConstants;
 use App\Http\Requests\CreateUserRequest;
@@ -15,16 +16,23 @@ use DB;
 use Illuminate\Http\Request;
 use Log;
 
-class StudentsController extends Controller
+class StudentsController extends Controller implements HasRepresentationRoute
 {
     use HandlesPagination;
     public const INDEX_ROUTE = 'students';
+    public const REPRESENTATION_ROUTE = self::INDEX_ROUTE . '.representation';
     public const SHOW_ROUTE = self::INDEX_ROUTE . '.show';
     public const CREATE_ROUTE = self::INDEX_ROUTE . '.create';
     public const UPDATE_ROUTE = self::INDEX_ROUTE . '.update';
     public const UPDATE_MANY_ROUTE = self::INDEX_ROUTE . '.update-many';
     public const DELETE_ROUTE = self::INDEX_ROUTE . '.delete';
     public const DELETE_MANY_ROUTE = self::INDEX_ROUTE . '.delete-many';
+
+    public function representation(string $user)
+    {
+        return User::whereKey($user)->firstOrFail()->getAttribute('full_name');
+    }
+
     /**
      * Display a listing of the resource.
      */
