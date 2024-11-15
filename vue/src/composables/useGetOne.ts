@@ -1,12 +1,14 @@
 import useApiHttpClient from '@/composables/useHttpClient'
+import { IStringOrNumber } from '@/types/common.type'
 import { apiPrefix, getOneUrl } from '@/utils/helpers'
 import { useQuery } from '@tanstack/vue-query'
 import { AxiosError } from 'axios'
 
 type IOptions = {
-  id: Ref<number | undefined>
+  id: Ref<IStringOrNumber | undefined>
   resource: string
   resourcePlular?: string
+  placeholderData?: any
 }
 
 export default function useGetOne<T>(options: IOptions) {
@@ -25,6 +27,7 @@ export default function useGetOne<T>(options: IOptions) {
   const res = useQuery<T, AxiosError, T>({
     queryKey: [resourcePlular, 'getOne', { id }],
     queryFn: getOne,
+    placeholderData: options.placeholderData,
   })
 
   return res

@@ -115,3 +115,4 @@ export const getDeleteApi = (resource: string) =>
   apiPrefix(`/${resource}/delete-many`)
 
 export const getPathSegments = (i: string) => i.split(/\/+/).filter(Boolean)
+export const removeTrailingSlash = (i: string) => i.replace(/\/+$/g, '')

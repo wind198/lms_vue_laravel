@@ -21,7 +21,7 @@ const router = createRouter({
 
 router.beforeEach(authNavigationGuard)
 router.beforeEach(DynamicTitleMiddleware)
-router.beforeEach(buildQueryMiddleware)
+// router.beforeEach(buildQueryMiddleware)
 // Workaround for https://github.com/vitejs/vite/issues/11804
 router.onError((err, to) => {
   if (err?.message?.includes?.('Failed to fetch dynamically imported module')) {

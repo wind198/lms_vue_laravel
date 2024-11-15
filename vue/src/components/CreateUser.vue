@@ -4,8 +4,12 @@ import { useI18n } from 'vue-i18n'
 import useApiHttpClient from '../composables/useHttpClient.js'
 import useUserInputs from '../composables/useUserInputs.js'
 import { useToastStore } from '../stores/toast.js'
-import { IUserCoreField, IUserType } from '../types/entities/user.entity.js'
-import { apiPrefix } from '../utils/helpers.js'
+import {
+  IUser,
+  IUserCoreField,
+  IUserType,
+} from '../types/entities/user.entity.js'
+import { apiPrefix, getOneUrl, removeTrailingSlash } from '../utils/helpers.js'
 import {
   EDUCATION_BACKGROUND_LIST,
   GENDER_LIST,
@@ -17,37 +21,17 @@ import { useQueryClient } from '@tanstack/vue-query'
 import useGenerations from '@/composables/useGenerations.js'
 import { IMethod } from '@/types/common.type.js'
 import { camelCase } from 'lodash-es'
+import useGetOne from '@/composables/useGetOne.js'
 
 const props = defineProps<{
   userType: IUserType
 }>()
 
 const { t } = useI18n()
-const { $post, $patch } = useApiHttpClient()
 
 const { path } = useRoute()
 
-const isEdit = computed(() => path.endsWith('update'))
-
-const getRandomUser = (): IUserCoreField => {
-  const firstName = faker.person.firstName()
-  const lastName = faker.person.lastName()
-  const fullName = `${firstName} ${lastName}`
-  return {
-    first_name: firstName,
-    last_name: lastName,
-    full_name: fullName,
-    education_background: 'HIGH_SCHOOL',
-    email: faker.internet.email(),
-    gender: 'FEMALE',
-    phone: faker.phone.number(),
-    address: faker.location.streetAddress(),
-    dob: faker.date.past(),
-    user_type: props.userType,
-  }
-}
-
-const initialValues = computed(() => (IS_DEV ? getRandomUser() : undefined))
+const isEdit = computed(() => removeTrailingSlash(path).endsWith('update'))
 
 const {
   addressField,
@@ -56,54 +40,15 @@ const {
   emailField,
   firstNameField,
   genderField,
-  handleReset,
-  handleSubmit,
   lastNameField,
   phoneField,
   generationField,
-} = useUserInputs(initialValues)
-
-const { show } = useToastStore()
-
-const router = useRouter()
-
-const resource = computed(() => props.userType + 's')
-
-const queryClient = useQueryClient()
-
-const sendApiRequest = async (_payload: IUserCoreField) => {
-  const { dob, ...o } = _payload
-  const $payload = {
-    ...o,
-    dob: dayjs(dob).format('YYYY-MM-DD'),
-  }
-  try {
-    if (isEdit.value) {
-      await $post(apiPrefix(resource.value), $payload)
-      show({
-        message: t('messages.info.createdSuccessfully'),
-        type: 'success',
-      })
-    } else {
-      await $patch(apiPrefix(resource.value), $payload)
-      show({
-        message: t('messages.info.updatedSuccessfully'),
-        type: 'success',
-      })
-    }
-
-    router.push('/settings/' + resource.value)
-  } catch (error) {
-    console.error('Error creating user:', error)
-  } finally {
-    queryClient.invalidateQueries([resource.value] as any)
-  }
-}
-
-const onSubmit = handleSubmit(async (values) => {
-  console.log('Form submitted with values:', values)
-
-  await sendApiRequest(values)
+  onSubmit,
+  onReset,
+} = useUserInputs({
+  isEdit: isEdit.value,
+  resource: props.userType,
+  user_type: props.userType,
 })
 
 const genderItemList = GENDER_LIST.map((i) => ({
@@ -123,11 +68,6 @@ const generationItems = computed(() => {
     value: g.id,
   }))
 })
-
-const onReset = () => {
-  handleReset()
-  router.back()
-}
 </script>
 
 <template>
@@ -179,7 +119,7 @@ const onReset = () => {
       />
 
       <v-select
-        :label="t('nouns.educationLevel')"
+        :label="t('nouns.educationBackground')"
         v-model="educationBackgroundField.value.value"
         :error-messages="educationBackgroundField.errorMessage.value"
         :items="educationBackgroundItemList"
@@ -189,15 +129,7 @@ const onReset = () => {
         v-model="dobField.value.value"
         :error-messages="dobField.errorMessage.value"
       />
-      <div class="d-flex w-full">
-        <v-spacer />
-        <v-btn variant="flat" type="reset">
-          {{ t('actions.reset') }}
-        </v-btn>
-        <v-btn type="submit" color="primary" variant="flat">
-          {{ t('actions.' + (isEdit ? 'save' : 'create')) }}
-        </v-btn>
-      </div>
+      <CreateFormActionsToolbar :is-edit="isEdit" />
     </VSheet>
   </VForm>
 </template>

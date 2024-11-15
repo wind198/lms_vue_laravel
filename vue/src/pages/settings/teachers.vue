@@ -12,7 +12,7 @@ definePage({
 <template>
   <div class="list-teachers">
     <AppBreadcrumbs />
-    <ListUser user_type="teacher" />
+    <RouterView />
   </div>
 </template>
 <style scoped></style>

@@ -3,13 +3,13 @@ definePage({
   meta: {
     isBreadcrumb: true,
     label: 'nouns.detail',
-    title: ['others.viewDetail', { entity: 'nouns.student' }],
+    title: ['others.viewDetail', { entity: 'nouns.teacher' }],
   },
 })
 </script>
 <template>
-  <div class="show-student-page">
-    <ShowUser user_type="student" />
+  <div class="show-teacher-page">
+    <ShowUser user_type="teacher" />
   </div>
 </template>
 <style scoped></style>

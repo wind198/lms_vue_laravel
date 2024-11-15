@@ -10,9 +10,11 @@ declare module 'vue' {
     AppBreadcrumbs: typeof import('./components/AppBreadcrumbs.vue')['default']
     AppWrapper: typeof import('./components/AppWrapper.vue')['default']
     BulkActionToolbar: typeof import('./components/common/BulkActionToolbar.vue')['default']
+    CreateFormActionsToolbar: typeof import('./components/CreateFormActionsToolbar.vue')['default']
     CreateGeneration: typeof import('./components/CreateGeneration.vue')['default']
     CreateUser: typeof import('./components/CreateUser.vue')['default']
     DateFilter: typeof import('./components/common/DateFilter.vue')['default']
+    DatePickerWithMenuPopup: typeof import('./components/common/DatePickerWithMenuPopup.vue')['default']
     DeleteBulkDialog: typeof import('./components/DeleteBulkDialog.vue')['default']
     FilterToolbar: typeof import('./components/common/FilterToolbar.vue')['default']
     GenderFilter: typeof import('./components/common/GenderFilter.vue')['default']
@@ -28,5 +30,6 @@ declare module 'vue' {
     ShowUserBasicInfo: typeof import('./components/ShowUserBasicInfo.vue')['default']
     TableMetaToolbar: typeof import('./components/common/TableMetaToolbar.vue')['default']
     TableSkeleton: typeof import('./components/common/TableSkeleton.vue')['default']
+    YearPicker: typeof import('./components/common/YearPicker.vue')['default']
   }
 }

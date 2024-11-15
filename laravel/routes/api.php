@@ -23,6 +23,8 @@ Route::group(
         });
         Route::controller(TeachersController::class)->group(function () {
             Route::get('/teachers', 'index')->name(TeachersController::INDEX_ROUTE);
+            Route::get('/teachers/{user}/representation', 'representation')->name(TeachersController::REPRESENTATION_ROUTE);
+
             Route::get('/teachers/{user}', 'show')->name(TeachersController::SHOW_ROUTE);
             Route::post('/teachers', 'create')->name(TeachersController::CREATE_ROUTE);
             Route::delete('/teachers/delete-many', 'deleteMany')->name(TeachersController::DELETE_MANY_ROUTE);
@@ -32,11 +34,13 @@ Route::group(
         });
         Route::controller(GenerationsController::class)->group(function () {
             Route::get('/generations', 'index')->name(GenerationsController::INDEX_ROUTE);
-            Route::get('/generations/{user}', 'show')->name(GenerationsController::SHOW_ROUTE);
+            Route::get('/generations/{user}/representation', 'representation')->name(GenerationsController::REPRESENTATION_ROUTE);
+
+            Route::get('/generations/{generation}', 'show')->name(GenerationsController::SHOW_ROUTE);
             Route::post('/generations', 'create')->name(GenerationsController::CREATE_ROUTE);
             Route::delete('/generations/delete-many', 'deleteMany')->name(GenerationsController::DELETE_MANY_ROUTE);
-            Route::delete('/generations/{user}', 'delete')->name(GenerationsController::DELETE_ROUTE);
-            Route::patch('/generations/{user}', 'update')->name(GenerationsController::UPDATE_ROUTE);
+            Route::delete('/generations/{generation}', 'delete')->name(GenerationsController::DELETE_ROUTE);
+            Route::patch('/generations/{generation}', 'update')->name(GenerationsController::UPDATE_ROUTE);
         });
         Route::get('/user', function (Request $request) {
             return $request->user();

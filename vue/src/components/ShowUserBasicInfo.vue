@@ -11,6 +11,7 @@ const props = defineProps<{
 const fieldsToRenders: (keyof IUser)[] = [
   'full_name',
   'user_type',
+  ...(props.userData.user_type === 'student' ? (['generation'] as const) : []),
   'email',
   'gender',
   'phone',
@@ -28,7 +29,7 @@ const renderData = (f: keyof IUser) => {
   switch (f) {
     case 'created_at':
     case 'dob':
-      return formatDateCommon(val)
+      return formatDateCommon(val as string)
     case 'education_background':
     case 'gender':
     case 'user_type':
@@ -43,7 +44,18 @@ const renderData = (f: keyof IUser) => {
   <dl class="user-basic-info pa-2">
     <template v-for="f in fieldsToRenders" :key="f">
       <dt class="text-subtitle-2 mb-1">{{ t(`nouns.${camelCase(f)}`) }}</dt>
-      <dd class="text-body-2 mb-2">
+      <dd class="text-body-2 mb-2" v-if="f === 'generation'">
+        <RouterLink
+          :to="`/settings/generations/${userData.generation.id}`"
+          v-if="userData.generation?.id"
+        >
+          {{ userData.generation?.title }}
+        </RouterLink>
+        <span v-else>
+          {{ t('others.none') }}
+        </span>
+      </dd>
+      <dd v-else class="text-body-2 mb-2">
         {{ renderData(f) }}
       </dd>
     </template>

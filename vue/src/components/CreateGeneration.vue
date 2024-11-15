@@ -1,21 +1,17 @@
 <script setup lang="ts">
 import useGenerationInputs from '@/composables/useGenerationInputs'
-import useApiHttpClient from '@/composables/useHttpClient'
+import useGetOne from '@/composables/useGetOne.js'
 import { IGenerationCoreField } from '@/types/entities/generation.entity'
-import {
-  IS_DEV,
-  MAX_DESCRIPTION_LENGTH,
-  MAX_TITLE_LENGTH,
-} from '@/utils/constants'
+import { IS_DEV } from '@/utils/constants'
+import { removeTrailingSlash } from '@/utils/helpers.js'
 import { faker } from '@faker-js/faker'
-import { useForm } from 'vee-validate'
+import dayjs from 'dayjs'
 import { useI18n } from 'vue-i18n'
-import { number, object, string } from 'yup'
 
 const getRandomGeneration = (): IGenerationCoreField => {
   return {
     title: faker.word.words(5),
-    description: faker.word.words(50),
+    description: faker.word.words(20),
     year: faker.number.int({ min: 1990, max: 2024 }),
   }
 }
@@ -26,8 +22,32 @@ const initialValues = computed(() =>
   IS_DEV ? getRandomGeneration() : undefined
 )
 
-const { handleReset, onSubmit, descriptionField, titleField, yearField } =
-  useGenerationInputs(initialValues)
+const { path, params } = useRoute()
+
+const recordId = ref<number | undefined>(params['id'])
+
+const isEdit = computed(() => removeTrailingSlash(path).endsWith('update'))
+
+const { data: userData } = useGetOne({
+  id: recordId,
+  resource: 'generation',
+  placeholderData: history.state.userData,
+})
+
+const {
+  useFormRes,
+  handleReset,
+  onSubmit,
+  descriptionField,
+  titleField,
+  yearField,
+} = useGenerationInputs(initialValues)
+
+watchEffect(() => {
+  if (userData.value && !useFormRes.meta.value.dirty) {
+    useFormRes.setValues(userData.value)
+  }
+})
 </script>
 
 <template>
@@ -38,16 +58,19 @@ const { handleReset, onSubmit, descriptionField, titleField, yearField } =
         :error-messages="titleField.errorMessage.value"
         v-model="titleField.value.value"
       />
-      <v-text-field
+      <v-textarea
         :label="t('nouns.description')"
         :error-messages="descriptionField.errorMessage.value"
         v-model="descriptionField.value.value"
       />
-      <VDatePickerYears
-        :label="t('nouns.startYear')"
-        v-model="yearField.value.value"
+      <DatePickerWithMenuPopup
+        :style="{ width: '400px' }"
+        is-year-picker
+        :label="t('nouns.year')"
         :error-messages="yearField.errorMessage.value"
+        v-model="yearField.value.value"
       />
+      <CreateFormActionsToolbar :is-edit="isEdit" />
     </VSheet>
   </VForm>
 </template>

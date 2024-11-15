@@ -48,7 +48,7 @@ export default function useApiHttpClient() {
     config?: AxiosRequestConfig<D>
   ) => {
     try {
-      return axios.patch<T, R, D>(url, data, config)
+      return apiHttpClient.patch<T, R, D>(url, data, config)
     } catch (error) {
       return handleHttpErr(error)
     }

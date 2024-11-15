@@ -1,3 +1,4 @@
+import { IGeneration } from '@/types/entities/generation.entity'
 import { IEducationBackground, IGender } from '../../utils/constants'
 import { IHasId, ITimeStamp } from '../common.type'
 
@@ -16,6 +17,8 @@ export type IUserCoreField = {
   education_background: IEducationBackground
   gender: IGender
   dob?: Date | null // Nullable date
+  generation_id?: number
+  generation?: IGeneration
 }
 
 export type IUser = IUserCoreField & IHasId & ITimeStamp

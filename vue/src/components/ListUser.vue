@@ -1,30 +1,21 @@
 <script setup lang="ts">
-import useQueryParamsStore, { ISearchParamKey } from '@/stores/query.js'
-import {
-  DEFAULT_ORDER,
-  DEFAULT_ORDER_BY,
-  DEFAULT_PAGE,
-  DEFAULT_PER_PAGE,
-  GENDER_LIST,
-  PAGINATION_SEARCH_PARAMS,
-} from '@/utils/constants.js'
+import { use } from 'vue-router'
+import TableMetaToolbar from '@/components/common/TableMetaToolbar.vue'
+import useFormatDateTime from '@/composables/useFormatDateTime'
+import useSelection from '@/composables/useSelection'
 import useServerTableEventHandler from '@/composables/useServerTableEventHandler.js'
 import useServerTablePaginationParams from '@/composables/useServerTablePaginationParams.js'
-import { useI18n } from 'vue-i18n'
-import { storeToRefs } from 'pinia'
 import useUsers from '@/composables/useUsers.js'
-import useFormatDateTime from '@/composables/useFormatDateTime'
-import { getAge, getDeleteApi, joinStr } from '@/utils/helpers'
-import { IUser, IUserType } from '@/types/entities/user.entity'
-import { useCommonStuffStore } from '@/stores/common'
-import useSelection from '@/composables/useSelection'
-import TableMetaToolbar from '@/components/common/TableMetaToolbar.vue'
-import useGenerationInputs from '@/composables/useGenerationInputs.js'
-import useGenerations from '@/composables/useGenerations.js'
+import useQueryParamsStore from '@/stores/query.js'
+import { IUserType } from '@/types/entities/user.entity'
+import { getAge, joinStr } from '@/utils/helpers'
+import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
+import { cloneDeep } from 'lodash-es'
 
 const props = defineProps<{ user_type: IUserType }>()
 
-const resource = computed(() => props.user_type + 's')
+const resourcePlural = computed(() => props.user_type + 's')
 
 const { t } = useI18n()
 
@@ -53,7 +44,9 @@ const headers = ref([
   { sortable: true, title: t('nouns.fullName'), value: 'full_name' },
   { sortable: true, title: t('nouns.age'), value: 'dob' },
   { sortable: true, title: t('nouns.gender'), value: 'gender' },
-  { sortable: true, title: t('nouns.generation'), value: 'generation' },
+  ...(props.user_type === 'student'
+    ? [{ sortable: true, title: t('nouns.generation'), value: 'generation' }]
+    : []),
   { sortable: true, title: t('nouns.email'), value: 'email' },
   { sortable: true, title: t('nouns.phone'), value: 'phone' },
   { sortable: true, title: t('nouns.address'), value: 'address' },
@@ -69,7 +62,13 @@ const { onClickDeleteBulk, selectedEntitesText, selectedEntities } =
 const router = useRouter()
 
 const onRowClick = (_: any, itemWrapper: any) => {
-  router.push('/settings/students/' + itemWrapper.item.id)
+  if (!itemWrapper.item) {
+    return
+  }
+  router.push({
+    path: `/settings/${resourcePlural.value}/` + itemWrapper.item.id,
+    state: { userData: cloneDeep(itemWrapper.item) },
+  })
 }
 </script>
 <template>
@@ -114,9 +113,9 @@ const onRowClick = (_: any, itemWrapper: any) => {
       >
         <template #item.actions="{ item }">
           <RowActionButtons
-            :edit-url="`/settings/${resource}/${item.id}/update`"
+            :edit-url="`/settings/${resourcePlural}/${item.id}/update`"
             :representation="item.full_name"
-            :resource="resource"
+            :resource="resourcePlural"
             :id="item.id"
           />
         </template>
@@ -127,20 +126,23 @@ const onRowClick = (_: any, itemWrapper: any) => {
           {{ getAge(value) }}
         </template>
         <template #item.generation="{ value }">
-          <RouterLink v-if="value" :to="`/settings/generations/${value.id}`">{{
-            value.title
-          }}</RouterLink>
+          <RouterLink
+            @click.stop=""
+            v-if="value"
+            :to="`/settings/generations/${value.id}`"
+            >{{ value.title }}</RouterLink
+          >
         </template>
         <template #item.gender="{ value }">
           {{ t('nouns.' + value.toLowerCase()) }}
         </template>
         <template #item.email="{ value }">
-          <a :href="`mailto:${value}`">
+          <a :href="`mailto:${value}`" @click.stop="">
             {{ value }}
           </a>
         </template>
         <template #item.phone="{ value }">
-          <a :href="`tel:${value}`">
+          <a :href="`tel:${value}`" @click.stop="">
             {{ value }}
           </a>
         </template>

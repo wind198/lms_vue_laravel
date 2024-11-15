@@ -2,6 +2,7 @@ import { ITranslation } from '../i18n'
 
 export const vi = {
   actions: {
+    configure: 'Cấu hình {entitiy}',
     create: 'Tạo {entity}',
     update: 'Cập nhật {entity}',
     delete: 'Xóa {entity}',
@@ -52,7 +53,7 @@ export const vi = {
     studentId: 'Mã sinh viên',
     teacherId: 'Mã giáo viên',
     dateOfEnrollment: 'Ngày nhập học',
-    educationLevel: 'Trình độ học vấn',
+    educationBackground: 'Trình độ học vấn',
     institution: 'Cơ sở giáo dục',
     notes: 'Ghi chú',
     subject: 'Môn học',
@@ -112,6 +113,7 @@ export const vi = {
     },
   },
   others: {
+    none: 'Chưa có',
     startYear: 'Năm bắt đầu',
     appName: 'Hệ thống Quản lý Học tập',
     appNameShort: 'LMS',

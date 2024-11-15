@@ -2,6 +2,7 @@
 import ShowUserBasicInfo from '@/components/ShowUserBasicInfo.vue'
 import useGetOne from '@/composables/useGetOne.js'
 import { IUser, IUserType } from '@/types/entities/user.entity.js'
+import { cloneDeep } from 'lodash-es'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{
@@ -10,13 +11,14 @@ const props = defineProps<{
 
 const currentRoute = useRoute()
 
-const userId = toRef(currentRoute.params.id)
+const userId = ref<string | undefined>(currentRoute.params.id)
 
 const { t } = useI18n()
 
 const { data: userData, isLoading } = useGetOne<IUser>({
   id: userId,
   resource: props.user_type,
+  placeholderData: history.state.userData,
 })
 
 const tabs = [
@@ -25,6 +27,19 @@ const tabs = [
     title: t(`nouns.basicInfo`),
   },
 ]
+
+const router = useRouter()
+
+const resourcePlural = computed(() => props.user_type + 's')
+
+const onClickEditBtn = () => {
+  router.push({
+    path: `/settings/${resourcePlural.value}/${userId.value}/update`,
+    state: {
+      userData: cloneDeep(userData.value ?? {}),
+    },
+  })
+}
 </script>
 <template>
   <VSheet class="pa-3">
@@ -45,7 +60,8 @@ const tabs = [
         <VBtn
           color="primary"
           variant="flat"
-          :to="`/settings/students/${userId}/update`"
+          :to="`/settings/${resourcePlural}/${userId}/update`"
+          @click.prevent="onClickEditBtn"
         >
           {{ t(`actions.update`) }}</VBtn
         >

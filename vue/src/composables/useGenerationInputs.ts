@@ -25,19 +25,19 @@ export default function useGenerationInputs(
   )
 
   const validationSchema = object({
-    title: stringRequiredSchema.length(
+    title: stringRequiredSchema.max(
       MAX_TITLE_LENGTH,
       t('messages.validations.maxLength', { max: MAX_TITLE_LENGTH })
     ),
-    description: string().length(
+    description: string().max(
       MAX_DESCRIPTION_LENGTH,
-      t('messages.validations.maxLength', { max: MAX_TITLE_LENGTH })
+      t('messages.validations.maxLength', { max: MAX_DESCRIPTION_LENGTH })
     ),
     year: number().min(1900, t('messages.validations.minValue', { min: 1900 })),
   })
 
   // Form and fields
-  const { handleSubmit, handleReset } = useForm<IGenerationForm>({
+  const useFormRes = useForm<IGenerationForm>({
     validationSchema,
     initialValues: initialValues?.value,
   })
@@ -53,36 +53,49 @@ export default function useGenerationInputs(
 
   const { setAugmented } = useQueryParamsStore()
 
-  const onSubmit = handleSubmit(async (payload: IGenerationCoreField) => {
-    try {
-      if (isEdit) {
-        // Update generation logic
-        await $patch('generations', payload)
-        show({ message: t('messages.info.savedSuccessfully'), type: 'success' })
-      } else {
-        await $post('generations', payload)
-        show({
-          message: t('messages.info.createdSuccessfully'),
-          type: 'success',
-        })
+  const onSubmit = useFormRes.handleSubmit(
+    async (payload: IGenerationCoreField) => {
+      try {
+        if (isEdit) {
+          // Update generation logic
+          await $patch('generations', payload)
+          show({
+            message: t('messages.info.savedSuccessfully'),
+            type: 'success',
+          })
+        } else {
+          await $post('generations', payload)
+          show({
+            message: t('messages.info.createdSuccessfully'),
+            type: 'success',
+          })
 
-        // Create generation logic
+          // Create generation logic
+        }
+        setAugmented(false)
+        router.push({
+          path: '/settings/generations',
+        })
+      } catch (error) {
+        console.error(error)
       }
-      setAugmented(false)
-      router.push({
-        path: '/settings/generations',
-      })
-    } catch (error) {
-      console.error(error)
     }
-  })
+  )
+
+  const onReset = () => {
+    if (isEdit) {
+      useFormRes.handleReset()
+      return
+    }
+    router.back()
+  }
 
   return {
-    handleSubmit,
-    handleReset,
+    useFormRes,
     titleField,
     descriptionField,
     yearField,
     onSubmit,
+    onReset,
   }
 }
