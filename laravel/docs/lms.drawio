@@ -1,0 +1,49 @@
+<mxfile host="Electron" modified="2024-11-19T01:51:29.654Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.4.0 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="nNcbUxDogax4pmr4Z2pf" version="24.4.0" type="device">
+  <diagram name="Webapi" id="seJAW3jOBdx39RnSyHoG">
+    <mxGraphModel dx="954" dy="656" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="MzhDHMl9UR7uEevvaPjb-1" value="Webapi" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry width="270" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="MzhDHMl9UR7uEevvaPjb-2" value="Resource" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry y="40" width="270" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="MzhDHMl9UR7uEevvaPjb-3" value="User" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry y="160" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="MzhDHMl9UR7uEevvaPjb-4" value="Major" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="80" y="160" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="MzhDHMl9UR7uEevvaPjb-5" value="Room" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="160" y="160" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="MzhDHMl9UR7uEevvaPjb-6" value="Generation" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry y="200" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="MzhDHMl9UR7uEevvaPjb-7" value="Course" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="80" y="200" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="MzhDHMl9UR7uEevvaPjb-9" value="Class" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="80" y="240" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="MzhDHMl9UR7uEevvaPjb-10" value="CourseConfig" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="160" y="240" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="MzhDHMl9UR7uEevvaPjb-11" value="ClassSession" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="80" y="280" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="MzhDHMl9UR7uEevvaPjb-12" value="CourseMark" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="160" y="280" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="MzhDHMl9UR7uEevvaPjb-13" value="CourseMarkElement" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="160" y="320" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="MzhDHMl9UR7uEevvaPjb-14" value="Attendance" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="80" y="320" width="80" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

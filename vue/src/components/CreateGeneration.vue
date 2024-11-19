@@ -5,7 +5,6 @@ import { IGenerationCoreField } from '@/types/entities/generation.entity'
 import { IS_DEV } from '@/utils/constants'
 import { removeTrailingSlash } from '@/utils/helpers.js'
 import { faker } from '@faker-js/faker'
-import dayjs from 'dayjs'
 import { useI18n } from 'vue-i18n'
 
 const getRandomGeneration = (): IGenerationCoreField => {
