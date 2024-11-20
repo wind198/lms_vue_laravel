@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Entities;
 
 use App\Contracts\HasRepresentationRoute;
 use App\Models\Major;

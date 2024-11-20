@@ -30,6 +30,5 @@ declare module 'vue' {
     ShowUserBasicInfo: typeof import('./components/ShowUserBasicInfo.vue')['default']
     TableMetaToolbar: typeof import('./components/common/TableMetaToolbar.vue')['default']
     TableSkeleton: typeof import('./components/common/TableSkeleton.vue')['default']
-    YearPicker: typeof import('./components/common/YearPicker.vue')['default']
   }
 }

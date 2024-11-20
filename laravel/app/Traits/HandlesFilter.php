@@ -18,6 +18,18 @@ trait HandlesFilter
         }
 
     }
+    public function handleNumberFilter(Builder $query, array $filter, array $numberFields)
+    {
+        foreach ($numberFields as $field) {
+            if (!empty($filter[$field]['gte'])) {
+                $query->where($field, '>=', $filter[$field]['gte']);
+            }
+            if (!empty($filter[$field]['lte'])) {
+                $query->where($field, '<=', $filter[$field]['lte']);
+            }
+        }
+
+    }
     public function handleDirectFilter(Builder $query, array $filter, array $directFilters)
     {
         foreach ($directFilters as $field) {

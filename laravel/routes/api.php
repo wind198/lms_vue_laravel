@@ -11,36 +11,23 @@ Route::group(
         'sanctum'
     ],
     function () {
-        Route::controller(StudentsController::class)->group(function () {
-            Route::get('/students', 'index')->name(StudentsController::INDEX_ROUTE);
-            Route::get('/students/{user}/representation', 'representation')->name(StudentsController::REPRESENTATION_ROUTE);
-            Route::get('/students/{user}', 'show')->name(StudentsController::SHOW_ROUTE);
-            Route::post('/students', 'create')->name(StudentsController::CREATE_ROUTE);
-            Route::delete('/students/delete-many', 'deleteMany')->name(StudentsController::DELETE_MANY_ROUTE);
-            Route::delete('/students/{user}', 'delete')->name(StudentsController::DELETE_ROUTE);
-            Route::patch('/students/update-many', 'updateMany')->name(StudentsController::UPDATE_MANY_ROUTE);
-            Route::patch('/students/{user}', 'update')->name(StudentsController::UPDATE_ROUTE);
-        });
-        Route::controller(TeachersController::class)->group(function () {
-            Route::get('/teachers', 'index')->name(TeachersController::INDEX_ROUTE);
-            Route::get('/teachers/{user}/representation', 'representation')->name(TeachersController::REPRESENTATION_ROUTE);
+        Route::apiResource('students', StudentsController::class);
+        Route::controller(StudentsController::class)->prefix('students')->group(function () {
+            Route::patch('update-many', 'updateMany')->name('students.update-many');
+            Route::delete('destroy-many', 'destroyMany')->name('students.destroy-many');
 
-            Route::get('/teachers/{user}', 'show')->name(TeachersController::SHOW_ROUTE);
-            Route::post('/teachers', 'create')->name(TeachersController::CREATE_ROUTE);
-            Route::delete('/teachers/delete-many', 'deleteMany')->name(TeachersController::DELETE_MANY_ROUTE);
-            Route::delete('/teachers/{user}', 'delete')->name(TeachersController::DELETE_ROUTE);
-            Route::patch('/teachers/update-many', 'updateMany')->name(TeachersController::UPDATE_MANY_ROUTE);
-            Route::patch('/teachers/{user}', 'update')->name(TeachersController::UPDATE_ROUTE);
         });
-        Route::controller(GenerationsController::class)->group(function () {
-            Route::get('/generations', 'index')->name(GenerationsController::INDEX_ROUTE);
-            Route::get('/generations/{user}/representation', 'representation')->name(GenerationsController::REPRESENTATION_ROUTE);
+        Route::apiResource('teachers', TeachersController::class);
+        Route::controller(TeachersController::class)->prefix('teachers')->group(function () {
+            Route::patch('update-many', 'updateMany');
+            Route::delete('destroy-many', 'destroyMany');
 
-            Route::get('/generations/{generation}', 'show')->name(GenerationsController::SHOW_ROUTE);
-            Route::post('/generations', 'create')->name(GenerationsController::CREATE_ROUTE);
-            Route::delete('/generations/delete-many', 'deleteMany')->name(GenerationsController::DELETE_MANY_ROUTE);
-            Route::delete('/generations/{generation}', 'delete')->name(GenerationsController::DELETE_ROUTE);
-            Route::patch('/generations/{generation}', 'update')->name(GenerationsController::UPDATE_ROUTE);
+        });
+        Route::apiResource('generations', GenerationsController::class);
+        Route::controller(GenerationsController::class)->prefix('generations')->group(function () {
+            // Route::patch('update-many', 'updateMany');
+            Route::delete('destroy-many', 'destroyMany');
+
         });
         Route::get('/user', function (Request $request) {
             return $request->user();

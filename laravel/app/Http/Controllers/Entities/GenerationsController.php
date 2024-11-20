@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Entities;
 
 use App\Contracts\HasRepresentationRoute;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateGenerationRequest;
 use App\Http\Requests\UpdateGenerationRequest;
 use App\Models\Generation;
@@ -39,14 +38,16 @@ class GenerationsController extends Controller implements HasRepresentationRoute
             });
         }
 
-        // Date range filters
-
         $dateFilters = ['created_at'];
         $this->handleDateFilter($query, $filter, $dateFilters);
 
 
+        $numberFilters = ['year'];
+        $this->handleNumberFilter($query, $filter, $numberFilters);
+
         // Direct filters
-        // $directFilters = [];
+        $directFilters = [];
+        $this->handleDirectFilter($query, $filter, $directFilters);
 
 
         $res = $this->paginateQuery($query, $request->all());
@@ -86,7 +87,6 @@ class GenerationsController extends Controller implements HasRepresentationRoute
      */
     public function update(Generation $generation, UpdateGenerationRequest $request)
     {
-
         // Validate the request data
         $validated = $request->validated();
 
@@ -108,15 +108,13 @@ class GenerationsController extends Controller implements HasRepresentationRoute
     public function deleteMany(Request $request)
     {
         // Retrieve the array of generation IDs from the request
-        $ids = $request->input('ids', []);
+        $validated = $request->validate([
+            'ids' => ['required', 'array', 'min:1'],
+            'ids.*' => ['integer'],
+        ]);
 
-        if (!is_array($ids)) {
-            return response()->json(['message' => trans('validation.array', ['attribute' => 'ids'])], 400);
+        $ids = $validated['ids'];
 
-        }
-        if (empty($ids)) {
-            return response()->json(['message' => trans('validation.empty', ['attribute' => 'ids'])], 400);
-        }
         // Perform the deletion of the generations
         $deleted = Generation::whereIn('id', $ids)
             ->pluck('id'); // Retrieve IDs of the records to be deleted

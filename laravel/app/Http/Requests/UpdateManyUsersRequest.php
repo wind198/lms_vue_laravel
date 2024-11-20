@@ -27,7 +27,11 @@ class UpdateManyUsersRequest extends FormRequest
 
         unset($rules['email']);
 
-        // Make each field optional by modifying the rules
-        return ValidationHelpers::makeRulesOptional($rules);
+        $rules = ValidationHelpers::makeRulesOptional($rules);
+        $rules['ids']=[
+            'ids' => ['required', 'array', 'min:1'],
+            'ids.*' => ['integer'],
+        ];
+        return $rules;
     }
 }

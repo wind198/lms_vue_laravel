@@ -6,7 +6,7 @@ use App\Constants\AppConstants;
 use Database\Seeders\StudentSeeder;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Log;
-use App\Http\Controllers\StudentsController;
+use App\Http\Controllers\Entities\StudentsController;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Log\Logger;
@@ -31,7 +31,7 @@ class StudentControllerTest extends TestCase
         // Log in the user
         $this->actingAs($user);
         // Call the API at /students
-        $response = $this->getJson(route(StudentsController::INDEX_ROUTE));
+        $response = $this->getJson(route('students.index'));
 
         // Print out the response (optional)
         // You can uncomment the line below to see the response during testing
@@ -57,7 +57,7 @@ class StudentControllerTest extends TestCase
         // Log in the user
         $this->actingAs($user);
         // Call the API at /students
-        $response = $this->postJson(route(StudentsController::CREATE_ROUTE), User::factory()->makeOne([
+        $response = $this->postJson(route('students.store'), User::factory()->makeOne([
             'user_type' => AppConstants::STUDENT_ROLE,
             'education_background' => AppConstants::HIGH_SCHOOL,
         ])->toArray());
@@ -83,7 +83,7 @@ class StudentControllerTest extends TestCase
 
         $builder = User::query();
         $studentToUpdate = $builder->get()->random(1)->first();
-        $response = $this->patchJson(route(StudentsController::UPDATE_ROUTE, ['user' => $studentToUpdate->getKey()]), ['dob' => '2002-02-19']);
+        $response = $this->patchJson(route('students.update', ['user' => $studentToUpdate->getKey()]), ['dob' => '2002-02-19']);
 
         // Print out the response (optional)
         // You can uncomment the line below to see the response during testing
@@ -107,7 +107,7 @@ class StudentControllerTest extends TestCase
         $builder = User::query();
         $studentsToUpdate = $builder->get()->random(2);
         $studentsIds = $studentsToUpdate->pluck('id')->toArray();
-        $response = $this->patchJson(route(StudentsController::UPDATE_MANY_ROUTE, ['ids' => $studentsIds]), ['dob' => '2002-02-19']);
+        $response = $this->patchJson(route('students.update-many', ['ids' => $studentsIds]), ['dob' => '2002-02-19']);
 
         $content = $response->getContent();
 

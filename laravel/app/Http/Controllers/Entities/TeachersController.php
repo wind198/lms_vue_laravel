@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Entities;
 
 use App\Contracts\HasRepresentationRoute;
-use App\Http\Controllers\Controller;
 use App\Constants\AppConstants;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateManyUsersRequest;

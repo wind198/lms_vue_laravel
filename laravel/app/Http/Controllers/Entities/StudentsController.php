@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Entities;
 
 use App\Contracts\HasRepresentationRoute;
-use App\Http\Controllers\Controller;
 use App\Constants\AppConstants;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\StoreStudentRequest;
@@ -19,14 +18,7 @@ use Log;
 class StudentsController extends Controller implements HasRepresentationRoute
 {
     use HandlesPagination;
-    public const INDEX_ROUTE = 'students';
-    public const REPRESENTATION_ROUTE = self::INDEX_ROUTE . '.representation';
-    public const SHOW_ROUTE = self::INDEX_ROUTE . '.show';
-    public const CREATE_ROUTE = self::INDEX_ROUTE . '.create';
-    public const UPDATE_ROUTE = self::INDEX_ROUTE . '.update';
-    public const UPDATE_MANY_ROUTE = self::INDEX_ROUTE . '.update-many';
-    public const DELETE_ROUTE = self::INDEX_ROUTE . '.delete';
-    public const DELETE_MANY_ROUTE = self::INDEX_ROUTE . '.delete-many';
+    
 
     public function representation(string $user)
     {
@@ -81,7 +73,7 @@ class StudentsController extends Controller implements HasRepresentationRoute
     }
 
 
-    public function create(CreateUserRequest $request)
+    public function store(CreateUserRequest $request)
     {
         $validated = $request->validated();
         $payload = User::augmentCreateUserPayload($validated, AppConstants::STUDENT_ROLE);
@@ -139,9 +131,9 @@ class StudentsController extends Controller implements HasRepresentationRoute
     public function updateMany(UpdateManyUsersRequest $request)
     {
         // Retrieve the array of student IDs and validate the data
-        $ids = $request->input('ids', []);
         $validated = $request->validated();
 
+        $ids = $validated['ids'];
         if (!is_array($ids) || empty($ids)) {
             return response()->json(['message' => trans('validation.invalid', ['attribute' => 'ids'])], 400);
         }
@@ -179,7 +171,7 @@ class StudentsController extends Controller implements HasRepresentationRoute
     /**
      * Remove the specified resource from storage.
      */
-    public function delete(User $user)
+    public function destroy(User $user)
     {
         $user->delete();
         return $user;
@@ -188,7 +180,7 @@ class StudentsController extends Controller implements HasRepresentationRoute
     /**
      * Delete multiple records at once.
      */
-    public function deleteMany(Request $request)
+    public function destroyMany(Request $request)
     {
         // Retrieve the array of student IDs from the request
         $ids = $request->input('ids', []);
