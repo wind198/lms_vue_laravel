@@ -36,4 +36,8 @@ class AppConstants
     public const MAX_ADDRESS_LENGTH = 200;
     public const MAX_TITLE_LENGTH = 50;
     public const MAX_DESCRIPTION_LENGTH = 200;
+
+    // Class session user roles
+    public const CLASS_SESSION_TEACHER_ROLE = 'teacher';
+    public const CLASS_SESSION_MENTOR_ROLE = 'mentor';
 }

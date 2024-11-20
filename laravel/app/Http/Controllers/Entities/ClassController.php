@@ -2,31 +2,31 @@
 
 namespace App\Http\Controllers\Entities;
 
-use App\Http\Requests\CreateCourseConfigRequest;
+use App\Http\Requests\CreateClassRequest;
 use App\Http\Requests\ManyIdsRequest;
-use App\Http\Requests\UpdateCourseConfigRequest;
+use App\Http\Requests\UpdateClassRequest;
 use App\Models\Course;
-use App\Models\CourseConfig;
+use App\Models\Klass;
 use App\Traits\HandlesFilter;
 use App\Traits\HandlesPagination;
 use DB;
 use Illuminate\Http\Request;
 
-class CourseConfigController extends Controller
+class ClassController extends Controller
 {
     use HandlesPagination, HandlesFilter;
-
-
+    /**
+     * Display a listing of the resource.
+     */
     public function index(Request $request)
     {
         $filter = $request->input('filter', []); // Filters array
 
-        $query = CourseConfig::query()->with
-        ([
-                'course' => function ($query) {
-                    $query->select('id', 'title');
-                }
-            ]);
+        $query = Klass::query()->with([
+            'course' => function ($query) {
+                $query->select('id', 'title');
+            }
+        ]);
 
         // Text search filter
         if (!empty($filter['q'])) {
@@ -52,48 +52,51 @@ class CourseConfigController extends Controller
         return $res['output'];
     }
 
-
-    public function store(CreateCourseConfigRequest $request)
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(CreateClassRequest $request)
     {
+
         $validated = $request->validated();
 
-        $builder = CourseConfig::query();
+        $builder = Klass::query();
 
-        $major = $builder->create($validated);
+        $course = $builder->create($validated);
 
-        return $major;
+        return $course;
+
 
     }
 
-
-    public function representation(string $courseConfig)
+    public function representation(string $klass)
     {
-        return CourseConfig::whereKey($courseConfig)->firstOrFail()->getAttribute('title');
+        return Klass::whereKey($klass)->firstOrFail()->getAttribute('title');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(CourseConfig $major)
+    public function show(Klass $klass)
     {
-        return $major;
+        return $klass;
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(CourseConfig $courseConfig, UpdateCourseConfigRequest $request)
+    public function update(UpdateClassRequest $request, Klass $klass)
     {
         // Validate the request data
         $validated = $request->validated();
 
-        // Update the major's details
-        $courseConfig->update($validated);
+        // Update the course's details
+        $klass->update($validated);
 
-        return $courseConfig;
+        return $klass;
     }
 
-    public function updateMany(UpdateCourseConfigRequest $request)
+    public function updateMany(UpdateClassRequest $request)
     {
         // Retrieve the array of student IDs and validate the data
         $validated = $request->validated();
@@ -110,35 +113,37 @@ class CourseConfigController extends Controller
             }
             $updatePayload = collect($validated)->except(['ids'])->toArray();
             // Bulk update fields that don’t require relationship handling
-            CourseConfig::whereIn('id', $ids)
+            Klass::whereIn('id', $ids)
                 ->update($updatePayload);
 
             // Commit the transaction
             DB::commit();
 
-            return response()->json(['updated_ids' => $ids, 'message' => 'Course config updated successfully.']);
+            return response()->json(['updated_ids' => $ids, 'message' => trans('message.success.updated', ['resource' => trans('nouns.class')])]);
         } catch (\Exception $e) {
             // Rollback in case of error
             DB::rollBack();
-            return response()->json(['error' => 'Failed to update course config', 'details' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Failed to update classes', 'details' => $e->getMessage()], 500);
         }
     }
 
-    public function destroy(CourseConfig $courseConfig)
-    {
-        $courseConfig->delete();
-        return $courseConfig;
-    }
 
     /**
-     * Delete multiple records at once.
+     * Remove the specified resource from storage.
      */
+    public function destroy(Klass $klass)
+    {
+        $klass->delete();
+        return $klass;
+    }
+
+
     public function destroyMany(ManyIdsRequest $request)
     {
         $ids = $request->validated()['ids'];
 
         // Perform the deletion of the majors
-        $deleted = CourseConfig::whereIn('id', $ids)
+        $deleted = Klass::whereIn('id', $ids)
             ->pluck('id'); // Retrieve IDs of the records to be deleted
 
         if ($deleted->isEmpty()) {
@@ -146,8 +151,9 @@ class CourseConfigController extends Controller
         }
 
         // Actually delete the records
-        CourseConfig::whereIn('id', $deleted)->delete();
+        Klass::whereIn('id', $deleted)->delete();
 
         return $deleted;
     }
+
 }

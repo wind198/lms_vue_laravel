@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Constants\AppConstants;
+use App\Helpers\AppHelpers;
 use App\Helpers\ValidationHelpers;
 use App\Models\Major;
 use App\Models\User;
@@ -28,7 +29,6 @@ class UpdateMajorRequest extends FormRequest
     public function rules(): array
     {
         $rules = Major::getRules();
-
         return ValidationHelpers::makeRulesOptional($rules);
     }
 }

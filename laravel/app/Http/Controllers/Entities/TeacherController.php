@@ -5,25 +5,16 @@ namespace App\Http\Controllers\Entities;
 use App\Contracts\HasRepresentationRoute;
 use App\Constants\AppConstants;
 use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\ManyIdsRequest;
 use App\Http\Requests\UpdateManyUsersRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use App\Traits\HandlesPagination;
 use Illuminate\Http\Request;
 
-class TeachersController extends Controller implements HasRepresentationRoute
+class TeacherController extends Controller implements HasRepresentationRoute
 {
     use HandlesPagination;
-    public const INDEX_ROUTE = 'teachers';
-    public const REPRESENTATION_ROUTE = self::INDEX_ROUTE . '.representation';
-
-    public const SHOW_ROUTE = self::INDEX_ROUTE . '.show';
-    public const CREATE_ROUTE = self::INDEX_ROUTE . '.create';
-    public const UPDATE_ROUTE = self::INDEX_ROUTE . '.update';
-    public const UPDATE_MANY_ROUTE = self::INDEX_ROUTE . '.update-many';
-    public const DELETE_ROUTE = self::INDEX_ROUTE . '.delete';
-    public const DELETE_MANY_ROUTE = self::INDEX_ROUTE . '.delete-many';
-
     public function representation(string $user)
     {
         return User::whereKey($user)->firstOrFail()->getAttribute('full_name');
@@ -36,7 +27,7 @@ class TeachersController extends Controller implements HasRepresentationRoute
     {
         $filter = $request->input('filter', []); // Filters array
 
-        $query = User::where('user_type', 'teacher');
+        $query = User::query()->where('user_type', 'teacher');
 
         // Text search filter
         if (!empty($filter['q'])) {
@@ -76,7 +67,7 @@ class TeachersController extends Controller implements HasRepresentationRoute
     /**
      * Store a newly created resource in storage.
      */
-    public function create(CreateUserRequest $request)
+    public function store(CreateUserRequest $request)
     {
 
         $validated = $request->validated();
@@ -126,17 +117,10 @@ class TeachersController extends Controller implements HasRepresentationRoute
     public function updateMany(UpdateManyUsersRequest $request)
     {
         // Retrieve the array of teacher IDs from the request
-        $ids = $request->input('ids', []);
-        // Validate the request data
         $validated = $request->validated();
 
-        if (!is_array($ids)) {
-            return response()->json(['message' => trans('validation.array', ['attribute' => 'ids'])], 400);
-        }
-        // Ensure we have an array of teacher IDs and update data
-        if (empty($ids)) {
-            return response()->json(['message' => trans('validation.empty', ['attribute' => 'ids'])], 400);
-        }
+        $ids = $validated['ids'];
+
 
         User::whereIn('id', $ids)
             ->where('user_type', AppConstants::TEACHER_ROLE)->update($validated);
@@ -147,7 +131,7 @@ class TeachersController extends Controller implements HasRepresentationRoute
     /**
      * Remove the specified resource from storage.
      */
-    public function delete(User $user)
+    public function destroy(User $user)
     {
         $user->delete();
         return $user;
@@ -156,19 +140,10 @@ class TeachersController extends Controller implements HasRepresentationRoute
     /**
      * Delete multiple records at once.
      */
-    public function deleteMany(Request $request)
+    public function destroyMany(ManyIdsRequest $request)
     {
-        // Retrieve the array of teacher IDs from the request
-        $ids = $request->input('ids', []);
+        $ids = $request->validated()['ids'];
 
-        if (!is_array($ids)) {
-            return response()->json(['message' => trans('validation.array', ['attribute' => 'ids'])], 400);
-
-        }
-        if (empty($ids)) {
-            return response()->json(['message' => trans('validation.empty', ['attribute' => 'ids'])], 400);
-        }
-        // Perform the deletion of the teachers
         $deleted = User::whereIn('id', $ids)
             ->where('user_type', AppConstants::TEACHER_ROLE) // Ensure only teacher records are deleted
             ->pluck('id'); // Retrieve IDs of the records to be deleted

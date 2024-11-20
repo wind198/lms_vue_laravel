@@ -11,10 +11,12 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('majors', function (Blueprint $table) {
+        Schema::create('course_marks', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->foreign('course_config_id')->references('id')->on('course_configs')->onDelete('restrict');
             AppHelpers::addDescriptiveFieldToTable($table);
+            $table->smallInteger('factor', false, true)->default(1);
         });
     }
 
@@ -23,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('majors');
+        Schema::dropIfExists('course_marks');
     }
 };

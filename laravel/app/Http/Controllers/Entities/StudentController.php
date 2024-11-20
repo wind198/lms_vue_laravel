@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Entities;
 use App\Contracts\HasRepresentationRoute;
 use App\Constants\AppConstants;
 use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\ManyIdsRequest;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateManyUsersRequest;
 use App\Http\Requests\UpdateUserRequest;
@@ -15,10 +16,10 @@ use DB;
 use Illuminate\Http\Request;
 use Log;
 
-class StudentsController extends Controller implements HasRepresentationRoute
+class StudentController extends Controller implements HasRepresentationRoute
 {
     use HandlesPagination;
-    
+
 
     public function representation(string $user)
     {
@@ -124,7 +125,7 @@ class StudentsController extends Controller implements HasRepresentationRoute
         return $user;
     }
 
-    /**
+    /** 
      * Update the multiple record at once.
      */
 
@@ -134,28 +135,20 @@ class StudentsController extends Controller implements HasRepresentationRoute
         $validated = $request->validated();
 
         $ids = $validated['ids'];
-        if (!is_array($ids) || empty($ids)) {
-            return response()->json(['message' => trans('validation.invalid', ['attribute' => 'ids'])], 400);
-        }
-
         // Start a transaction for atomic updates
         DB::beginTransaction();
 
         try {
+            if (
+                isset($validated['generation_id'])
+            ) {
+                Generation::findOrFail($validated['generation_id']);
+            }
+            $updatePayload = collect($validated)->except(['ids'])->toArray();
             // Bulk update fields that don’t require relationship handling
             User::whereIn('id', $ids)
                 ->where('user_type', AppConstants::STUDENT_ROLE)
-                ->update(collect($validated)->except('generation_id')->toArray());
-
-            // Handle generation association in a separate batch if 'generation_id' is provided
-            if (isset($validated['generation_id'])) {
-                $matchGeneration = Generation::findOrFail($validated['generation_id']);
-
-                // Associate the generation in bulk for relevant users
-                User::whereIn('id', $ids)
-                    ->where('user_type', AppConstants::STUDENT_ROLE)
-                    ->update(['generation_id' => $matchGeneration->id]);
-            }
+                ->update($updatePayload);
 
             // Commit the transaction
             DB::commit();
@@ -180,18 +173,11 @@ class StudentsController extends Controller implements HasRepresentationRoute
     /**
      * Delete multiple records at once.
      */
-    public function destroyMany(Request $request)
+    public function destroyMany(ManyIdsRequest $request)
     {
         // Retrieve the array of student IDs from the request
-        $ids = $request->input('ids', []);
+        $ids = $request->validated()['ids'];
 
-        if (!is_array($ids)) {
-            return response()->json(['message' => trans('validation.array', ['attribute' => 'ids'])], 400);
-
-        }
-        if (empty($ids)) {
-            return response()->json(['message' => trans('validation.empty', ['attribute' => 'ids'])], 400);
-        }
         // Perform the deletion of the students
         $deleted = User::whereIn('id', $ids)
             ->where('user_type', AppConstants::STUDENT_ROLE) // Ensure only student records are deleted

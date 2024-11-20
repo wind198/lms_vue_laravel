@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Entities;
 
 use App\Contracts\HasRepresentationRoute;
+use App\Http\Requests\CreateMajorRequest;
+use App\Http\Requests\ManyIdsRequest;
+use App\Http\Requests\UpdateMajorRequest;
 use App\Models\Major;
 use App\Traits\HandlesFilter;
 use App\Traits\HandlesPagination;
@@ -11,18 +14,8 @@ use Illuminate\Http\Request;
 class MajorController extends Controller implements HasRepresentationRoute
 {
     use HandlesPagination, HandlesFilter;
-    public const INDEX_ROUTE = 'majors';
-    public const REPRESENTATION_ROUTE = self::INDEX_ROUTE . '.representation';
 
-    public const SHOW_ROUTE = self::INDEX_ROUTE . '.show';
-    public const CREATE_ROUTE = self::INDEX_ROUTE . '.create';
-    public const UPDATE_ROUTE = self::INDEX_ROUTE . '.update';
-    public const UPDATE_MANY_ROUTE = self::INDEX_ROUTE . '.update-many';
-    public const DELETE_ROUTE = self::INDEX_ROUTE . '.delete';
-    public const DELETE_MANY_ROUTE = self::INDEX_ROUTE . '.delete-many';
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index(Request $request)
     {
         $filter = $request->input('filter', []); // Filters array
@@ -36,14 +29,16 @@ class MajorController extends Controller implements HasRepresentationRoute
             });
         }
 
-        // Date range filters
-
         $dateFilters = ['created_at'];
         $this->handleDateFilter($query, $filter, $dateFilters);
 
 
+        $numberFilters = [];
+        $this->handleNumberFilter($query, $filter, $numberFilters);
+
         // Direct filters
-        // $directFilters = [];
+        $directFilters = [];
+        $this->handleDirectFilter($query, $filter, $directFilters);
 
 
         $res = $this->paginateQuery($query, $request->all());
@@ -52,7 +47,7 @@ class MajorController extends Controller implements HasRepresentationRoute
     }
 
 
-    public function create(CreateMajorRequest $request)
+    public function store(CreateMajorRequest $request)
     {
         $validated = $request->validated();
 
@@ -83,7 +78,6 @@ class MajorController extends Controller implements HasRepresentationRoute
      */
     public function update(Major $major, UpdateMajorRequest $request)
     {
-
         // Validate the request data
         $validated = $request->validated();
 
@@ -93,7 +87,7 @@ class MajorController extends Controller implements HasRepresentationRoute
         return $major;
     }
 
-    public function delete(Major $major)
+    public function destroy(Major $major)
     {
         $major->delete();
         return $major;
@@ -102,18 +96,10 @@ class MajorController extends Controller implements HasRepresentationRoute
     /**
      * Delete multiple records at once.
      */
-    public function deleteMany(Request $request)
+    public function destroyMany(ManyIdsRequest $request)
     {
-        // Retrieve the array of major IDs from the request
-        $ids = $request->input('ids', []);
+        $ids = $request->validated()['ids'];
 
-        if (!is_array($ids)) {
-            return response()->json(['message' => trans('validation.array', ['attribute' => 'ids'])], 400);
-
-        }
-        if (empty($ids)) {
-            return response()->json(['message' => trans('validation.empty', ['attribute' => 'ids'])], 400);
-        }
         // Perform the deletion of the majors
         $deleted = Major::whereIn('id', $ids)
             ->pluck('id'); // Retrieve IDs of the records to be deleted

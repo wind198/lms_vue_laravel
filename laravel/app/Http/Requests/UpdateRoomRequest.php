@@ -4,12 +4,12 @@ namespace App\Http\Requests;
 
 use App\Constants\AppConstants;
 use App\Helpers\ValidationHelpers;
-use App\Models\Major;
+use App\Models\Room;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class CreateMajorRequest extends FormRequest
+class UpdateRoomRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,6 +19,7 @@ class CreateMajorRequest extends FormRequest
         return true;
     }
 
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -26,7 +27,6 @@ class CreateMajorRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = Major::getRules();
-        return $rules;
+        return ValidationHelpers::makeRulesOptional(Room::getRules());
     }
 }

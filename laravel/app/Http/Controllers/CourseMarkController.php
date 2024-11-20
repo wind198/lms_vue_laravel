@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Entities;
+namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateRoomRequest;
+use App\Http\Requests\CreateCourseMarkRequest;
 use App\Http\Requests\ManyIdsRequest;
-use App\Http\Requests\UpdateRoomRequest;
-use App\Models\Room;
+use App\Models\CourseMark;
+use App\Http\Requests\StoreCourseMarkRequest;
+use App\Http\Requests\UpdateCourseMarkRequest;
 use App\Traits\HandlesFilter;
 use App\Traits\HandlesPagination;
-use Illuminate\Http\Request;
+use Request;
 
-class RoomController extends Controller
+class CourseMarkController
 {
     use HandlesPagination, HandlesFilter;
 
@@ -19,7 +20,7 @@ class RoomController extends Controller
     {
         $filter = $request->input('filter', []); // Filters array
 
-        $query = Room::query()->withCount('students');
+        $query = CourseMark::query()->withCount('students');
 
         // Text search filter
         if (!empty($filter['q'])) {
@@ -46,50 +47,50 @@ class RoomController extends Controller
     }
 
 
-    public function store(CreateRoomRequest $request)
+    public function store(CreateCourseMarkRequest $request)
     {
         $validated = $request->validated();
 
-        $builder = Room::query();
+        $builder = CourseMark::query();
 
-        $major = $builder->create($validated);
+        $courseMark = $builder->create($validated);
 
-        return $major;
+        return $courseMark;
 
     }
 
 
-    public function representation(string $major)
+    public function representation(string $courseMark)
     {
-        return Room::whereKey($major)->firstOrFail()->getAttribute('title');
+        return CourseMark::whereKey($courseMark)->firstOrFail()->getAttribute('title');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Room $major)
+    public function show(CourseMark $courseMark)
     {
-        return $major;
+        return $courseMark;
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Room $major, UpdateRoomRequest $request)
+    public function update(CourseMark $courseMark, UpdateCourseMarkRequest $request)
     {
         // Validate the request data
         $validated = $request->validated();
 
-        // Update the major's details
-        $major->update($validated);
+        // Update the courseMark's details
+        $courseMark->update($validated);
 
-        return $major;
+        return $courseMark;
     }
 
-    public function destroy(Room $major)
+    public function destroy(CourseMark $courseMark)
     {
-        $major->delete();
-        return $major;
+        $courseMark->delete();
+        return $courseMark;
     }
 
     /**
@@ -99,8 +100,8 @@ class RoomController extends Controller
     {
         $ids = $request->validated()['ids'];
 
-        // Perform the deletion of the majors
-        $deleted = Room::whereIn('id', $ids)
+        // Perform the deletion of the courseMarks
+        $deleted = CourseMark::whereIn('id', $ids)
             ->pluck('id'); // Retrieve IDs of the records to be deleted
 
         if ($deleted->isEmpty()) {
@@ -108,7 +109,7 @@ class RoomController extends Controller
         }
 
         // Actually delete the records
-        Room::whereIn('id', $deleted)->delete();
+        CourseMark::whereIn('id', $deleted)->delete();
 
         return $deleted;
     }

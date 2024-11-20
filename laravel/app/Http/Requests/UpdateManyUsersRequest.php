@@ -28,10 +28,10 @@ class UpdateManyUsersRequest extends FormRequest
         unset($rules['email']);
 
         $rules = ValidationHelpers::makeRulesOptional($rules);
-        $rules['ids']=[
-            'ids' => ['required', 'array', 'min:1'],
-            'ids.*' => ['integer'],
-        ];
+        $rules['ids'] =
+            ['required', 'array', 'min:1'];
+        $rules['ids.*'] =
+            ['required', 'string'];
         return $rules;
     }
 }

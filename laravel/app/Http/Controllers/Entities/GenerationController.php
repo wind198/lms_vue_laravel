@@ -4,27 +4,18 @@ namespace App\Http\Controllers\Entities;
 
 use App\Contracts\HasRepresentationRoute;
 use App\Http\Requests\CreateGenerationRequest;
+use App\Http\Requests\ManyIdsRequest;
 use App\Http\Requests\UpdateGenerationRequest;
 use App\Models\Generation;
 use App\Traits\HandlesFilter;
 use App\Traits\HandlesPagination;
 use Illuminate\Http\Request;
 
-class GenerationsController extends Controller implements HasRepresentationRoute
+class GenerationController extends Controller implements HasRepresentationRoute
 {
     use HandlesPagination, HandlesFilter;
-    public const INDEX_ROUTE = 'generations';
-    public const REPRESENTATION_ROUTE = self::INDEX_ROUTE . '.representation';
 
-    public const SHOW_ROUTE = self::INDEX_ROUTE . '.show';
-    public const CREATE_ROUTE = self::INDEX_ROUTE . '.create';
-    public const UPDATE_ROUTE = self::INDEX_ROUTE . '.update';
-    public const UPDATE_MANY_ROUTE = self::INDEX_ROUTE . '.update-many';
-    public const DELETE_ROUTE = self::INDEX_ROUTE . '.delete';
-    public const DELETE_MANY_ROUTE = self::INDEX_ROUTE . '.delete-many';
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index(Request $request)
     {
         $filter = $request->input('filter', []); // Filters array
@@ -96,7 +87,7 @@ class GenerationsController extends Controller implements HasRepresentationRoute
         return $generation;
     }
 
-    public function delete(Generation $generation)
+    public function destroy(Generation $generation)
     {
         $generation->delete();
         return $generation;
@@ -105,15 +96,9 @@ class GenerationsController extends Controller implements HasRepresentationRoute
     /**
      * Delete multiple records at once.
      */
-    public function deleteMany(Request $request)
+    public function destroyMany(ManyIdsRequest $request)
     {
-        // Retrieve the array of generation IDs from the request
-        $validated = $request->validate([
-            'ids' => ['required', 'array', 'min:1'],
-            'ids.*' => ['integer'],
-        ]);
-
-        $ids = $validated['ids'];
+        $ids = $request->validated()['ids'];
 
         // Perform the deletion of the generations
         $deleted = Generation::whereIn('id', $ids)

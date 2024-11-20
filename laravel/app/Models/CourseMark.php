@@ -6,9 +6,9 @@ use App\Constants\AppConstants;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CourseConfig extends Model
+class CourseMark extends Model
 {
-    /** @use HasFactory<\Database\Factories\CourseFactory> */
+    /** @use HasFactory<\Database\Factories\CourseMarkFactory> */
     use HasFactory;
 
     /**
@@ -16,7 +16,7 @@ class CourseConfig extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['title', 'description', 'course_id'];
+    protected $fillable = ['title', 'description', 'course_config_id', 'factor'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -40,24 +40,18 @@ class CourseConfig extends Model
         $defaultRules = [
             'title' => ['required', 'string', 'max:' . AppConstants::MAX_TITLE_LENGTH],
             'description' => ['nullable', 'string', 'max:' . AppConstants::MAX_DESCRIPTION_LENGTH],
-            'course_id' => [
-                'exists:courses,id'
-            ],
-
+            'factor' => ['required', 'integer', 'min:0'],
+            'course_config_id' => [
+                'exists:course_configs,id'
+            ]
         ];
 
         return array_merge($defaultRules, $overrides);
     }
 
-    public function course()
+    public function courseConfig()
     {
-        return $this->belongsTo(Course::class);
-    }
-
-
-    public function courseMarks()
-    {
-        return $this->hasMany(CourseMark::class);
+        return $this->belongsTo(CourseConfig::class);
     }
 
 }

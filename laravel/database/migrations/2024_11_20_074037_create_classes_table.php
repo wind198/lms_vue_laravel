@@ -11,10 +11,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('majors', function (Blueprint $table) {
+        Schema::create('classes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             AppHelpers::addDescriptiveFieldToTable($table);
+            $table->foreign('course_id')->references('id')->on('courses')->onDelete('restrict');
         });
     }
 
@@ -23,6 +24,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('majors');
+        Schema::dropIfExists('classes');
     }
 };

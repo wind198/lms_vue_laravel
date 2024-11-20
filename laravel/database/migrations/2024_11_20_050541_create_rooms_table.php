@@ -1,5 +1,6 @@
 <?php
 
+use App\Constants\AppConstants;
 use App\Helpers\AppHelpers;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -11,10 +12,12 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('majors', function (Blueprint $table) {
+        Schema::create('rooms', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             AppHelpers::addDescriptiveFieldToTable($table);
+            $table->string('address', AppConstants::MAX_ADDRESS_LENGTH)->nullable();
+
         });
     }
 
@@ -23,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('majors');
+        Schema::dropIfExists('rooms');
     }
 };
