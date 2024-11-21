@@ -82,9 +82,10 @@ export default function useUserInputs(options: IOptions) {
     placeholderData: history.state.userData,
   })
 
-  const initialValues = computed(() =>
-    isEdit ? {} : IS_DEV ? getRandomUser() : undefined
-  )
+  const initialValues = computed(() => {
+    const state = history.state
+    return isEdit ? state.record : IS_DEV ? getRandomUser() : undefined
+  })
 
   // Form and fields
   const useFormRes = useForm<IUserForm>({

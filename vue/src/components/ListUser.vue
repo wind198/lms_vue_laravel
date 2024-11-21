@@ -11,7 +11,7 @@ import { IUserType } from '@/types/entities/user.entity'
 import { getAge, joinStr } from '@/utils/helpers'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import { cloneDeep } from 'lodash-es'
+import { cloneDeep, isError } from 'lodash-es'
 
 const props = defineProps<{ user_type: IUserType }>()
 

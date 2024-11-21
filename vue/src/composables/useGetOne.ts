@@ -30,5 +30,6 @@ export default function useGetOne<T>(options: IOptions) {
     placeholderData: options.placeholderData,
   })
 
-  return res
+  const isNotFoundErr = computed(() => res.error?.value?.status === 404)
+  return { ...res, isNotFoundErr }
 }

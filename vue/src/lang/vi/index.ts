@@ -78,6 +78,7 @@ export const vi = {
       info: 'Thông tin',
       warning: 'Chú ý',
       error: 'Lỗi',
+      unexpectedError: 'Lỗi bất ngờ xảy ra, vui lòng thử lại sau',
       success: 'Thành công',
       welcome: 'Chào mừng đến với Hệ thống Quản lý Học tập',
       savedSuccessfully: 'Các thay đổi của bạn đã được lưu thành công.',

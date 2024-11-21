@@ -88,6 +88,9 @@ class TeacherController extends Controller implements HasRepresentationRoute
      */
     public function show(User $user)
     {
+        if (!$user->exists) {
+            abort(404, 'Not found');
+        }
         return $user;
     }
 

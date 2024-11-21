@@ -15,7 +15,11 @@ const userId = ref<string | undefined>(currentRoute.params.id)
 
 const { t } = useI18n()
 
-const { data: userData, isLoading } = useGetOne<IUser>({
+const {
+  data: userData,
+  isLoading,
+  isNotFoundErr,
+} = useGetOne<IUser>({
   id: userId,
   resource: props.user_type,
   placeholderData: history.state.userData,
@@ -33,17 +37,20 @@ const router = useRouter()
 const resourcePlural = computed(() => props.user_type + 's')
 
 const onClickEditBtn = () => {
+  const record = cloneDeep(userData.value ?? {})
+
   router.push({
     path: `/settings/${resourcePlural.value}/${userId.value}/update`,
     state: {
-      userData: cloneDeep(userData.value ?? {}),
+      record,
     },
   })
 }
 </script>
 <template>
   <VSheet class="pa-3">
-    <VSkeletonLoader type="heading, card" v-if="isLoading" />
+    <NotFound v-if="isNotFoundErr" />
+    <VSkeletonLoader type="heading, card" v-else-if="isLoading" />
     <div v-else-if="userData">
       <VToolbar class="bg-transparent">
         <VTabs>

@@ -1,6 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { useToastStore } from '../stores/toast'
-import { extractErrorMsgFromFetchErr } from '../utils/helpers'
 import apiHttpClient from '../utils/httpClient'
 import useAuthStore from '../stores/auth'
 
@@ -13,7 +12,6 @@ export default function useApiHttpClient() {
 
   const handleHttpErr = (error: any) => {
     const statusCode = (error as AxiosError)?.status
-    show({ message: extractErrorMsgFromFetchErr(error), type: 'error' })
     if (statusCode === 401) {
       setAuthenticate(false)
       router.push('/auth/login')
@@ -21,34 +19,37 @@ export default function useApiHttpClient() {
     throw error
   }
 
-  const $get = <T = any, R = AxiosResponse<T>, D = any>(
+  const $get = async <T = any, R = AxiosResponse<T>, D = any>(
     url: string,
     config?: AxiosRequestConfig<D>
   ) => {
     try {
-      return apiHttpClient.get<T, R, D>(url, config)
+      const data = await apiHttpClient.get<T, R, D>(url, config)
+      return data
     } catch (error) {
       return handleHttpErr(error)
     }
   }
-  const $post = <T = any, R = AxiosResponse<T>, D = any>(
+  const $post = async <T = any, R = AxiosResponse<T>, D = any>(
     url: string,
     data: D,
     config?: AxiosRequestConfig<D>
   ) => {
     try {
-      return apiHttpClient.post<T, R, D>(url, data, config)
+      const res = await apiHttpClient.post<T, R, D>(url, data, config)
+      return res
     } catch (error) {
       return handleHttpErr(error)
     }
   }
-  const $patch = <T = any, R = AxiosResponse<T>, D = any>(
+  const $patch = async <T = any, R = AxiosResponse<T>, D = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig<D>
   ) => {
     try {
-      return apiHttpClient.patch<T, R, D>(url, data, config)
+      const res = await apiHttpClient.patch<T, R, D>(url, data, config)
+      return res
     } catch (error) {
       return handleHttpErr(error)
     }
