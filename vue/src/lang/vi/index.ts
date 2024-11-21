@@ -16,6 +16,9 @@ export const vi = {
     copy: 'Copy',
     confirm: 'Xác nhận',
   },
+  adjs: {
+    advanced: 'Nâng cao',
+  },
   nouns: {
     year: 'Năm',
     detail: 'Chi tiết',

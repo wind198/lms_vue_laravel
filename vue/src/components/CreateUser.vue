@@ -1,27 +1,11 @@
 <script setup lang="ts">
-import { faker } from '@faker-js/faker'
-import { useI18n } from 'vue-i18n'
-import useApiHttpClient from '../composables/useHttpClient.js'
-import useUserInputs from '../composables/useUserInputs.js'
-import { useToastStore } from '../stores/toast.js'
-import {
-  IUser,
-  IUserCoreField,
-  IUserType,
-} from '../types/entities/user.entity.js'
-import { apiPrefix, getOneUrl, removeTrailingSlash } from '../utils/helpers.js'
-import {
-  EDUCATION_BACKGROUND_LIST,
-  GENDER_LIST,
-  IS_DEV,
-} from '../utils/constants.js'
-import dayjs from 'dayjs'
-import useQueryParamsStore from '@/stores/query.js'
-import { useQueryClient } from '@tanstack/vue-query'
 import useGenerations from '@/composables/useGenerations.js'
-import { IMethod } from '@/types/common.type.js'
 import { camelCase } from 'lodash-es'
-import useGetOne from '@/composables/useGetOne.js'
+import { useI18n } from 'vue-i18n'
+import useUserInputs from '../composables/useUserInputs.js'
+import { IUser, IUserType } from '../types/entities/user.entity.js'
+import { EDUCATION_BACKGROUND_LIST, GENDER_LIST } from '../utils/constants.js'
+import { removeTrailingSlash } from '../utils/helpers.js'
 
 const props = defineProps<{
   userType: IUserType
@@ -45,6 +29,7 @@ const {
   generationField,
   onSubmit,
   onReset,
+  useFormRes,
 } = useUserInputs({
   isEdit: isEdit.value,
   resource: props.userType,
@@ -68,67 +53,120 @@ const generationItems = computed(() => {
     value: g.id,
   }))
 })
+
+const basicTabErr = computed(() => {
+  const basicItems: (keyof IUser)[] = [
+    'first_name',
+    'last_name',
+    'email',
+    'education_background',
+    'generation_id',
+    'gender',
+  ]
+
+  console.log(useFormRes.errors.value)
+
+  return basicItems.some((i) => !!useFormRes.errors.value[i])
+})
+
+const advancedTabErr = computed(() => {
+  const advancedItems: (keyof IUser)[] = ['phone', 'address']
+
+  console.log(useFormRes.errors.value)
+
+  return advancedItems.some((i) => !!useFormRes.errors.value[i])
+})
 </script>
 
 <template>
   <VForm @submit.prevent="onSubmit" @reset.prevent="onReset">
     <VSheet class="pa-3">
-      <v-text-field
-        :label="t('nouns.email')"
-        type="email"
-        :error-messages="emailField.errorMessage.value"
-        v-model="emailField.value.value"
-      />
-      <div class="d-flex align-baseline">
-        <v-text-field
-          :label="t('nouns.firstName')"
-          :error-messages="firstNameField.errorMessage.value"
-          v-model="firstNameField.value.value"
-          class="mr-3"
-        />
-        <v-text-field
-          :label="t('nouns.lastName')"
-          :error-messages="lastNameField.errorMessage.value"
-          v-model="lastNameField.value.value"
-        />
-      </div>
-      <v-select
-        :label="t('nouns.gender')"
-        v-model="genderField.value.value"
-        :error-messages="genderField.errorMessage.value"
-        :items="genderItemList"
-      />
-      <VSelect
-        v-if="userType === 'student'"
-        :label="t('nouns.generation')"
-        :items="generationItems"
-        v-model="generationField.value.value"
-        :loading="isLoadingGenerations"
-        :error-messages="generationField.errorMessage.value"
-      />
-      <v-text-field
-        :label="t('nouns.phone')"
-        :error-messages="phoneField.errorMessage.value"
-        v-model="phoneField.value.value"
-        type="tel"
-      />
-      <v-text-field
-        :label="t('nouns.address')"
-        :error-messages="addressField.errorMessage.value"
-        v-model="addressField.value.value"
-      />
+      <FormTabs
+        default-tab="basic"
+        :tabs="[
+          {
+            value: 'basic',
+            label: t('nouns.basicInfo'),
+            isError: basicTabErr,
+          },
+          {
+            value: 'advanced',
+            label: t('adjs.advanced'),
+            isError: advancedTabErr,
+          },
+        ]"
+      >
+        <template #basic>
+          <div class="tab-content">
+            <div class="d-flex align-baseline">
+              <v-text-field
+                :label="t('nouns.firstName')"
+                :error-messages="firstNameField.errorMessage.value"
+                v-model="firstNameField.value.value"
+                class="mr-3"
+              />
+              <v-text-field
+                :label="t('nouns.lastName')"
+                :error-messages="lastNameField.errorMessage.value"
+                v-model="lastNameField.value.value"
+              />
+            </div>
+            <v-text-field
+              :label="t('nouns.email')"
+              type="email"
+              :error-messages="emailField.errorMessage.value"
+              v-model="emailField.value.value"
+              prepend-icon="mdi-email"
+            />
+            <v-select
+              :label="t('nouns.gender')"
+              v-model="genderField.value.value"
+              :error-messages="genderField.errorMessage.value"
+              :items="genderItemList"
+              prepend-icon="mdi-human-female"
+            />
+            <VDateInput
+              :label="t('nouns.dob')"
+              v-model="dobField.value.value"
+              :error-messages="dobField.errorMessage.value"
+            />
+            <VSelect
+              v-if="userType === 'student'"
+              :label="t('nouns.generation')"
+              :items="generationItems"
+              v-model="generationField.value.value"
+              :loading="isLoadingGenerations"
+              :error-messages="generationField.errorMessage.value"
+              prepend-icon="mdi-account-group"
+            />
 
-      <v-select
-        :label="t('nouns.educationBackground')"
-        v-model="educationBackgroundField.value.value"
-        :error-messages="educationBackgroundField.errorMessage.value"
-        :items="educationBackgroundItemList"
-      />
-      <VDateInput
-        :label="t('nouns.dob')"
-        v-model="dobField.value.value"
-        :error-messages="dobField.errorMessage.value"
-      />
+            <v-select
+              prepend-icon="mdi-school"
+              :label="t('nouns.educationBackground')"
+              v-model="educationBackgroundField.value.value"
+              :error-messages="educationBackgroundField.errorMessage.value"
+              :items="educationBackgroundItemList"
+            />
+          </div>
+        </template>
+        <template #advanced>
+          <div class="tab-content">
+            <v-text-field
+              :label="t('nouns.phone')"
+              :error-messages="phoneField.errorMessage.value"
+              v-model="phoneField.value.value"
+              type="tel"
+              prepend-icon="mdi-phone"
+            />
+            <v-text-field
+              prepend-icon="mdi-map-marker"
+              :label="t('nouns.address')"
+              :error-messages="addressField.errorMessage.value"
+              v-model="addressField.value.value"
+            />
+          </div>
+        </template>
+      </FormTabs>
       <CreateFormActionsToolbar :is-edit="isEdit" />
     </VSheet>
   </VForm>
@@ -138,5 +176,9 @@ const generationItems = computed(() => {
 .error {
   color: red;
   font-size: 0.875rem;
+}
+.tab-content {
+  max-width: 800px;
+  margin: auto;
 }
 </style>

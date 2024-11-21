@@ -13,7 +13,7 @@ const settingLinks = {
       to: '/settings/generations',
       text: t('nouns.generation'),
       value: 'generation',
-      icon: 'mdi-timeline-clock', // Generation icon suggestion
+      icon: 'mdi-account-group', // Generation icon suggestion
     },
     {
       to: '/settings/students',

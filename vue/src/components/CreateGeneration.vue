@@ -35,8 +35,8 @@ const { data: userData } = useGetOne({
 
 const {
   useFormRes,
-  handleReset,
   onSubmit,
+  onReset,
   descriptionField,
   titleField,
   yearField,
@@ -50,7 +50,11 @@ watchEffect(() => {
 </script>
 
 <template>
-  <VForm @submit.prevent="onSubmit" @reset.prevent="handleReset">
+  <VForm
+    @submit.prevent="onSubmit"
+    @reset.prevent="onReset"
+    class="create-generation-form"
+  >
     <VSheet class="pa-3">
       <v-text-field
         :label="t('nouns.title')"
@@ -58,11 +62,13 @@ watchEffect(() => {
         v-model="titleField.value.value"
       />
       <v-textarea
+        prepend-icon="mdi-file-document-outline"
         :label="t('nouns.description')"
         :error-messages="descriptionField.errorMessage.value"
         v-model="descriptionField.value.value"
       />
       <DatePickerWithMenuPopup
+      prepend-icon="mdi-calendar"
         :style="{ width: '400px' }"
         is-year-picker
         :label="t('nouns.year')"
@@ -73,4 +79,9 @@ watchEffect(() => {
     </VSheet>
   </VForm>
 </template>
-<style scoped></style>
+<style scoped>
+.create-generation-form {
+  max-width: 800px;
+  margin: auto;
+}
+</style>

@@ -17,6 +17,7 @@ declare module 'vue' {
     DatePickerWithMenuPopup: typeof import('./components/common/DatePickerWithMenuPopup.vue')['default']
     DeleteBulkDialog: typeof import('./components/DeleteBulkDialog.vue')['default']
     FilterToolbar: typeof import('./components/common/FilterToolbar.vue')['default']
+    FormTabs: typeof import('./components/common/FormTabs.vue')['default']
     GenderFilter: typeof import('./components/common/GenderFilter.vue')['default']
     ListUser: typeof import('./components/ListUser.vue')['default']
     LongTextDialog: typeof import('./components/LongTextDialog.vue')['default']
