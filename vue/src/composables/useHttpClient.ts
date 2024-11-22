@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { useToastStore } from '../stores/toast'
 import apiHttpClient from '../utils/httpClient'
 import useAuthStore from '../stores/auth'
+import i18n from '@/lang/i18n'
 
 export default function useApiHttpClient() {
   const { show } = useToastStore()
@@ -10,8 +11,22 @@ export default function useApiHttpClient() {
 
   const router = useRouter()
 
+  const extractAxiosErrMsg = (error: AxiosError) => {
+    const unExpectedErrorMsg = i18n.global.t('messages.error.unexpectedError')
+    if (error.response) {
+      // If the server responded with a status code out of the range of 2xx
+      return error.response.data?.message || unExpectedErrorMsg
+    }
+
+    return unExpectedErrorMsg
+  }
+
   const handleHttpErr = (error: any) => {
     const statusCode = (error as AxiosError)?.status
+    show({
+      type: 'error',
+      message: extractAxiosErrMsg(error),
+    })
     if (statusCode === 401) {
       setAuthenticate(false)
       router.push('/auth/login')
