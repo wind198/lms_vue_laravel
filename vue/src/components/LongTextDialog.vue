@@ -33,7 +33,11 @@ const addToClipboard = async () => {
           @click="addToClipboard"
         />
         <v-spacer />
-        <v-btn :text="t('actions.close')" @click="store.closeLongTextDialog" />
+        <v-btn
+          color="primary"
+          :text="t('actions.close')"
+          @click="store.closeLongTextDialog"
+        />
       </v-card-actions>
     </v-card>
   </v-dialog>

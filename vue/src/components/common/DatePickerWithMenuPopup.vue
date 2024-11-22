@@ -38,6 +38,8 @@ const handleUpdateDateValue = ($event: any) => {
     modelValue.value = dayjs($event).toDate()
   }
 }
+
+const pickerClasses = ['bg-white']
 </script>
 <template>
   <div class="date-picker-with-popup-menu">
@@ -53,6 +55,7 @@ const handleUpdateDateValue = ($event: any) => {
         />
       </template>
       <VDatePickerYears
+        :class="pickerClasses"
         v-if="isYearPicker"
         hide-header
         elevation="8"
@@ -61,6 +64,7 @@ const handleUpdateDateValue = ($event: any) => {
       />
       <VDatePickerMonth
         v-else-if="isMonthPicker"
+        :class="pickerClasses"
         hide-header
         elevation="8"
         :model-value="modelValue as any"
@@ -68,6 +72,7 @@ const handleUpdateDateValue = ($event: any) => {
       />
       <VDatePicker
         v-else
+        :class="pickerClasses"
         hide-header
         elevation="8"
         :model-value="modelValue"

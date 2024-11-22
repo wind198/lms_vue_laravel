@@ -10,6 +10,7 @@ import { MAX_DESCRIPTION_LENGTH, MAX_TITLE_LENGTH } from '@/utils/constants'
 import useApiHttpClient from '@/composables/useHttpClient'
 import { useToastStore } from '@/stores/toast'
 import useQueryParamsStore from '@/stores/query'
+import { apiPrefix } from '@/utils/helpers'
 
 export type IGenerationForm = IGenerationCoreField
 
@@ -58,13 +59,13 @@ export default function useGenerationInputs(
       try {
         if (isEdit) {
           // Update generation logic
-          await $patch('generations', payload)
+          await $patch(apiPrefix('generations'), payload)
           show({
             message: t('messages.info.savedSuccessfully'),
             type: 'success',
           })
         } else {
-          await $post('generations', payload)
+          await $post(apiPrefix('generations'), payload)
           show({
             message: t('messages.info.createdSuccessfully'),
             type: 'success',

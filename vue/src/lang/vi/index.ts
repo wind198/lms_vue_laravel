@@ -78,7 +78,6 @@ export const vi = {
       info: 'Thông tin',
       warning: 'Chú ý',
       error: 'Lỗi',
-      unexpectedError: 'Lỗi bất ngờ xảy ra, vui lòng thử lại sau',
       success: 'Thành công',
       welcome: 'Chào mừng đến với Hệ thống Quản lý Học tập',
       savedSuccessfully: 'Các thay đổi của bạn đã được lưu thành công.',
@@ -92,7 +91,9 @@ export const vi = {
     confirmation: {
       delete: 'Bạn có chắc muốn xóa {count} {entity} này?',
     },
-    error: {},
+    error: {
+      unexpectedError: 'Lỗi bất ngờ xảy ra, vui lòng thử lại sau',
+    },
     validations: {
       pleaseLogin: 'Đăng nhập để tiếp tục',
       minLength: 'Trường này phải có ít nhất {min} ký tự.',
