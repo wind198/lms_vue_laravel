@@ -11,7 +11,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('courses', function (Blueprint $table) {
+        Schema::create('course_configs', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             AppHelpers::addDescriptiveFieldToTable($table);
@@ -25,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('course_config');
+        Schema::dropIfExists('course_configs');
     }
 };

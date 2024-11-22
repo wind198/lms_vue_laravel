@@ -19,18 +19,25 @@ Route::group(
     ],
     function () {
         Route::controller(StudentController::class)->prefix('students')->group(function () {
+            Route::get('{user}/representation', 'representation');
+            
             Route::patch('update-many', 'updateMany')->name('students.update-many');
             Route::delete('destroy-many', 'destroyMany')->name('students.destroy-many');
 
         });
-        Route::apiResource('students', StudentController::class);
+        Route::apiResource('students', StudentController::class)->parameters([
+            'students' => 'user'
+        ]);
 
         Route::controller(TeacherController::class)->prefix('teachers')->group(function () {
+            Route::get('{user}/representation', 'representation');
             Route::patch('update-many', 'updateMany');
             Route::delete('destroy-many', 'destroyMany');
 
         });
-        Route::apiResource('teachers', TeacherController::class);
+        Route::apiResource('teachers', TeacherController::class)->parameters([
+            'teachers' => 'user'
+        ]);
 
         Route::controller(GenerationController::class)->prefix('generations')->group(function () {
             Route::delete('destroy-many', 'destroyMany');

@@ -47,7 +47,7 @@ class GenerationController extends Controller implements HasRepresentationRoute
     }
 
 
-    public function create(CreateGenerationRequest $request)
+    public function store(CreateGenerationRequest $request)
     {
         $validated = $request->validated();
 

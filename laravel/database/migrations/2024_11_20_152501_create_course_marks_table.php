@@ -14,6 +14,7 @@ return new class extends Migration {
         Schema::create('course_marks', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->unsignedBigInteger('course_config_id');
             $table->foreign('course_config_id')->references('id')->on('course_configs')->onDelete('restrict');
             AppHelpers::addDescriptiveFieldToTable($table);
             $table->smallInteger('factor', false, true)->default(1);

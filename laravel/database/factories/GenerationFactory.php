@@ -26,7 +26,7 @@ class GenerationFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => fake()->sentence(5),
+            'title' => fake()->words(3, true),
             'description' => fake()->sentence(50),
             'year' => fake()->numberBetween(1990, 2024),
         ];

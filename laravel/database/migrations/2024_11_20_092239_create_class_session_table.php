@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->timestamps();
             $table->dateTime('start_time');
             $table->dateTime('end_time');
+            $table->unsignedBigInteger('class_id');
             $table->foreign('class_id')->references('id')->on('classes')->onDelete('restrict');
         });
     }

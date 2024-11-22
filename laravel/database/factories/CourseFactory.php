@@ -21,7 +21,7 @@ class CourseFactory extends Factory
         $major = Major::query()->get()->take(10)->random();
 
         return [
-            'title' => fake()->sentence(5),
+            'title' => fake()->words(3, true),
             'description' => fake()->sentence(50),
             'major_id' => $major->getKey()
         ];

@@ -19,7 +19,7 @@ class ClassFactory extends Factory
     {
         $course = Course::query()->inRandomOrder()->first();
         return [
-            'title' => fake()->sentence(5),
+            'title' => fake()->words(3, true),
             'description' => fake()->sentence(50),
             'course_id' => $course->getKey()
         ];
