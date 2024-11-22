@@ -15,6 +15,8 @@ export const vi = {
     close: 'Đóng',
     copy: 'Copy',
     confirm: 'Xác nhận',
+    reload: 'Tải lại',
+    back: 'Quay lại'
   },
   adjs: {
     advanced: 'Nâng cao',
@@ -93,6 +95,7 @@ export const vi = {
     },
     error: {
       unexpectedError: 'Lỗi bất ngờ xảy ra, vui lòng thử lại sau',
+      notFound: 'Nội dung bạn tìm kiếm không tồn tại',
     },
     validations: {
       pleaseLogin: 'Đăng nhập để tiếp tục',

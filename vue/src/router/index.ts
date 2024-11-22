@@ -9,7 +9,6 @@ import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
 import { authNavigationGuard } from './guards/auth'
-import { buildQueryMiddleware } from './middlewares/build-query'
 import { DynamicTitleMiddleware } from './middlewares/dynamic-title'
 
 const augmentedRoutes = setupLayouts(routes)
