@@ -108,7 +108,7 @@ export function removeNullFields(obj: any) {
 }
 
 export const getDeleteApi = (resource: string) =>
-  apiPrefix(`/${resource}/delete-many`)
+  apiPrefix(`/${resource}/destroy-many`)
 
 export const getPathSegments = (i: string) => i.split(/\/+/).filter(Boolean)
 export const removeTrailingSlash = (i: string) => i.replace(/\/+$/g, '')

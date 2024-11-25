@@ -1,14 +1,38 @@
 <script setup lang="ts">
-import useGenerationInputs from '@/composables/useGenerationInputs'
-import useIsEditPage from '@/composables/useIsEditPage'
+import useGetOne from '@/composables/useGetOne.js'
+import useRoomInputs from '@/composables/useRoomInputs'
+import { removeTrailingSlash } from '@/utils/helpers.js'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
-const { onSubmit, onReset, descriptionField, titleField, yearField } =
-  useGenerationInputs()
+const { path, params } = useRoute()
 
-const { isEdit } = useIsEditPage()
+// @ts-expect-error
+const recordId = ref<number | undefined>(params.id)
+
+const isEdit = computed(() => removeTrailingSlash(path).endsWith('update'))
+
+const { data: userData } = useGetOne({
+  id: recordId,
+  resource: 'room',
+  placeholderData: history.state.recordData,
+})
+
+const {
+  useFormRes,
+  onSubmit,
+  onReset,
+  descriptionField,
+  titleField,
+  addressField,
+} = useRoomInputs()
+
+watchEffect(() => {
+  if (userData.value && !useFormRes.meta.value.dirty) {
+    useFormRes.setValues(userData.value)
+  }
+})
 </script>
 
 <template>
@@ -32,15 +56,16 @@ const { isEdit } = useIsEditPage()
       <v-textarea
         prepend-icon="mdi-map-marker"
         :label="t('nouns.address')"
-        :error-messages="descriptionField.errorMessage.value"
-        v-model="descriptionField.value.value"
+        :error-messages="addressField.errorMessage.value"
+        v-model="addressField.value.value"
       />
+
       <CreateFormActionsToolbar :is-edit="isEdit" />
     </VSheet>
   </VForm>
 </template>
 <style scoped>
-.create-generation-form {
+.create-room-form {
   max-width: 800px;
   margin: auto;
 }

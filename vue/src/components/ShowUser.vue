@@ -11,18 +11,18 @@ const props = defineProps<{
 
 const currentRoute = useRoute()
 
-const userId = ref<string | undefined>(currentRoute.params.id)
+const recordId = ref<string | undefined>(currentRoute.params.id)
 
 const { t } = useI18n()
 
 const {
-  data: userData,
+  data: recordData,
   isLoading,
   isNotFoundErr,
 } = useGetOne<IUser>({
-  id: userId,
+  id: recordId,
   resource: props.user_type,
-  placeholderData: history.state.userData,
+  placeholderData: history.state.recordData,
 })
 
 const tabs = [
@@ -37,12 +37,10 @@ const router = useRouter()
 const resourcePlural = computed(() => props.user_type + 's')
 
 const onClickEditBtn = () => {
-  const record = cloneDeep(userData.value ?? {})
-
   router.push({
-    path: `/settings/${resourcePlural.value}/${userId.value}/update`,
+    path: `/settings/${resourcePlural.value}/${recordId.value}/update`,
     state: {
-      record,
+      recordData: cloneDeep(recordData.value ?? {}),
     },
   })
 }
@@ -51,7 +49,7 @@ const onClickEditBtn = () => {
   <VSheet class="pa-3">
     <NotFound v-if="isNotFoundErr" />
     <VSkeletonLoader type="heading, card" v-else-if="isLoading" />
-    <div v-else-if="userData">
+    <div v-else-if="recordData">
       <VToolbar class="bg-transparent">
         <VTabs>
           <VTab
@@ -67,13 +65,13 @@ const onClickEditBtn = () => {
         <VBtn
           color="primary"
           variant="flat"
-          :to="`/settings/${resourcePlural}/${userId}/update`"
+          :to="`/settings/${resourcePlural}/${recordId}/update`"
           @click.prevent="onClickEditBtn"
         >
           {{ t(`actions.update`) }}</VBtn
         >
       </VToolbar>
-      <ShowUserBasicInfo :user-data="userData" />
+      <ShowUserBasicInfo :user-data="recordData" />
     </div>
   </VSheet>
 </template>

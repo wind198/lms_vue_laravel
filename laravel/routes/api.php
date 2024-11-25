@@ -20,7 +20,6 @@ Route::group(
     function () {
         Route::controller(StudentController::class)->prefix('students')->group(function () {
             Route::get('{user}/representation', 'representation');
-            
             Route::patch('update-many', 'updateMany')->name('students.update-many');
             Route::delete('destroy-many', 'destroyMany')->name('students.destroy-many');
 
@@ -41,6 +40,7 @@ Route::group(
 
         Route::controller(GenerationController::class)->prefix('generations')->group(function () {
             Route::delete('destroy-many', 'destroyMany');
+            Route::get('{generation}/representation', 'representation');
 
         });
         Route::apiResource('generations', GenerationController::class);
@@ -48,11 +48,15 @@ Route::group(
         Route::controller(RoomController::class)->prefix('rooms')->group(function () {
             Route::delete('destroy-many', 'destroyMany');
 
+            Route::get('{room}/representation', 'representation');
+
         });
         Route::apiResource('rooms', RoomController::class);
 
         Route::controller(MajorController::class)->prefix('majors')->group(function () {
             Route::delete('destroy-many', 'destroyMany');
+            Route::get('{major}/representation', 'representation');
+
 
         });
         Route::apiResource('majors', MajorController::class);
@@ -60,11 +64,15 @@ Route::group(
 
         Route::controller(CourseController::class)->prefix('courses')->group(function () {
             Route::delete('destroy-many', 'destroyMany');
+            Route::get('{course}/representation', 'representation');
+
         });
         Route::apiResource('courses', CourseController::class);
 
         Route::controller(ClassController::class)->prefix('classes')->group(function () {
             Route::delete('destroy-many', 'destroyMany');
+            Route::get('{klass}/representation', 'representation');
+
         });
         Route::apiResource('classes', ClassController::class)->parameters([
             'classes' => 'klass'
@@ -73,12 +81,16 @@ Route::group(
 
         Route::controller(CourseConfigController::class)->prefix('course-configs')->group(function () {
             Route::delete('destroy-many', 'destroyMany');
+            Route::get('{course_config}/representation', 'representation');
+
         });
         Route::apiResource('course-configs', CourseConfigController::class)->parameters([]);
 
 
         Route::controller(ClassSessionController::class)->prefix('class-sessions')->group(function () {
             Route::delete('destroy-many', 'destroyMany');
+            Route::get('{class_session}/representation', 'representation');
+
         });
         Route::apiResource('class-sessions', ClassSessionController::class)->parameters([]);
 

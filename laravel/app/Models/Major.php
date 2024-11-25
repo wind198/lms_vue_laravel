@@ -45,4 +45,9 @@ class Major extends Model
         return array_merge($defaultRules, $overrides);
     }
 
+    public function courses()
+    {
+        return $this->hasMany(Course::class, 'major_id');
+    }
+
 }

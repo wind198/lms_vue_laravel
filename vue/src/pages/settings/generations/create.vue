@@ -11,7 +11,7 @@ definePage({
 </script>
 
 <template>
-  <div class="create-teacher-page">
+  <div class="create-generation-page">
     <CreateGeneration />
   </div>
 </template>

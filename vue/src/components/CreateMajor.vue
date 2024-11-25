@@ -1,21 +1,22 @@
 <script setup lang="ts">
-import useGenerationInputs from '@/composables/useGenerationInputs'
-import useIsEditPage from '@/composables/useIsEditPage'
+import useMajorInputs from '@/composables/useMajorInputs'
+import { removeTrailingSlash } from '@/utils/helpers.js'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
-const { onSubmit, onReset, descriptionField, titleField, yearField } =
-  useGenerationInputs()
+const { path, params } = useRoute()
 
-const { isEdit } = useIsEditPage()
+const isEdit = computed(() => removeTrailingSlash(path).endsWith('update'))
+
+const { onSubmit, onReset, descriptionField, titleField } = useMajorInputs()
 </script>
 
 <template>
   <VForm
     @submit.prevent="onSubmit"
     @reset.prevent="onReset"
-    class="create-room-form"
+    class="create-major-form"
   >
     <VSheet class="pa-3">
       <v-text-field
@@ -29,18 +30,13 @@ const { isEdit } = useIsEditPage()
         :error-messages="descriptionField.errorMessage.value"
         v-model="descriptionField.value.value"
       />
-      <v-textarea
-        prepend-icon="mdi-map-marker"
-        :label="t('nouns.address')"
-        :error-messages="descriptionField.errorMessage.value"
-        v-model="descriptionField.value.value"
-      />
+
       <CreateFormActionsToolbar :is-edit="isEdit" />
     </VSheet>
   </VForm>
 </template>
 <style scoped>
-.create-generation-form {
+.create-major-form {
   max-width: 800px;
   margin: auto;
 }

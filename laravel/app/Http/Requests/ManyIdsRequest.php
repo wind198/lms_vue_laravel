@@ -27,6 +27,9 @@ class ManyIdsRequest extends FormRequest
      */
     public function rules(): array
     {
-    return 
+        return [
+            'ids' => ["array", "min:1", "required"],
+            'ids.*' => ["string", "required"],
+        ];
     }
 }

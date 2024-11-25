@@ -1,13 +1,10 @@
 import { useI18n } from 'vue-i18n'
-import {
-  IGeneration,
-  IGenerationCoreField,
-} from '@/types/entities/generation.entity'
 import { date, number, object, string } from 'yup'
 import { useField, useForm } from 'vee-validate'
 import { Dayjs } from 'dayjs'
 import {
   IS_DEV,
+  MAX_ADDRESS_LENGTH,
   MAX_DESCRIPTION_LENGTH,
   MAX_TITLE_LENGTH,
 } from '@/utils/constants'
@@ -18,20 +15,21 @@ import { apiPrefix, getOneUrl } from '@/utils/helpers'
 import useIsEditPage from '@/composables/useIsEditPage'
 import { faker } from '@faker-js/faker'
 import useGetOne from '@/composables/useGetOne'
+import { IRoom, IRoomCoreField } from '@/types/entities/room.entity'
 
-export type IGenerationForm = IGenerationCoreField
+export type IRoomForm = IRoomCoreField
 
-export type IUpdateGenerationForm = Partial<IGenerationForm>
+export type IUpdateRoomForm = Partial<IRoomForm>
 
-const getRandomGeneration = (): IGenerationCoreField => {
+const getRandomRoomInputs = (): IRoomCoreField => {
   return {
     title: faker.word.words(5),
     description: faker.word.words(20),
-    year: faker.number.int({ min: 1990, max: 2024 }),
+    address: faker.word.words(20),
   }
 }
 
-export default function useGenerationInputs() {
+export default function useRoomInputs() {
   const { t } = useI18n()
 
   const { isEdit } = useIsEditPage()
@@ -54,33 +52,40 @@ export default function useGenerationInputs() {
       MAX_DESCRIPTION_LENGTH,
       t('messages.validations.maxLength', { max: MAX_DESCRIPTION_LENGTH })
     ),
-    year: number().min(1900, t('messages.validations.minValue', { min: 1900 })),
+    address: string().max(
+      MAX_ADDRESS_LENGTH,
+      t('messages.validations.maxLength', { max: MAX_ADDRESS_LENGTH })
+    ),
   })
 
   const initialValues = computed(() => {
     const state = history.state
-    return isEdit ? state.recordData : IS_DEV ? getRandomGeneration() : undefined
+    return isEdit
+      ? state.recordData
+      : IS_DEV
+      ? getRandomRoomInputs()
+      : undefined
   })
 
-  const { data: generationData } = useGetOne<IGeneration>({
+  const { data: roomData } = useGetOne<IRoom>({
     id: recordId,
-    resource: 'generation',
+    resource: 'room',
   })
 
   watchEffect(() => {
-    if (generationData.value && !useFormRes.meta.value.dirty) {
-      useFormRes.setValues(generationData.value)
+    if (roomData.value && !useFormRes.meta.value.dirty) {
+      useFormRes.setValues(roomData.value)
     }
   })
 
   // Form and fields
-  const useFormRes = useForm<IGenerationForm>({
+  const useFormRes = useForm<IRoomForm>({
     validationSchema,
     initialValues: initialValues?.value,
   })
   const titleField = useField<string>('title')
   const descriptionField = useField<string>('description')
-  const yearField = useField<number>('year')
+  const addressField = useField<string>('room')
 
   const { $patch, $post } = useApiHttpClient()
 
@@ -90,39 +95,37 @@ export default function useGenerationInputs() {
 
   const { setAugmented } = useQueryParamsStore()
 
-  const onSubmit = useFormRes.handleSubmit(
-    async (payload: IGenerationCoreField) => {
-      try {
-        if (isEdit) {
-          // Update generation logic
-          await $patch(getOneUrl('generations', recordId), payload)
-          show({
-            message: t('messages.info.savedSuccessfully'),
-            type: 'success',
-          })
-        } else {
-          await $post(apiPrefix('generations'), payload)
-          show({
-            message: t('messages.info.createdSuccessfully'),
-            type: 'success',
-          })
-
-          // Create generation logic
-        }
-        setAugmented(false)
-        router.push({
-          path: '/settings/generations',
+  const onSubmit = useFormRes.handleSubmit(async (payload: IRoomCoreField) => {
+    try {
+      if (isEdit) {
+        // Update room logic
+        await $patch(getOneUrl('rooms', recordId), payload)
+        show({
+          message: t('messages.info.savedSuccessfully'),
+          type: 'success',
         })
-      } catch (error) {
-        console.error(error)
+      } else {
+        await $post(apiPrefix('rooms'), payload)
+        show({
+          message: t('messages.info.createdSuccessfully'),
+          type: 'success',
+        })
+
+        // Create room logic
       }
+      setAugmented(false)
+      router.push({
+        path: '/settings/rooms',
+      })
+    } catch (error) {
+      console.error(error)
     }
-  )
+  })
 
   const onReset = () => {
     if (isEdit) {
-      if (generationData.value) {
-        useFormRes.setValues(generationData.value)
+      if (roomData.value) {
+        useFormRes.setValues(roomData.value)
       }
       return
     }
@@ -133,7 +136,7 @@ export default function useGenerationInputs() {
     useFormRes,
     titleField,
     descriptionField,
-    yearField,
+    addressField,
     onSubmit,
     onReset,
   }

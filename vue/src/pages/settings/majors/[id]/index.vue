@@ -2,7 +2,7 @@
 import useFormatDateTime from '@/composables/useFormatDateTime.js'
 import useGetOne from '@/composables/useGetOne.js'
 import { IStringOrNumber } from '@/types/common.type.js'
-import { IGeneration } from '@/types/entities/generation.entity.js'
+import { IMajor } from '@/types/entities/major.entity.js'
 import { camelCase, cloneDeep } from 'lodash-es'
 import { useI18n } from 'vue-i18n'
 
@@ -10,41 +10,32 @@ definePage({
   meta: {
     isBreadcrumb: true,
     label: 'nouns.detail',
-    title: ['others.viewDetail', { entity: 'nouns.generation' }],
+    title: ['others.viewDetail', { entity: 'nouns.student' }],
   },
 })
 
-const fieldsToRenders: (keyof IGeneration)[] = [
-  'title',
-  'description',
-  'year',
-  'students_count',
-  'created_at',
-]
+const fieldsToRenders: (keyof IMajor)[] = ['title', 'description', 'created_at']
 
-const resourcePlural = 'generations'
+const resourcePlural = 'majors'
 
 const currentRoute = useRoute()
 
 // @ts-expect-error
 const recordId = ref<IStringOrNumber | undefined>(currentRoute.params.id)
 
-const { data: recordData, isLoading } = useGetOne<IGeneration>({
+const { data: recordData, isLoading } = useGetOne<IMajor>({
   id: recordId,
-  resource: 'generation',
+  resource: 'major',
   placeholderData: history.state.recordData,
 })
 
 const { formatDateCommon } = useFormatDateTime()
 
-const renderLabel = (f: keyof IGeneration) => {
-  if (f === 'students_count') {
-    return t('nouns.count', { entity: t('nouns.student') })
-  }
+const renderLabel = (f: keyof IMajor) => {
   return t(`nouns.${camelCase(f)}`)
 }
 
-const renderData = (f: keyof IGeneration) => {
+const renderData = (f: keyof IMajor) => {
   const val = recordData.value?.[f]
   switch (f) {
     case 'created_at':
@@ -69,7 +60,7 @@ const onClickEditBtn = () => {
 }
 </script>
 <template>
-  <div class="show-generation-page">
+  <div class="show-major-page">
     <VSheet class="pa-3">
       <VSkeletonLoader type="heading, card" v-if="isLoading" />
       <div v-else-if="recordData">
@@ -85,7 +76,7 @@ const onClickEditBtn = () => {
           >
         </VToolbar>
       </div>
-      <dl class="generation-info pa-2">
+      <dl class="major-info pa-2">
         <template v-for="f in fieldsToRenders" :key="f">
           <dt class="text-subtitle-2 mb-1">{{ renderLabel(f) }}</dt>
           <dd class="text-body-2 mb-2">

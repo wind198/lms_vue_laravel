@@ -6,7 +6,7 @@ import useSelection from '@/composables/useSelection'
 import useServerTableEventHandler from '@/composables/useServerTableEventHandler.js'
 import useServerTablePaginationParams from '@/composables/useServerTablePaginationParams.js'
 import useQueryParamsStore from '@/stores/query.js'
-import { IGeneration } from '@/types/entities/generation.entity'
+import { IMajor } from '@/types/entities/major.entity'
 import { joinStr } from '@/utils/helpers'
 import { cloneDeep } from 'lodash-es'
 import { storeToRefs } from 'pinia'
@@ -21,23 +21,22 @@ const { handleUpdateSort, handleUpdatePage, handleUpdatePerPage } =
 
 const { order, order_by, page, per_page } = useServerTablePaginationParams()
 
-const { data, isLoading } = useGetList<IGeneration>({
+const { data, isLoading } = useGetList<IMajor>({
   order,
   order_by,
   page,
   per_page,
   filter: filterParams,
-  resource: 'generation',
+  resource: 'major',
 })
 
-const generationList = computed(() => data.value?.data ?? [])
+const majorList = computed(() => data.value?.data ?? [])
 
 const paginationParams = computed(() => data.value?.params)
 
 const headers = ref([
   { sortable: true, title: t('nouns.title'), value: 'title' },
   { sortable: true, title: t('nouns.description'), value: 'description' },
-  { sortable: true, title: t('nouns.startYear'), value: 'year' },
   { sortable: true, title: t('nouns.createdAt'), value: 'created_at' },
   { sortable: true, title: t('nouns.actions'), value: 'actions', width: 80 },
 ])
@@ -45,7 +44,7 @@ const headers = ref([
 const { formatDateCommon } = useFormatDateTime()
 
 const { onClickDeleteBulk, selectedEntitesText, selectedEntities } =
-  useSelection({ resource: 'generation' })
+  useSelection({ resource: 'major' })
 
 const router = useRouter()
 
@@ -54,13 +53,13 @@ const onRowClick = (_: any, itemWrapper: any) => {
     return
   }
   router.push({
-    path: `/settings/generations/` + itemWrapper.item.id,
+    path: `/settings/majors/` + itemWrapper.item.id,
     state: { userData: cloneDeep(itemWrapper.item) },
   })
 }
 </script>
 <template>
-  <div class="generation-list px-3">
+  <div class="user-list px-3">
     <TableSkeleton v-if="isLoading" />
     <template v-else>
       <VToolbar class="d-flex align-center bg-transparent">
@@ -73,7 +72,7 @@ const onRowClick = (_: any, itemWrapper: any) => {
         <v-spacer />
         <FilterToolbar v-if="!selectedEntities.length" />
         <BulkActionToolbar @delete="onClickDeleteBulk" v-else />
-        <v-btn color="primary" variant="flat" to="/settings/generations/create">
+        <v-btn color="primary" variant="flat" to="/settings/majors/create">
           {{ t('actions.create') }}
         </v-btn>
       </VToolbar>
@@ -81,7 +80,7 @@ const onRowClick = (_: any, itemWrapper: any) => {
         v-model="selectedEntities"
         show-select
         :headers="headers"
-        :items="generationList"
+        :items="majorList"
         :sort-by="[{ key: order_by, order: order }]"
         :hide-default-footer="true"
         :items-per-page="per_page"
@@ -91,9 +90,9 @@ const onRowClick = (_: any, itemWrapper: any) => {
         <template #item.actions="{ item }">
           <RowActionButtons
             @click.stop=""
-            :edit-url="`/settings/generations/${item.id}/update`"
+            :edit-url="`/settings/majors/${item.id}/update`"
             :representation="item.title"
-            resource="generations"
+            resource="majors"
             :id="item.id"
           />
         </template>
@@ -107,7 +106,7 @@ const onRowClick = (_: any, itemWrapper: any) => {
             :title="
               t('others.smtOfsmo', {
                 smt: t('nouns.description'),
-                smo: joinStr(t('nouns.generation').toLowerCase(), item.title),
+                smo: joinStr(t('nouns.major').toLowerCase(), item.title),
               })
             "
           />

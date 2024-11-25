@@ -1,15 +1,15 @@
 <script setup lang="ts">
 definePage({
   meta: {
-    label: 'nouns.teacher',
-    title: ['nouns.list', { entity: 'nouns.teacher' }],
+    label: 'nouns.major',
+    title: ['nouns.list', { entity: 'nouns.major' }],
     isBreadcrumb: true,
   },
 })
 </script>
 
 <template>
-  <div class="list-teachers">
+  <div class="majors-page-wrapper">
     <AppBreadcrumbs />
     <RouterView />
   </div>

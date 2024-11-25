@@ -1,16 +1,14 @@
 <script setup lang="ts">
 definePage({
   meta: {
-    label: 'nouns.teacher',
-    title: ['nouns.list', { entity: 'nouns.teacher' }],
     isBreadcrumb: true,
+    isIdRoute: true,
+    title: ['actions.view', { entity: 'nouns.room' }],
   },
 })
 </script>
-
 <template>
-  <div class="list-teachers">
-    <AppBreadcrumbs />
+  <div class="room-page-wrapper">
     <RouterView />
   </div>
 </template>

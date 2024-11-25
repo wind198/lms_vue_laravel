@@ -16,12 +16,15 @@ export const vi = {
     copy: 'Copy',
     confirm: 'Xác nhận',
     reload: 'Tải lại',
-    back: 'Quay lại'
+    back: 'Quay lại',
   },
   adjs: {
     advanced: 'Nâng cao',
   },
   nouns: {
+    room: 'Phòng học',
+    major: 'Chuyên ngành',
+    class: 'Lớp học',
     year: 'Năm',
     detail: 'Chi tiết',
     basicInfo: 'Thông tin cơ bản',

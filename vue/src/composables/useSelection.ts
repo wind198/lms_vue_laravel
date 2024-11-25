@@ -3,12 +3,12 @@ import { useCommonStuffStore } from '../stores/common'
 import { getDeleteApi, joinStr } from '../utils/helpers'
 
 type IOptions = {
-  entity: string
-  entityPlural?: string
+  resource: string
+  resourcePlural?: string
 }
 
 export default function useSelection(options: IOptions) {
-  const { entity, entityPlural = entity + 's' } = options
+  const { resource, resourcePlural = resource + 's' } = options
 
   const { t } = useI18n()
 
@@ -19,20 +19,20 @@ export default function useSelection(options: IOptions) {
   const selectedEntitesText = computed(() =>
     t('messages.info.selected', {
       count: selectedEntities.value.length,
-      entity: t('nouns.' + entity),
+      entity: t('nouns.' + resource),
     })
   )
 
   const onClickDeleteBulk = () => {
     openDeleteBulkDialog({
-      deleteApi: getDeleteApi(entityPlural),
-      title: joinStr(t('actions.delete'), t('nouns.' + entity)),
+      deleteApi: getDeleteApi(resourcePlural),
+      title: joinStr(t('actions.delete'), t('nouns.' + resource)),
       text: t('messages.confirmation.delete', {
         count: selectedEntities.value.length,
-        entity: t('nouns.' + entity),
+        entity: t('nouns.' + resource),
       }),
       ids: selectedEntities.value,
-      queryKey: [entity],
+      queryKey: [resource],
     })
   }
 

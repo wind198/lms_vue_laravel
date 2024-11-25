@@ -47,3 +47,8 @@ export type IStringOrNumber = string | number
 export type IHasRepresentation = {
   representation: string
 }
+
+export type IHasResource = {
+  resource: string
+  resourcePlural?: string
+}

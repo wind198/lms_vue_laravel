@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { use } from 'vue-router'
 import TableMetaToolbar from '@/components/common/TableMetaToolbar.vue'
 import useFormatDateTime from '@/composables/useFormatDateTime'
 import useSelection from '@/composables/useSelection'
@@ -12,6 +11,7 @@ import { getAge, joinStr } from '@/utils/helpers'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { cloneDeep, isError } from 'lodash-es'
+import useGetList from '@/composables/useGetList'
 
 const props = defineProps<{ user_type: IUserType }>()
 
@@ -26,13 +26,13 @@ const { handleUpdateSort, handleUpdatePage, handleUpdatePerPage } =
 
 const { order, order_by, page, per_page } = useServerTablePaginationParams()
 
-const { data, isLoading } = useUsers({
+const { data, isLoading } = useGetList({
   order,
   order_by,
   page,
   per_page,
   filter: filterParams,
-  user_type: props.user_type,
+  resource: props.user_type,
 })
 
 const studentList = computed(() => data.value?.data ?? [])
@@ -57,7 +57,7 @@ const headers = ref([
 const { formatDateCommon } = useFormatDateTime()
 
 const { onClickDeleteBulk, selectedEntitesText, selectedEntities } =
-  useSelection({ entity: props.user_type })
+  useSelection({ resource: props.user_type })
 
 const router = useRouter()
 
@@ -67,7 +67,7 @@ const onRowClick = (_: any, itemWrapper: any) => {
   }
   router.push({
     path: `/settings/${resourcePlural.value}/` + itemWrapper.item.id,
-    state: { userData: cloneDeep(itemWrapper.item) },
+    state: { recordData: cloneDeep(itemWrapper.item) },
   })
 }
 </script>
@@ -117,6 +117,7 @@ const onRowClick = (_: any, itemWrapper: any) => {
             :representation="item.full_name"
             :resource="resourcePlural"
             :id="item.id"
+            @click.stop=""
           />
         </template>
         <template #item.created_at="{ value }">

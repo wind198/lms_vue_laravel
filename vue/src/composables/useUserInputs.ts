@@ -16,6 +16,7 @@ import useApiHttpClient from '@/composables/useHttpClient'
 import { apiPrefix, getOneUrl } from '@/utils/helpers'
 import useGetOne from '@/composables/useGetOne'
 import { faker } from '@faker-js/faker'
+import useIsEditPage from '@/composables/useIsEditPage'
 
 export type IUserForm = IUserCoreField
 
@@ -24,25 +25,21 @@ export type IUpdateUserForm = Partial<IUserForm>
 type IOptions = {
   resource: string
   resourcePlural?: string
-  isEdit: boolean
   user_type: IUserType
 }
 
 export default function useUserInputs(options: IOptions) {
-  const {
-    isEdit,
-    resource,
-    user_type,
-    resourcePlural = resource + 's',
-  } = options
+  const { resource, user_type, resourcePlural = resource + 's' } = options
 
   const { t } = useI18n()
 
-  const { path, params } = useRoute()
+  const { params } = useRoute()
 
   const stringRequiredSchema = string().required(
     t('messages.validations.required')
   )
+
+  const { isEdit } = useIsEditPage()
 
   const getRandomUser = (): IUserCoreField => {
     const firstName = faker.person.firstName()
@@ -74,17 +71,17 @@ export default function useUserInputs(options: IOptions) {
     generation_id: number().notRequired(),
   })
 
+  // @ts-expect-error
   const recordId = params['id']
 
   const { data: userData } = useGetOne<IUser>({
     id: recordId,
     resource,
-    placeholderData: history.state.userData,
   })
 
   const initialValues = computed(() => {
     const state = history.state
-    return isEdit ? state.record : IS_DEV ? getRandomUser() : undefined
+    return isEdit ? state.recordData : IS_DEV ? getRandomUser() : undefined
   })
 
   // Form and fields

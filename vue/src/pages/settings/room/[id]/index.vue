@@ -2,7 +2,7 @@
 import useFormatDateTime from '@/composables/useFormatDateTime.js'
 import useGetOne from '@/composables/useGetOne.js'
 import { IStringOrNumber } from '@/types/common.type.js'
-import { IGeneration } from '@/types/entities/generation.entity.js'
+import { IRoom } from '@/types/entities/room.entity.js'
 import { camelCase, cloneDeep } from 'lodash-es'
 import { useI18n } from 'vue-i18n'
 
@@ -10,41 +10,37 @@ definePage({
   meta: {
     isBreadcrumb: true,
     label: 'nouns.detail',
-    title: ['others.viewDetail', { entity: 'nouns.generation' }],
+    title: ['others.viewDetail', { entity: 'nouns.room' }],
   },
 })
 
-const fieldsToRenders: (keyof IGeneration)[] = [
+const fieldsToRenders: (keyof IRoom)[] = [
   'title',
   'description',
-  'year',
-  'students_count',
+  'address',
   'created_at',
 ]
 
-const resourcePlural = 'generations'
+const resourcePlural = 'rooms'
 
 const currentRoute = useRoute()
 
 // @ts-expect-error
 const recordId = ref<IStringOrNumber | undefined>(currentRoute.params.id)
 
-const { data: recordData, isLoading } = useGetOne<IGeneration>({
+const { data: recordData, isLoading } = useGetOne<IRoom>({
   id: recordId,
-  resource: 'generation',
+  resource: 'room',
   placeholderData: history.state.recordData,
 })
 
 const { formatDateCommon } = useFormatDateTime()
 
-const renderLabel = (f: keyof IGeneration) => {
-  if (f === 'students_count') {
-    return t('nouns.count', { entity: t('nouns.student') })
-  }
+const renderLabel = (f: keyof IRoom) => {
   return t(`nouns.${camelCase(f)}`)
 }
 
-const renderData = (f: keyof IGeneration) => {
+const renderData = (f: keyof IRoom) => {
   const val = recordData.value?.[f]
   switch (f) {
     case 'created_at':
@@ -69,7 +65,7 @@ const onClickEditBtn = () => {
 }
 </script>
 <template>
-  <div class="show-generation-page">
+  <div class="show-room-page">
     <VSheet class="pa-3">
       <VSkeletonLoader type="heading, card" v-if="isLoading" />
       <div v-else-if="recordData">
@@ -81,11 +77,10 @@ const onClickEditBtn = () => {
             :to="`/settings/${resourcePlural}/${recordId}/update`"
             @click.prevent="onClickEditBtn"
           >
-            {{ t(`actions.update`) }}</VBtn
-          >
+            {{ t(`actions.update`) }}</VBtn>
         </VToolbar>
       </div>
-      <dl class="generation-info pa-2">
+      <dl class="room-info pa-2">
         <template v-for="f in fieldsToRenders" :key="f">
           <dt class="text-subtitle-2 mb-1">{{ renderLabel(f) }}</dt>
           <dd class="text-body-2 mb-2">

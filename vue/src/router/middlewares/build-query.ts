@@ -19,6 +19,7 @@ export const buildQueryMiddleware: NavigationGuardWithThis<undefined> = async (
   const { path, hash, fullPath } = to
 
   const { augmented } = storeToRefs(useQueryParamsStore())
+
   const queryStore = useQueryParamsStore()
 
   const defaultSearchParams = getDefaultSearchParams()
@@ -31,6 +32,7 @@ export const buildQueryMiddleware: NavigationGuardWithThis<undefined> = async (
   let objectToUpdateSearchParams = parse(
     extractQueryString(fullPath)
   ) as Partial<ISearchParams>
+
   objectToUpdateSearchParams.augmented = true
 
   // If path has changed, then we need to reset the search params first, then apply the new one from the URL

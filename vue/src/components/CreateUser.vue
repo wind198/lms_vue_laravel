@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 import useUserInputs from '../composables/useUserInputs.js'
 import { IUser, IUserType } from '../types/entities/user.entity.js'
 import { EDUCATION_BACKGROUND_LIST, GENDER_LIST } from '../utils/constants.js'
-import { removeTrailingSlash } from '../utils/helpers.js'
+import useIsEditPage from '@/composables/useIsEditPage.js'
 
 const props = defineProps<{
   userType: IUserType
@@ -13,9 +13,7 @@ const props = defineProps<{
 
 const { t } = useI18n()
 
-const { path } = useRoute()
-
-const isEdit = computed(() => removeTrailingSlash(path).endsWith('update'))
+const { isEdit } = useIsEditPage()
 
 const {
   addressField,
@@ -31,7 +29,6 @@ const {
   onReset,
   useFormRes,
 } = useUserInputs({
-  isEdit: isEdit.value,
   resource: props.userType,
   user_type: props.userType,
 })

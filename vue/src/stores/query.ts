@@ -134,6 +134,7 @@ export const useQueryParamsStore = defineStore('query', () => {
     order_by,
     augmented,
     mapQueryStringToStore,
+    searchParams,
   }
 })
 
