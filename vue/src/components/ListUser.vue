@@ -114,8 +114,7 @@ const onRowClick = (_: any, itemWrapper: any) => {
         <template #item.actions="{ item }">
           <RowActionButtons
             :edit-url="`/settings/${resourcePlural}/${item.id}/update`"
-            :representation="item.full_name"
-            :resource="resourcePlural"
+            :resource="props.user_type"
             :id="item.id"
             @click.stop=""
           />

@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import useDeleteOne from '@/composables/useDeleteOne.js'
-import { IHasId, IStringOrNumber } from '@/types/common.type.js'
+import { IHasId, IHasResource, IStringOrNumber } from '@/types/common.type.js'
 
-const props = defineProps<{
-  representation: string
-  editUrl?: string
-  resource: string
-  id: IStringOrNumber
-}>()
+const props = defineProps<
+  {
+    editUrl?: string
+    id: IStringOrNumber
+  } & IHasResource
+>()
 
 const { mutateAsync, isPending } = useDeleteOne({
   id: props.id,
   resource: props.resource,
+  resourcePlular: props.resourcePlural,
 })
 </script>
 <template>

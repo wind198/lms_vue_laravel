@@ -6,7 +6,7 @@ import useSelection from '@/composables/useSelection'
 import useServerTableEventHandler from '@/composables/useServerTableEventHandler.js'
 import useServerTablePaginationParams from '@/composables/useServerTablePaginationParams.js'
 import useQueryParamsStore from '@/stores/query.js'
-import { IRoom } from '@/types/entities/room.entity'
+import { IClass } from '@/types/entities/class.entity'
 import { joinStr } from '@/utils/helpers'
 import { cloneDeep } from 'lodash-es'
 import { storeToRefs } from 'pinia'
@@ -21,23 +21,23 @@ const { handleUpdateSort, handleUpdatePage, handleUpdatePerPage } =
 
 const { order, order_by, page, per_page } = useServerTablePaginationParams()
 
-const { data, isLoading } = useGetList<IRoom>({
+const { data, isLoading } = useGetList<IClass>({
   order,
   order_by,
   page,
   per_page,
   filter: filterParams,
-  resource: 'room',
+  resource: 'class',
 })
 
-const roomList = computed(() => data.value?.data ?? [])
+const classList = computed(() => data.value?.data ?? [])
 
 const paginationParams = computed(() => data.value?.params)
 
 const headers = ref([
   { sortable: true, title: t('nouns.title'), value: 'title' },
   { sortable: true, title: t('nouns.description'), value: 'description' },
-  { sortable: true, title: t('nouns.address'), value: 'year' },
+  { sortable: true, title: t('nouns.major'), value: 'major' },
   { sortable: true, title: t('nouns.createdAt'), value: 'created_at' },
   { sortable: true, title: t('nouns.actions'), value: 'actions', width: 80 },
 ])
@@ -45,7 +45,7 @@ const headers = ref([
 const { formatDateCommon } = useFormatDateTime()
 
 const { onClickDeleteBulk, selectedEntitesText, selectedEntities } =
-  useSelection({ resource: 'room' })
+  useSelection({ resource: 'class' })
 
 const router = useRouter()
 
@@ -54,13 +54,13 @@ const onRowClick = (_: any, itemWrapper: any) => {
     return
   }
   router.push({
-    path: `/settings/rooms/` + itemWrapper.item.id,
+    path: `/study/classes/` + itemWrapper.item.id,
     state: { userData: cloneDeep(itemWrapper.item) },
   })
 }
 </script>
 <template>
-  <div class="room-list px-3">
+  <div class="class-list px-3">
     <TableSkeleton v-if="isLoading" />
     <template v-else>
       <VToolbar class="d-flex align-center bg-transparent">
@@ -73,7 +73,7 @@ const onRowClick = (_: any, itemWrapper: any) => {
         <v-spacer />
         <FilterToolbar v-if="!selectedEntities.length" />
         <BulkActionToolbar @delete="onClickDeleteBulk" v-else />
-        <v-btn color="primary" variant="flat" to="/settings/rooms/create">
+        <v-btn color="primary" variant="flat" to="/settings/classes/create">
           {{ t('actions.create') }}
         </v-btn>
       </VToolbar>
@@ -81,7 +81,7 @@ const onRowClick = (_: any, itemWrapper: any) => {
         v-model="selectedEntities"
         show-select
         :headers="headers"
-        :items="roomList"
+        :items="classList"
         :sort-by="[{ key: order_by, order: order }]"
         :hide-default-footer="true"
         :items-per-page="per_page"
@@ -91,9 +91,9 @@ const onRowClick = (_: any, itemWrapper: any) => {
         <template #item.actions="{ item }">
           <RowActionButtons
             @click.stop=""
-            :edit-url="`/settings/rooms/${item.id}/update`"
+            :edit-url="`/settings/classes/${item.id}/update`"
             :representation="item.title"
-            resource="room"
+            resource="class"
             :id="item.id"
           />
         </template>
@@ -103,26 +103,22 @@ const onRowClick = (_: any, itemWrapper: any) => {
         </template>
         <template #item.description="{ value, item }">
           <LongTextWithElipsis
-            :text="value"
             @click.stop=""
+            :text="value"
             :title="
               t('others.smtOfsmo', {
                 smt: t('nouns.description'),
-                smo: joinStr(t('nouns.room').toLowerCase(), item.title),
+                smo: joinStr(t('nouns.class').toLowerCase(), item.title),
               })
             "
         /></template>
-        <template #item.address="{ value, item }">
-          <LongTextWithElipsis
-          @click.stop=""
-          :text="value"
-            :title="
-              t('others.smtOfsmo', {
-                smt: t('nouns.address'),
-                smo: joinStr(t('nouns.room').toLowerCase(), item.title),
-              })
-            "
-          />
+        <template #item.course="{ value }">
+          <RouterLink
+            @click.stop=""
+            v-if="value"
+            :to="`/study/courses/${value.id}`"
+            >{{ value.title }}</RouterLink
+          >
         </template>
       </VDataTable>
     </template>

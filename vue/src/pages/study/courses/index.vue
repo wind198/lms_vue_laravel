@@ -93,7 +93,7 @@ const onRowClick = (_: any, itemWrapper: any) => {
             @click.stop=""
             :edit-url="`/settings/courses/${item.id}/update`"
             :representation="item.title"
-            resource="courses"
+            resource="course"
             :id="item.id"
           />
         </template>
