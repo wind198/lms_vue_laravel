@@ -71,7 +71,7 @@ const onClickEditBtn = () => {
           {{ t(`actions.update`) }}</VBtn
         >
       </VToolbar>
-      <ShowUserBasicInfo :user-data="recordData" />
+      <ShowUserBasicInfo :recordData="recordData" />
     </div>
   </VSheet>
 </template>

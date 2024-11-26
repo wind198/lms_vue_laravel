@@ -3,12 +3,12 @@ definePage({
   meta: {
     isBreadcrumb: true,
     isIdRoute: true,
-    title: ['actions.view', { entity: 'nouns.room' }],
+    title: ['actions.view', { entity: 'nouns.course' }],
   },
 })
 </script>
 <template>
-  <div class="room-page-wrapper">
+  <div class="course-page-wrapper">
     <RouterView />
   </div>
 </template>

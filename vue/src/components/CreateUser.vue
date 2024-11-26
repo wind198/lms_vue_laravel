@@ -6,6 +6,8 @@ import useUserInputs from '../composables/useUserInputs.js'
 import { IUser, IUserType } from '../types/entities/user.entity.js'
 import { EDUCATION_BACKGROUND_LIST, GENDER_LIST } from '../utils/constants.js'
 import useIsEditPage from '@/composables/useIsEditPage.js'
+import useGetList from '@/composables/useGetList.js'
+import { IGeneration } from '@/types/entities/generation.entity.js'
 
 const props = defineProps<{
   userType: IUserType
@@ -42,8 +44,15 @@ const educationBackgroundItemList = EDUCATION_BACKGROUND_LIST.map((i) => ({
   value: i,
 }))
 
+const queryGenerationPage = ref(1)
+const queryGenerationPerPage = ref(1e5)
+
 const { data: generationData, isLoading: isLoadingGenerations } =
-  useGenerations()
+  useGetList<IGeneration>({
+    resource: 'generation',
+    page: queryGenerationPage,
+    per_page: queryGenerationPerPage,
+  })
 const generationItems = computed(() => {
   return generationData.value?.data.map((g) => ({
     title: g.title,

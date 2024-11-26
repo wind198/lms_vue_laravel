@@ -2,14 +2,14 @@
 definePage({
   meta: {
     label: 'actions.update',
-    title: ['actions.update', { entity: 'nouns.generation' }],
+    title: ['actions.update', { entity: 'nouns.course' }],
     isBreadcrumb: true,
   },
 })
 </script>
 <template>
-  <div class="update-generation-page">
-    <CreateGeneration />
+  <div class="update-course-page">
+    <CreateCourse />
   </div>
 </template>
 <style scoped></style>

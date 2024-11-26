@@ -5,13 +5,13 @@ import { camelCase } from 'lodash-es'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{
-  userData: IUser
+  recordData: IUser
 }>()
 
 const fieldsToRenders: (keyof IUser)[] = [
   'full_name',
   'user_type',
-  ...(props.userData.user_type === 'student' ? (['generation'] as const) : []),
+  ...(props.recordData.user_type === 'student' ? (['generation'] as const) : []),
   'email',
   'gender',
   'phone',
@@ -25,7 +25,7 @@ const { t } = useI18n()
 const { formatDateCommon } = useFormatDateTime()
 
 const renderData = (f: keyof IUser) => {
-  const val = props.userData[f]
+  const val = props.recordData[f]
   switch (f) {
     case 'created_at':
     case 'dob':
@@ -46,10 +46,10 @@ const renderData = (f: keyof IUser) => {
       <dt class="text-subtitle-2 mb-1">{{ t(`nouns.${camelCase(f)}`) }}</dt>
       <dd class="text-body-2 mb-2" v-if="f === 'generation'">
         <RouterLink
-          :to="`/settings/generations/${userData.generation.id}`"
-          v-if="userData.generation?.id"
+          :to="`/settings/generations/${recordData.generation.id}`"
+          v-if="recordData.generation?.id"
         >
-          {{ userData.generation?.title }}
+          {{ recordData.generation?.title }}
         </RouterLink>
         <span v-else>
           {{ t('others.none') }}

@@ -102,7 +102,11 @@ class StudentController extends Controller implements HasRepresentationRoute
      */
     public function show(User $user)
     {
-        return $user;
+        return $user->with([
+            'generation' => function ($query) {
+                $query->select('id', 'title');
+            }
+        ]);
     }
 
     /**
