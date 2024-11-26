@@ -19,7 +19,7 @@ class RoomController extends Controller
     {
         $filter = $request->input('filter', []); // Filters array
 
-        $query = Room::query()->withCount('students');
+        $query = Room::query();
 
         // Text search filter
         if (!empty($filter['q'])) {

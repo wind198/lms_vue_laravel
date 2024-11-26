@@ -6,7 +6,7 @@ import useSelection from '@/composables/useSelection'
 import useServerTableEventHandler from '@/composables/useServerTableEventHandler.js'
 import useServerTablePaginationParams from '@/composables/useServerTablePaginationParams.js'
 import useQueryParamsStore from '@/stores/query.js'
-import { ICourse } from '@/types/entities/course.entity'
+import { IMajor } from '@/types/entities/major.entity'
 import { joinStr } from '@/utils/helpers'
 import { cloneDeep } from 'lodash-es'
 import { storeToRefs } from 'pinia'
@@ -21,23 +21,22 @@ const { handleUpdateSort, handleUpdatePage, handleUpdatePerPage } =
 
 const { order, order_by, page, per_page } = useServerTablePaginationParams()
 
-const { data, isLoading } = useGetList<ICourse>({
+const { data, isLoading } = useGetList<IMajor>({
   order,
   order_by,
   page,
   per_page,
   filter: filterParams,
-  resource: 'course',
+  resource: 'major',
 })
 
-const courseList = computed(() => data.value?.data ?? [])
+const majorList = computed(() => data.value?.data ?? [])
 
 const paginationParams = computed(() => data.value?.params)
 
 const headers = ref([
   { sortable: true, title: t('nouns.title'), value: 'title' },
   { sortable: true, title: t('nouns.description'), value: 'description' },
-  { sortable: true, title: t('nouns.major'), value: 'major' },
   { sortable: true, title: t('nouns.createdAt'), value: 'created_at' },
   { sortable: true, title: t('nouns.actions'), value: 'actions', width: 80 },
 ])
@@ -45,7 +44,7 @@ const headers = ref([
 const { formatDateCommon } = useFormatDateTime()
 
 const { onClickDeleteBulk, selectedEntitesText, selectedEntities } =
-  useSelection({ resource: 'course' })
+  useSelection({ resource: 'major' })
 
 const router = useRouter()
 
@@ -54,13 +53,13 @@ const onRowClick = (_: any, itemWrapper: any) => {
     return
   }
   router.push({
-    path: `/settings/courses/` + itemWrapper.item.id,
+    path: `/study/majors/` + itemWrapper.item.id,
     state: { userData: cloneDeep(itemWrapper.item) },
   })
 }
 </script>
 <template>
-  <div class="course-list px-3">
+  <div class="user-list px-3">
     <TableSkeleton v-if="isLoading" />
     <template v-else>
       <VToolbar class="d-flex align-center bg-transparent">
@@ -73,7 +72,7 @@ const onRowClick = (_: any, itemWrapper: any) => {
         <v-spacer />
         <FilterToolbar v-if="!selectedEntities.length" />
         <BulkActionToolbar @delete="onClickDeleteBulk" v-else />
-        <v-btn color="primary" variant="flat" to="/settings/courses/create">
+        <v-btn color="primary" variant="flat" to="/study/majors/create">
           {{ t('actions.create') }}
         </v-btn>
       </VToolbar>
@@ -81,7 +80,7 @@ const onRowClick = (_: any, itemWrapper: any) => {
         v-model="selectedEntities"
         show-select
         :headers="headers"
-        :items="courseList"
+        :items="majorList"
         :sort-by="[{ key: order_by, order: order }]"
         :hide-default-footer="true"
         :items-per-page="per_page"
@@ -91,9 +90,9 @@ const onRowClick = (_: any, itemWrapper: any) => {
         <template #item.actions="{ item }">
           <RowActionButtons
             @click.stop=""
-            :edit-url="`/settings/courses/${item.id}/update`"
+            :edit-url="`/study/majors/${item.id}/update`"
             :representation="item.title"
-            resource="courses"
+            resource="majors"
             :id="item.id"
           />
         </template>
@@ -103,21 +102,15 @@ const onRowClick = (_: any, itemWrapper: any) => {
         </template>
         <template #item.description="{ value, item }">
           <LongTextWithElipsis
+            @click.stop=""
             :text="value"
             :title="
               t('others.smtOfsmo', {
                 smt: t('nouns.description'),
-                smo: joinStr(t('nouns.course').toLowerCase(), item.title),
+                smo: joinStr(t('nouns.major').toLowerCase(), item.title),
               })
             "
-        /></template>
-        <template #item.major="{ value, item }">
-          <RouterLink
-            @click.stop=""
-            v-if="value"
-            :to="`/settings/majors/${value.id}`"
-            >{{ value.title }}</RouterLink
-          >
+          />
         </template>
       </VDataTable>
     </template>

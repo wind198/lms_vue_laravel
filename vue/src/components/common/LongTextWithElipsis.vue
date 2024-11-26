@@ -16,10 +16,10 @@ const handleShowAll = () => {
   })
 }
 
-const textToRender = computed(() => props.text.slice(0, props.limit ?? 50))
+const textToRender = computed(() => props.text?.slice(0, props.limit ?? 50))
 </script>
 <template>
-  <div class="long-text">
+  <div class="long-text" v-if="textToRender">
     {{ textToRender }}
     <v-btn
       class="elipsis-btn"

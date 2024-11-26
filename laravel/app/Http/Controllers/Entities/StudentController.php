@@ -100,13 +100,15 @@ class StudentController extends Controller implements HasRepresentationRoute
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(string $user)
     {
-        return $user->with([
+        $output = User::with([
             'generation' => function ($query) {
                 $query->select('id', 'title');
             }
-        ]);
+        ])->findOrFail($user); //
+
+        return $output;
     }
 
     /**

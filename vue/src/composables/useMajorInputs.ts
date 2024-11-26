@@ -103,7 +103,7 @@ export default function useMajorInputs() {
       }
       setAugmented(false)
       router.push({
-        path: '/settings/majors',
+        path: '/study/majors',
       })
     } catch (error) {
       console.error(error)

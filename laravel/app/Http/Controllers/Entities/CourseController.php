@@ -79,15 +79,15 @@ class CourseController extends Controller implements HasRepresentationRoute
     /**
      * Display the specified resource.
      */
-    public function show(Course $course)
+    public function show(string $course)
     {
-        return $course->with(
-            [
-                'major' => function ($query) {
-                    $query->select('id', 'title');
-                }
-            ]
-        );
+        $output = Course::with([
+            'major' => function ($query) {
+                $query->select('id', 'title');
+            }
+        ])->findOrFail($course); //
+
+        return $output;
     }
 
     /**

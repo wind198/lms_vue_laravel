@@ -27,6 +27,12 @@ const settingLinks = {
       value: 'teachers',
       icon: 'mdi-human-male-board', // Teacher icon
     },
+    {
+      to: '/settings/rooms',
+      text: t('nouns.room'),
+      value: 'rooms',
+      icon: 'mdi-table-chair', // Teacher icon
+    },
   ],
 }
 
@@ -47,12 +53,12 @@ const studyLinks = {
       icon: 'mdi-book', // Course icon
       value: 'courses',
     },
-    {
-      to: '/study/classes',
-      text: t('nouns.class'),
-      icon: 'mdi-chair-school', // Class icon
-      value: 'classes',
-    },
+    // {
+    //   to: '/study/classes',
+    //   text: t('nouns.class'),
+    //   icon: 'mdi-chair-school', // Class icon
+    //   value: 'classes',
+    // },
   ],
 }
 </script>

@@ -33,9 +33,9 @@ class AppConstants
     public const MAX_FIRST_NAME_LENGTH = 20;
     public const MAX_PHONE_LENGTH = 25;
     public const MAX_EMAIL_LENGTH = 50;
-    public const MAX_ADDRESS_LENGTH = 200;
+    public const MAX_ADDRESS_LENGTH = 500;
     public const MAX_TITLE_LENGTH = 50;
-    public const MAX_DESCRIPTION_LENGTH = 200;
+    public const MAX_DESCRIPTION_LENGTH = 500;
 
     // Class session user roles
     public const CLASS_SESSION_TEACHER_ROLE = 'teacher';

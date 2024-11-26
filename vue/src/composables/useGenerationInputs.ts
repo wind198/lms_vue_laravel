@@ -59,12 +59,22 @@ export default function useGenerationInputs() {
 
   const initialValues = computed(() => {
     const state = history.state
-    return isEdit ? state.recordData : IS_DEV ? getRandomGeneration() : undefined
+    return isEdit
+      ? state.recordData
+      : IS_DEV
+      ? getRandomGeneration()
+      : undefined
   })
 
   const { data: generationData } = useGetOne<IGeneration>({
     id: recordId,
     resource: 'generation',
+  })
+
+  // Form and fields
+  const useFormRes = useForm<IGenerationForm>({
+    validationSchema,
+    initialValues: initialValues?.value,
   })
 
   watchEffect(() => {
@@ -73,11 +83,6 @@ export default function useGenerationInputs() {
     }
   })
 
-  // Form and fields
-  const useFormRes = useForm<IGenerationForm>({
-    validationSchema,
-    initialValues: initialValues?.value,
-  })
   const titleField = useField<string>('title')
   const descriptionField = useField<string>('description')
   const yearField = useField<number>('year')

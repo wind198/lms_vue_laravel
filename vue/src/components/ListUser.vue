@@ -135,7 +135,7 @@ const onRowClick = (_: any, itemWrapper: any) => {
           >
         </template>
         <template #item.gender="{ value }">
-          {{ t('nouns.' + value.toLowerCase()) }}
+          {{ t('nouns.' + value?.toLowerCase()) }}
         </template>
         <template #item.email="{ value }">
           <a :href="`mailto:${value}`" @click.stop="">

@@ -104,6 +104,7 @@ const onRowClick = (_: any, itemWrapper: any) => {
         <template #item.description="{ value, item }">
           <LongTextWithElipsis
             :text="value"
+            @click.stop=""
             :title="
               t('others.smtOfsmo', {
                 smt: t('nouns.description'),
@@ -113,7 +114,8 @@ const onRowClick = (_: any, itemWrapper: any) => {
         /></template>
         <template #item.address="{ value, item }">
           <LongTextWithElipsis
-            :text="value"
+          @click.stop=""
+          :text="value"
             :title="
               t('others.smtOfsmo', {
                 smt: t('nouns.address'),

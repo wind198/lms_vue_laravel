@@ -22,6 +22,7 @@ export const vi = {
     advanced: 'Nâng cao',
   },
   nouns: {
+    count: 'Số lượng {entity}',
     room: 'Phòng học',
     major: 'Chuyên ngành',
     class: 'Lớp học',
@@ -124,6 +125,7 @@ export const vi = {
     },
   },
   others: {
+    viewDetail: 'Xem chi tiết',
     none: 'Chưa có',
     startYear: 'Năm bắt đầu',
     appName: 'Hệ thống Quản lý Học tập',

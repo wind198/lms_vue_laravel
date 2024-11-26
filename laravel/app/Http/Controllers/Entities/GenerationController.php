@@ -15,7 +15,7 @@ class GenerationController extends Controller implements HasRepresentationRoute
 {
     use HandlesPagination, HandlesFilter;
 
-    
+
     public function index(Request $request)
     {
         $filter = $request->input('filter', []); // Filters array
@@ -68,9 +68,13 @@ class GenerationController extends Controller implements HasRepresentationRoute
     /**
      * Display the specified resource.
      */
-    public function show(Generation $generation)
+    public function show(string $generation)
     {
-        return $generation;
+        $output = Generation::withCount([
+            'students'
+        ])->findOrFail($generation); //
+
+        return $output;
     }
 
     /**

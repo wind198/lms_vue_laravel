@@ -10,7 +10,7 @@ definePage({
   meta: {
     isBreadcrumb: true,
     label: 'nouns.detail',
-    title: ['others.viewDetail', { entity: 'nouns.student' }],
+    title: ['others.viewDetail', { entity: 'nouns.major' }],
   },
 })
 
@@ -52,7 +52,7 @@ const router = useRouter()
 
 const onClickEditBtn = () => {
   router.push({
-    path: `/settings/${resourcePlural}/${recordId.value}/update`,
+    path: `/study/${resourcePlural}/${recordId.value}/update`,
     state: {
       recordData: cloneDeep(recordData.value ?? {}),
     },

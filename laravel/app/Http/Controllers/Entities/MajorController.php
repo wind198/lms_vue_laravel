@@ -20,7 +20,7 @@ class MajorController extends Controller implements HasRepresentationRoute
     {
         $filter = $request->input('filter', []); // Filters array
 
-        $query = Major::query()->withCount('students');
+        $query = Major::query();
 
         // Text search filter
         if (!empty($filter['q'])) {

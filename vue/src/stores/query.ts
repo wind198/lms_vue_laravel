@@ -40,10 +40,6 @@ export const useQueryParamsStore = defineStore('query', () => {
 
   const searchParams = reactive<ISearchParams>(getDefaultSearchParams())
 
-  onMounted(() => {
-    mapQueryStringToStore(window.location.search)
-  })
-
   // Actions
   function updatePaginationParams(
     v: Partial<Pick<ISearchParams, IPaginationSearchParamKey>>

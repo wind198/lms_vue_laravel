@@ -57,7 +57,7 @@ const router = useRouter()
 
 const onClickEditBtn = () => {
   router.push({
-    path: `/settings/${resourcePlural}/${recordId.value}/update`,
+    path: `/study/${resourcePlural}/${recordId.value}/update`,
     state: {
       recordData: cloneDeep(recordData.value ?? {}),
     },
@@ -80,26 +80,28 @@ const onClickEditBtn = () => {
             {{ t(`actions.update`) }}</VBtn
           >
         </VToolbar>
+        <dl class="user-basic-info pa-2">
+          <template v-for="f in fieldsToRenders" :key="f">
+            <dt class="text-subtitle-2 mb-1">
+              {{ t(`nouns.${camelCase(f)}`) }}
+            </dt>
+            <dd class="text-body-2 mb-2" v-if="f === 'major'">
+              <RouterLink
+                :to="`/settings/generations/${recordData?.major?.id}`"
+                v-if="recordData?.major?.id"
+              >
+                {{ recordData?.major?.title }}
+              </RouterLink>
+              <span v-else>
+                {{ t('others.none') }}
+              </span>
+            </dd>
+            <dd v-else class="text-body-2 mb-2">
+              {{ renderData(f) }}
+            </dd>
+          </template>
+        </dl>
       </div>
-      <dl class="user-basic-info pa-2">
-        <template v-for="f in fieldsToRenders" :key="f">
-          <dt class="text-subtitle-2 mb-1">{{ t(`nouns.${camelCase(f)}`) }}</dt>
-          <dd class="text-body-2 mb-2" v-if="f === 'major'">
-            <RouterLink
-              :to="`/settings/generations/${recordData?.major?.id}`"
-              v-if="recordData?.major?.id"
-            >
-              {{recordData?.major?.title}}
-            </RouterLink>
-            <span v-else>
-              {{ t('others.none') }}
-            </span>
-          </dd>
-          <dd v-else class="text-body-2 mb-2">
-            {{ renderData(f) }}
-          </dd>
-        </template>
-      </dl>
     </VSheet>
   </div>
 </template>
