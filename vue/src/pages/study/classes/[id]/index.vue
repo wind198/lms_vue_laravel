@@ -31,6 +31,7 @@ const recordId = ref<IStringOrNumber | undefined>(currentRoute.params.id)
 const { data: recordData, isLoading } = useGetOne<IClass>({
   id: recordId,
   resource: 'class',
+  resourcePlular: 'classes',
   placeholderData: history.state.recordData,
 })
 

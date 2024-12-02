@@ -3,7 +3,7 @@ definePage({
   meta: {
     isBreadcrumb: true,
     isIdRoute: true,
-    title: ['actions.view', { entity: 'nouns.room' }],
+    title: ['others.viewDetail', { entity: 'nouns.room' }],
   },
 })
 </script>

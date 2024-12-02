@@ -72,12 +72,6 @@ export default function useRoomInputs() {
     resource: 'room',
   })
 
-  watchEffect(() => {
-    if (roomData.value && !useFormRes.meta.value.dirty) {
-      useFormRes.setValues(roomData.value)
-    }
-  })
-
   // Form and fields
   const useFormRes = useForm<IRoomForm>({
     validationSchema,
@@ -85,7 +79,7 @@ export default function useRoomInputs() {
   })
   const titleField = useField<string>('title')
   const descriptionField = useField<string>('description')
-  const addressField = useField<string>('room')
+  const addressField = useField<string>('address')
 
   const { $patch, $post } = useApiHttpClient()
 
@@ -131,6 +125,12 @@ export default function useRoomInputs() {
     }
     router.back()
   }
+
+  watchEffect(() => {
+    if (roomData.value && !useFormRes.meta.value.dirty) {
+      useFormRes.setValues(roomData.value)
+    }
+  })
 
   return {
     useFormRes,

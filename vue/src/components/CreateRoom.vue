@@ -6,33 +6,12 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
-const { path, params } = useRoute()
-
-// @ts-expect-error
-const recordId = ref<number | undefined>(params.id)
+const { path } = useRoute()
 
 const isEdit = computed(() => removeTrailingSlash(path).endsWith('update'))
 
-const { data: userData } = useGetOne({
-  id: recordId,
-  resource: 'room',
-  placeholderData: history.state.recordData,
-})
-
-const {
-  useFormRes,
-  onSubmit,
-  onReset,
-  descriptionField,
-  titleField,
-  addressField,
-} = useRoomInputs()
-
-watchEffect(() => {
-  if (userData.value && !useFormRes.meta.value.dirty) {
-    useFormRes.setValues(userData.value)
-  }
-})
+const { onSubmit, onReset, descriptionField, titleField, addressField } =
+  useRoomInputs()
 </script>
 
 <template>

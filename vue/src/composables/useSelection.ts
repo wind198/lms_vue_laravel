@@ -1,11 +1,9 @@
 import { useI18n } from 'vue-i18n'
 import { useCommonStuffStore } from '../stores/common'
 import { getDeleteApi, joinStr } from '../utils/helpers'
+import { IHasResource } from '@/types/common.type'
 
-type IOptions = {
-  resource: string
-  resourcePlural?: string
-}
+type IOptions = IHasResource
 
 export default function useSelection(options: IOptions) {
   const { resource, resourcePlural = resource + 's' } = options

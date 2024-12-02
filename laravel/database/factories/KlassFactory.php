@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Klass>
  */
-class ClassFactory extends Factory
+class KlassFactory extends Factory
 {
+
+    protected $modelName = 'Klass';
     /**
      * Define the model's default state.
      *

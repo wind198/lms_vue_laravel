@@ -8,9 +8,9 @@ import { useI18n } from 'vue-i18n'
 
 definePage({
   meta: {
-    isBreadcrumb: true,
-    label: 'nouns.detail',
-    title: ['others.viewDetail', { entity: 'nouns.room' }],
+    // isBreadcrumb: true,
+    // label: ['others.viewDetail', { entity: 'nouns.room' }],
+    // title: ['others.viewDetail', { entity: 'nouns.room' }],
   },
 })
 
@@ -77,7 +77,8 @@ const onClickEditBtn = () => {
             :to="`/settings/${resourcePlural}/${recordId}/update`"
             @click.prevent="onClickEditBtn"
           >
-            {{ t(`actions.update`) }}</VBtn>
+            {{ t(`actions.update`) }}</VBtn
+          >
         </VToolbar>
       </div>
       <dl class="room-info pa-2">

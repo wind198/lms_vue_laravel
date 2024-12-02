@@ -10,6 +10,7 @@ declare module 'vue' {
     AppBreadcrumbs: typeof import('./components/AppBreadcrumbs.vue')['default']
     AppWrapper: typeof import('./components/AppWrapper.vue')['default']
     BulkActionToolbar: typeof import('./components/common/BulkActionToolbar.vue')['default']
+    CreateClass: typeof import('./components/CreateClass.vue')['default']
     CreateCourse: typeof import('./components/CreateCourse.vue')['default']
     CreateFormActionsToolbar: typeof import('./components/CreateFormActionsToolbar.vue')['default']
     CreateGeneration: typeof import('./components/CreateGeneration.vue')['default']

@@ -52,44 +52,44 @@ class RoomController extends Controller
 
         $builder = Room::query();
 
-        $major = $builder->create($validated);
+        $room = $builder->create($validated);
 
-        return $major;
+        return $room;
 
     }
 
 
-    public function representation(string $major)
+    public function representation(string $room)
     {
-        return Room::whereKey($major)->firstOrFail()->getAttribute('title');
+        return Room::whereKey($room)->firstOrFail()->getAttribute('title');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Room $major)
+    public function show(Room $room)
     {
-        return $major;
+        return $room;
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Room $major, UpdateRoomRequest $request)
+    public function update(Room $room, UpdateRoomRequest $request)
     {
         // Validate the request data
         $validated = $request->validated();
 
-        // Update the major's details
-        $major->update($validated);
+        // Update the room's details
+        $room->update($validated);
 
-        return $major;
+        return $room;
     }
 
-    public function destroy(Room $major)
+    public function destroy(Room $room)
     {
-        $major->delete();
-        return $major;
+        $room->delete();
+        return $room;
     }
 
     /**
@@ -99,7 +99,7 @@ class RoomController extends Controller
     {
         $ids = $request->validated()['ids'];
 
-        // Perform the deletion of the majors
+        // Perform the deletion of the rooms
         $deleted = Room::whereIn('id', $ids)
             ->pluck('id'); // Retrieve IDs of the records to be deleted
 

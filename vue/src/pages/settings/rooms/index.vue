@@ -37,7 +37,7 @@ const paginationParams = computed(() => data.value?.params)
 const headers = ref([
   { sortable: true, title: t('nouns.title'), value: 'title' },
   { sortable: true, title: t('nouns.description'), value: 'description' },
-  { sortable: true, title: t('nouns.address'), value: 'year' },
+  { sortable: true, title: t('nouns.address'), value: 'address' },
   { sortable: true, title: t('nouns.createdAt'), value: 'created_at' },
   { sortable: true, title: t('nouns.actions'), value: 'actions', width: 80 },
 ])

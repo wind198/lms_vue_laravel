@@ -3,13 +3,25 @@
 namespace App\Models;
 
 use App\Constants\AppConstants;
+use Database\Factories\KlassFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Klass extends Model
 {
-    /** @use HasFactory<\Database\Factories\ClassFactory> */
+    /** @use HasFactory<\Database\Factories\KlassFactory> */
     use HasFactory;
+
+
+    protected $table = 'classes';
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return KlassFactory::new();
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -53,4 +65,10 @@ class Klass extends Model
     {
         return $this->belongsTo(Course::class);
     }
+
+    public function sessions()
+    {
+        return $this->hasMany(ClassSession::class, 'class_id');
+    }
+
 }

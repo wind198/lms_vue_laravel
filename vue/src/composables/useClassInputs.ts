@@ -66,6 +66,8 @@ export default function useClassInputs() {
   const { data: classData } = useGetOne<IClass>({
     id: recordId,
     resource: 'class',
+    resourcePlular: 'classes',
+
   })
 
   watchEffect(() => {

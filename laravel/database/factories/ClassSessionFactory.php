@@ -22,6 +22,8 @@ class ClassSessionFactory extends Factory
 
         $class = Klass::query()->inRandomOrder()->first();
         return [
+            'title' => fake()->words(3, true),
+            'description' => fake()->sentence(50),
             'start_time' => $startTime,
             'end_time' => $endTime,
             'class_id' => $class->getKey(), // Assuming you have a factory for the "classes" table

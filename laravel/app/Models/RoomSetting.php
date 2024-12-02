@@ -6,9 +6,10 @@ use App\Constants\AppConstants;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Room extends Model
+class RoomSetting extends Model
 {
-    /** @use HasFactory<\Database\Factories\RoomFactory> */
+
+    /** @use HasFactory<\Database\Factories\GenerationFactory> */
     use HasFactory;
 
     /**
@@ -16,7 +17,7 @@ class Room extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['title', 'description', 'address'];
+    protected $fillable = ['is_global', 'dates_off', 'title', 'description'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -38,12 +39,19 @@ class Room extends Model
     public static function getRules(array $overrides = []): array
     {
         $defaultRules = [
-            'title' => ['required', 'string', 'max:' . AppConstants::MAX_TITLE_LENGTH],
+            'is_global' => ['required', 'boolean'],
+            'dates_off' => ['nullable', 'array'],
+            'dates_off.*' => ['integer', 'min:0', 'max:365'],
+            'title' => ['required', 'string', 'max:' . 2 * AppConstants::MAX_TITLE_LENGTH],
             'description' => ['nullable', 'string', 'max:' . AppConstants::MAX_DESCRIPTION_LENGTH],
-            'address' => ['required', 'string', 'max:' . AppConstants::MAX_ADDRESS_LENGTH],
+
         ];
 
         return array_merge($defaultRules, $overrides);
     }
 
+    public function opentimes()
+    {
+        return $this->hasMany(RoomOpenTime::class, 'room_setting_id');
+    }
 }

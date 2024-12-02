@@ -53,12 +53,12 @@ const studyLinks = {
       icon: 'mdi-book', // Course icon
       value: 'courses',
     },
-    // {
-    //   to: '/study/classes',
-    //   text: t('nouns.class'),
-    //   icon: 'mdi-chair-school', // Class icon
-    //   value: 'classes',
-    // },
+    {
+      to: '/study/classes',
+      text: t('nouns.class'),
+      icon: 'mdi-chair-school', // Class icon
+      value: 'classes',
+    },
   ],
 }
 </script>
